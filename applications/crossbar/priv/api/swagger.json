@@ -10744,9 +10744,6 @@
                         "now"
                     ],
                     "type": "string"
-                },
-                "Reset": {
-                    "type": "string"
                 }
             },
             "required": [
