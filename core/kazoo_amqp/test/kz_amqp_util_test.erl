@@ -8,7 +8,7 @@
 %%%   Karl Anderson
 %%%   Edouard Swiac
 %%%-------------------------------------------------------------------
--module(amqp_util_test).
+-module(kz_amqp_util_test).
 
 -include_lib("eunit/include/eunit.hrl").
 
