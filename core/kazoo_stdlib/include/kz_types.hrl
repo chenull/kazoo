@@ -1,5 +1,6 @@
 -ifndef(KAZOO_TYPES_INCLUDED).
 -include_lib("xmerl/include/xmerl.hrl").
+-include_lib("kazoo_stdlib/include/kz_records.hrl").
 
 -define(MILLISECONDS_IN_SECOND, 1000).
 -define(MILLISECONDS_IN_MINUTE, (?MILLISECONDS_IN_SECOND * ?SECONDS_IN_MINUTE)).
@@ -27,111 +28,107 @@
 
 -define(DEFAULT_CONTENT_TYPE, <<"application/json">>).
 
--type text() :: string() | atom() | binary() | iolist().
+-type text() :: kz_types:text().
 
--type atoms() :: [atom()].
--type pids() :: [pid()].
--type references() :: [reference()].
+-type atoms() :: kz_types:atoms().
+-type pids() :: kz_types:pids().
+-type references() :: kz_types:references().
 
--type kz_proplist_key() :: any().
--type kz_proplist_value() :: any().
--type kz_proplist_property() :: atom() | {kz_proplist_key(), kz_proplist_value()}.
--type kz_proplist() :: [kz_proplist_property()].
--type kz_proplists() :: [kz_proplist()].
--type kz_proplist_kv(K, V) :: [{K, V}].
+-type kz_proplist_key() :: kz_types:kz_proplist_key().
+-type kz_proplist_value() :: kz_types:kz_proplist_value().
+-type kz_proplist_property() :: kz_types:kz_proplist_property().
+-type kz_proplist() :: kz_types:kz_proplist().
+-type kz_proplists() :: kz_types:kz_proplists().
+-type kz_proplist_kv(K, V) :: kz_types:kz_proplist_kv(K, V).
 
--type pid_ref() :: {pid(), reference()}.
--type pid_refs() :: [pid_ref()].
--type api_pid_ref() :: pid_ref() | 'undefined'.
--type api_pid_refs() :: pid_refs() | 'undefined'.
+-type pid_ref() :: kz_types:pid_ref().
+-type pid_refs() :: kz_types:pid_refs().
+-type api_pid_ref() :: kz_types:api_pid_ref().
+-type api_pid_refs() :: kz_types:api_pid_refs().
 
--type api_terms() :: kz_json:object() | kz_proplist().
--type api_binary() :: binary() | 'undefined'.
--type api_ne_binary() :: ne_binary() | 'undefined'.
--type api_ne_binaries() :: [api_ne_binary()] | 'undefined'.
--type api_binaries() :: [api_binary()] | 'undefined'.
--type api_object() :: kz_json:object() | 'undefined'.
--type api_objects() :: kz_json:objects() | 'undefined'.
--type api_boolean() :: boolean() | 'undefined'.
--type api_atom() :: atom() | 'undefined'.
--type api_atoms() :: atoms() | 'undefined'.
--type api_string() :: string() | 'undefined'.
--type api_reference() :: reference() | 'undefined'.
--type api_pid() :: pid() | 'undefined'.
--type api_list() :: list() | 'undefined'.
+-type api_terms() :: kz_types:api_terms().
+-type api_binary() :: kz_types:api_binary().
+-type api_ne_binary() :: kz_types:api_ne_binary().
+-type api_ne_binaries() :: kz_types:api_ne_binaries().
+-type api_binaries() :: kz_types:api_binaries().
+-type api_object() :: kz_types:api_object().
+-type api_objects() :: kz_types:api_objects().
+-type api_boolean() :: kz_types:api_boolean().
+-type api_atom() :: kz_types:api_atom().
+-type api_atoms() :: kz_types:api_atoms().
+-type api_string() :: kz_types:api_string().
+-type api_reference() :: kz_types:api_reference().
+-type api_pid() :: kz_types:api_pid().
+-type api_list() :: kz_types:api_list().
 
--type api_number() :: number() | 'undefined'.
--type api_integer() :: integer() | 'undefined'.
--type api_pos_integer() :: pos_integer() | 'undefined'.
--type api_non_neg_integer() :: non_neg_integer() | 'undefined'.
--type api_float() :: float() | 'undefined'.
+-type api_number() :: kz_types:api_number().
+-type api_integer() :: kz_types:api_integer().
+-type api_pos_integer() :: kz_types:api_pos_integer().
+-type api_non_neg_integer() :: kz_types:api_non_neg_integer().
+-type api_float() :: kz_types:api_float().
 
--type kz_deeplist() :: iolist(). %[any() | kz_deeplist()].
+-type kz_deeplist() :: kz_types:kz_deeplist().
 
--type kz_std_return() :: {'ok', any()} | {'error', any()}.
+-type kz_std_return() :: kz_types:kz_std_return().
 
--type kz_jobj_return() :: {'ok', kz_json:object()} | {'error', any()}.
--type kz_jobjs_return() :: {'ok', kz_json:objects()} | {'error', any()}.
+-type kz_jobj_return() :: kz_types:kz_jobj_return().
+-type kz_jobjs_return() :: kz_types:kz_jobjs_return().
 
 %% non-empty binary
 -define(NE_BINARY, <<_:8,_/binary>>).
--type ne_binary() :: <<_:8,_:_*8>>.
--type ne_binaries() :: [ne_binary()].
--type binaries() :: [binary()].
 
--type strings() :: [string()].
--type integers() :: [integer()].
+-type ne_binary() :: kz_types:ne_binary().
+-type ne_binaries() :: kz_types:ne_binaries().
+-type binaries() :: kz_types:binaries().
 
--type functions() :: [function()].
+-type strings() :: kz_types:strings().
+-type integers() :: kz_types:integers().
+
+-type functions() :: kz_types:functions().
 
 %% when using gen_smtp to send emails, it takes a 5-tuple for a message-body part
--type mail_message_body() :: {ne_binary(), ne_binary(), kz_proplist(), kz_proplist(), ne_binary() | iolist()}.
+-type mail_message_body() :: kz_types:mail_message_body().
 
 %% for setting types on dicts
--type dict(K,V) :: [{K, V}].
+-type dict(K,V) :: kz_types:dic(K, V).
 
 %% result of calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}}).
-%% Subtract this value from a gregorian seconds version of a date
+%% Subtract this value from a Gregorian seconds version of a date
 %% to get the Unix timestamp
 %% datetime_to_gregorian_seconds({date(),time()}) - ?UNIX_EPOCH_IN_GREGORIAN.
 -define(UNIX_EPOCH_IN_GREGORIAN, 62167219200).
 
--type kz_now() :: erlang:timestamp().
--type kz_year() :: non_neg_integer().
--type kz_month() :: 1..12.
--type kz_day() :: 1..31.
--type kz_hour() :: 0..23.
--type kz_minute() :: 0..59.
--type kz_second() :: 0..59.
--type kz_daynum() :: 1..7.
--type kz_weeknum() :: 1..53.
--type kz_date() :: calendar:date(). %%{kz_year(), kz_month(), kz_day()}.
--type kz_time() :: calendar:time(). %%{kz_hour(), kz_minute(), kz_second()}.
--type kz_datetime() :: calendar:datetime(). %%{kz_date(), kz_time()}.
--type kz_iso_week() :: calendar:yearweeknum(). %%{kz_year(), kz_weeknum()}.
--type gregorian_seconds() :: pos_integer().
--type unix_seconds() :: pos_integer().
--type api_seconds() :: 'undefined' | gregorian_seconds().
+-type kz_now() :: kz_types:kz_now().
+-type kz_year() :: kz_types:kz_year().
+-type kz_month() :: kz_types:kz_month().
+-type kz_day() :: kz_types:kz_day().
+-type kz_hour() :: kz_types:kz_hour().
+-type kz_minute() :: kz_types:kz_minute().
+-type kz_second() :: kz_types:kz_second().
+-type kz_daynum() :: kz_types:kz_daynum().
+-type kz_weeknum() :: kz_types:kz_weeknum().
+-type kz_date() :: kz_types:kz_date().
+-type kz_time() :: kz_types:kz_time().
+-type kz_datetime() :: kz_types:kz_datetime().
+-type kz_iso_week() :: kz_types:kz_iso_week().
+-type gregorian_seconds() :: kz_types:gregorian_seconds().
+-type unix_seconds() :: kz_types:unix_seconds().
+-type api_seconds() :: kz_types:api_seconds().
 
--type kz_timeout() :: non_neg_integer() | 'infinity'.
+-type kz_timeout() :: kz_types:kz_timeout().
 
--type kz_ip_list() :: ne_binaries().
+-type kz_ip_list() :: kz_types:kz_ip_list().
 
-%% Recreate the non-exported types defined in the erlang supervisor source
--type sup_child_spec() :: supervisor:child_spec().
--type sup_child_specs() :: [sup_child_spec()].
--type sup_start_flags() :: supervisor:sup_flags().
+%% Recreate the non-exported types defined in the Erlang supervisor source
+-type sup_child_spec() :: kz_types:sup_child_spec().
+-type sup_child_specs() :: kz_types:sup_child_specs().
+-type sup_start_flags() :: kz_types:sup_flags().
 
--type sup_init_ret() :: {'ok', {supervisor:sup_flags(), [supervisor:child_spec()]}} |
-                        'ignore'.
+-type sup_init_ret() :: kz_types:sup_init_ret().
 
--type sup_child_id() :: api_pid().
--type sup_startchild_err() :: 'already_present' |
-                              {'already_started', sup_child_id()} |
-                              any().
--type sup_startchild_ret() :: {'ok', sup_child_id()} |
-                              {'ok', sup_child_id(), any()} |
-                              {'error', sup_startchild_err()}.
+-type sup_child_id() :: kz_types:sup_child_id().
+-type sup_startchild_err() :: kz_types:sup_startchild_err().
+-type sup_startchild_ret() :: kz_types:sup_startchild_ret().
 
 %% Helper macro for declaring children of supervisor
 -define(WORKER(I), {I, {I, 'start_link', []}, 'permanent', 5 * ?MILLISECONDS_IN_SECOND, 'worker', [I]}).
@@ -153,81 +150,47 @@
 -define(CACHE(N), {N, {'kz_cache', 'start_link', [N]}, 'permanent', 5 * ?MILLISECONDS_IN_SECOND, 'worker', ['kz_cache']}).
 -define(CACHE_ARGS(N, Arg), {N, {'kz_cache', 'start_link', [N, Arg]}, 'permanent', 5 * ?MILLISECONDS_IN_SECOND, 'worker', ['kz_cache']}).
 
-%% Recreate the non-exported types defined in the erlang gen_server source
--type startlink_err() :: {'already_started', pid()} |
-                         'shutdown' |
-                         any().
--type startlink_ret() :: {'ok', pid()} |
-                         'ignore' |
-                         {'error', startlink_err()}.
--type startapp_ret() :: {'ok', pid()} |
-                        {'ok', pid(), any()} |
-                        {'error', startlink_err()}.
+%% Recreate the non-exported types defined in the Erlang gen_server source
+-type startlink_err() :: kz_types:startlink_err().
+-type startlink_ret() :: kz_types:startlink_ret().
+-type startapp_ret() :: kz_types:startapp_ret().
 
--type call_from() :: pid_ref().
--type gen_server_timeout() :: 'hibernate' | non_neg_integer().
--type handle_call_ret() :: {'reply', any(), any()} |
-                           {'reply', any(), any(), gen_server_timeout()} |
-                           {'noreply', any()} |
-                           {'noreply', any(), gen_server_timeout()} |
-                           {'stop', any(), any()} |
-                           {'stop', any(), any(), any()}.
+-type call_from() :: kz_types:call_from().
+-type gen_server_timeout() :: kz_types:gen_server_timeout().
+-type handle_call_ret() :: kz_types:handle_call_ret().
 
--type handle_call_ret_state(State) :: {'reply', any(), State} |
-                                      {'reply', any(), State, gen_server_timeout()} |
-                                      {'noreply', State} |
-                                      {'noreply', State, gen_server_timeout()} |
-                                      {'stop', any(), State} |
-                                      {'stop', any(), State, any()}.
+-type handle_call_ret_state(State) :: kz_types:handle_call_ret_state(State).
 
--type handle_cast_ret() :: {'noreply', any()} |
-                           {'noreply', any(), gen_server_timeout()} |
-                           {'stop', any(), any()}.
--type handle_cast_ret_state(State) :: {'noreply', State} |
-                                      {'noreply', State, gen_server_timeout()} |
-                                      {'stop', any(), State}.
+-type handle_cast_ret() :: kz_types:handle_cast_ret().
+-type handle_cast_ret_state(State) :: kz_types:handle_cast_ret_state(State).
 
--type handle_info_ret() :: {'noreply', any()} |
-                           {'noreply', any(), gen_server_timeout()} |
-                           {'stop', any(), any()}.
--type handle_info_ret_state(State) :: {'noreply', State} |
-                                      {'noreply', State, gen_server_timeout()} |
-                                      {'stop', any(), State}.
+-type handle_info_ret() :: kz_types:handle_info_ret().
+-type handle_info_ret_state(State) :: kz_types:handle_info_ret_state(State).
 
--type handle_fsm_ret(State) :: {'next_state', atom(), State} |
-                               {'next_state', atom(), State, timeout() | 'hibernate'} |
-                               {'stop', any(), State}.
+-type handle_fsm_ret(State) :: kz_types:handle_fsm_ret(State).
 
--type handle_sync_event_ret(State) :: handle_fsm_ret(State) |
-                                      {'reply', any(), atom(), State} |
-                                      {'reply', any(), atom(), State, timeout() | 'hibernate'} |
-                                      {'stop', any(), any(), State}.
+-type handle_sync_event_ret(State) :: kz_types:handle_sync_event_ret(State).
 
--type server_ref() :: atom() |
-                      {atom(), atom()} |
-                      {'global', any()} |
-                      {'via', atom(), any()} |
-                      pid().
+-type server_ref() :: kz_types:server_ref().
 
--type gen_server_name() :: {'local', atom()} |
-                           {'global', any()} |
-                           {'via', atom(), any()}.
--type gen_server_option() :: {'debug', list()} |
-                             {'timeout', non_neg_integer()} |
-                             {'spawn_opt', list()}.
--type gen_server_options() :: [gen_server_option()].
+-type gen_server_name() :: kz_types:gen_server_name().
+-type gen_server_option() :: kz_types:gen_server_option().
+-type gen_server_options() :: kz_types:gen_server_options().
 
 %% XML types
--type xml_attrib_name() :: atom().
--type xml_attrib_value() :: ne_binary() | nonempty_string() | iolist() | atom() | number().
--type xml_attrib() :: #xmlAttribute{}.
--type xml_attribs() :: [xml_attrib()].
+-type xml_attrib_name() :: kz_types:xml_attrib_name().
+-type xml_attrib_value() :: kz_types:xml_attrib_value().
+-type xml_attrib() :: kz_types:xml_attrib().
+-type xml_attribs() :: kz_types:xml_attribs().
 
--type xml_el() :: #xmlElement{}.
--type xml_els() :: [xml_el()].
+-type xml_el() :: kz_types:xml_el().
+-type xml_els() :: kz_types:xml_els().
 
--type xml_text() :: #xmlText{value :: iolist()}.
--type xml_texts() :: [xml_text()].
+-type xml_text() :: kz_types:xml_text().
+-type xml_texts() :: kz_types:xml_texts().
+
+-type xml_thing() :: kz_types:xml_thing().
+-type xml_things() :: kz_types:xml_things().
 
 %% Used by ecallmgr and kapi_dialplan at least
 -define(CALL_EVENTS,
@@ -254,9 +217,6 @@
         >>).
 
 -define(BRIDGE_DEFAULT_SYSTEM_TIMEOUT_S, 20).
-
--type xml_thing() :: xml_el() | xml_text().
--type xml_things() :: xml_els() | xml_texts().
 
 
 -define(MATCH_ACCOUNT_RAW(Account),
@@ -370,38 +330,15 @@
        ).
 
 %% KZ_NODES types
--record(whapp_info, {startup :: api_seconds()
-                    ,roles = [] :: ne_binaries()
-                    }).
 
--type whapp_info() :: #whapp_info{}.
--type kapps_info() :: [{binary(), whapp_info()}].
+-type whapp_info() :: kz_types:whapp_info().
+-type kapps_info() :: kz_types:kapps_info().
 
--type media_server() :: {ne_binary(), kz_json:object()}.
--type media_servers() :: [media_server()].
+-type media_server() :: kz_types:media_server().
+-type media_servers() :: kz_types:media_servers().
 
--record(kz_node, {node = node() :: atom() | '$1' | '$2' | '_'
-                 ,md5 :: api_binary() | '_'
-                 ,expires = 0 :: non_neg_integer() | 'undefined' | '$2' | '_'
-                 ,kapps = [] :: kapps_info() | '$1' | '_'
-                 ,media_servers = [] :: media_servers() | '_'
-                 ,last_heartbeat = kz_time:now_ms() :: pos_integer() | 'undefined' | '$3' | '_'
-                 ,zone :: atom() | 'undefined' | '$2' | '_'
-                 ,broker :: api_binary() | '_'
-                 ,used_memory = 0 :: non_neg_integer() | '_'
-                 ,processes = 0 :: non_neg_integer() | '_'
-                 ,ports = 0 :: non_neg_integer() | '_'
-                 ,version :: api_binary() | '_'
-                 ,channels = 0 :: non_neg_integer() | '_'
-                 ,conferences = 0 :: non_neg_integer() | '_'
-                 ,registrations = 0 :: non_neg_integer() | '_'
-                 ,globals = [] :: kz_proplist() | '$1' | '_'
-                 ,node_info :: api_object() | '_'
-                 ,roles = [] :: kz_proplist() | '$1' | '_'
-                 }).
-
--type kz_node() :: #kz_node{}.
--type kz_nodes() :: [kz_node()].
+-type kz_node() :: kz_types:kz_node().
+-type kz_nodes() :: kz_types:kz_nodes().
 
 -define(FAKE_CALLID(C), kz_term:to_hex_binary(crypto:hash(md5, C))).
 
