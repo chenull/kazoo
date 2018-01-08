@@ -294,11 +294,11 @@ change_to_module_type() {
     local MODULE="${ERL_FILE##*/}"
 
     local TYPES=$(`echo -n get_types "$ERL_FILE"` | tr ' ' '|' | sed 's/|$//g')
-    local GREP_PATTERN="[ ,([{>](kz_)?($TYPES) ?\\("
+    local GREP_PATTERN="[ ,([{>:](kz_)?($TYPES) ?\\("
     # local SED_PATTERN="([ ,([{>])(kz_)?($TYPES) ?(\()"
 
     local TYPE_TYPE_REGEX="[a-zA-Z?_\[\]\(\),\s]"
-    local SED_PATTERN="([ ,([{>])(kz_)?($TYPES)\s*((\(\s*\)|\($TYPE_TYPE_REGEX+\)|\($TYPE_TYPE_REGEX\s*,?\s*$TYPE_TYPE_REGEX\)))"
+    local SED_PATTERN="([ ,([{>:])(kz_)?($TYPES)\s*((\(\s*\)|\($TYPE_TYPE_REGEX+\)|\($TYPE_TYPE_REGEX\s*,?\s*$TYPE_TYPE_REGEX\)))"
 
     local FILES=`grep -Elr --include=*.erl --include=*.hrl --include=*.escript --exclude="$MODULE" "$GREP_PATTERN" core/* applications/* scripts/*`
 

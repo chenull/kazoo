@@ -182,10 +182,10 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--type kz_time:time() :: amqp_cron_task:oneshot() | amqp_cron_task:cron() | amqp_cron_task:sleeper().
+-type time() :: amqp_cron_task:oneshot() | amqp_cron_task:cron() | amqp_cron_task:sleeper().
 -type time_token_value() :: 'all' | integer() | kz_term:integers().
 -type amqp_cron_callback() :: {atom(), atom(), list()} | {fun(), list()}.
--spec normalize_schedule(kz_json:object()) -> {kz_term:ne_binary(), kz_time:time(), amqp_cron_callback()}.
+-spec normalize_schedule(kz_json:object()) -> {kz_term:ne_binary(), time(), amqp_cron_callback()}.
 normalize_schedule(Schedule) ->
     Action = kz_json:get_value(<<"action">>, Schedule),
     ActionType = kz_json:get_value(<<"type">>, Action),
@@ -194,7 +194,7 @@ normalize_schedule(Schedule) ->
     ActionName = action_name(ActionType, Action, TimeSchedule),
     {ActionName, TimeSchedule, ActionFun}.
 
--spec time_schedule(kz_json:object()) -> kz_time:time().
+-spec time_schedule(kz_json:object()) -> time().
 time_schedule(Schedule) ->
     GetTimeTokenFun = get_time_token_value(Schedule),
     case kz_json:get_value(<<"type">>, Schedule) of
@@ -233,7 +233,7 @@ time_schedule(Schedule) ->
                          + ?SECONDS_IN_DAY * Days) * ?MILLISECONDS_IN_SECOND}
     end.
 
--spec schedule({kz_term:ne_binary(), kz_time:time(), amqp_cron_task:execargs()}) -> {'ok', pid()} | {'error', any()}.
+-spec schedule({kz_term:ne_binary(), time(), amqp_cron_task:execargs()}) -> {'ok', pid()} | {'error', any()}.
 schedule({Name, Time, Action}) ->
     lager:info("scheduling ~p", [Name]),
     amqp_cron:schedule_task(Name, Time, Action).
@@ -263,7 +263,7 @@ action_fun(<<"account_crawl">>, _) ->
 action_fun(Type, _JObj) ->
     {fun unknown_type/1, [Type]}.
 
--spec action_name(kz_term:ne_binary(), kz_json:object(), kz_time:time()) -> kz_term:ne_binary().
+-spec action_name(kz_term:ne_binary(), kz_json:object(), time()) -> kz_term:ne_binary().
 action_name(ActionType, Action, Times) ->
     ActionSuffix = action_suffixes(ActionType, Action),
     kz_binary:join([ActionType | ActionSuffix] ++ [time_suffix(Times)], "-").
@@ -273,7 +273,7 @@ action_suffixes(<<"check_voicemail">>, JObj) ->
     [kz_json:get_value(<<"account_id">>, JObj), kz_json:get_value(<<"vmbox_id">>, JObj)];
 action_suffixes(_Type, _JObj) -> [].
 
--spec time_suffix(kz_time:time()) -> kz_term:ne_binary().
+-spec time_suffix(time()) -> kz_term:ne_binary().
 time_suffix({'cron', {Minutes, Hours, MDays, Months, Weekdays}}) ->
     Time = [time_tokens_to_binary(T) || T <- [Minutes, Hours, MDays, Months, Weekdays]],
     kz_binary:join(Time, "-");

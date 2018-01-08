@@ -333,11 +333,11 @@ do_move(AccountId, FromId, OldBoxId, NewBoxId, NBoxJ, Funs) ->
 %% @doc copy a message to other vmbox(es)
 %% @end
 %%--------------------------------------------------------------------
--spec copy_to_vmboxes(kz_term:ne_binary(), kz_term:ne_binary()|kz_json:object(), kz_term:ne_binary(), kz_term:ne_binary()|ne_binaries()) -> kz_json:object().
+-spec copy_to_vmboxes(kz_term:ne_binary(), kz_term:ne_binary() | kz_json:object(), kz_term:ne_binary(), kz_term:ne_binary() | kz_term:ne_binaries()) -> kz_json:object().
 copy_to_vmboxes(AccountId, MsgThing, OldBoxId, NewBoxIds) ->
     copy_to_vmboxes(AccountId, MsgThing, OldBoxId, NewBoxIds, []).
 
--spec copy_to_vmboxes(kz_term:ne_binary(), kz_term:ne_binary()|kz_json:object(), kz_term:ne_binary(), kz_term:ne_binary()|ne_binaries(), update_funs()) -> kz_json:object().
+-spec copy_to_vmboxes(kz_term:ne_binary(), kz_term:ne_binary() | kz_json:object(), kz_term:ne_binary(), kz_term:ne_binary() | kz_term:ne_binaries(), update_funs()) -> kz_json:object().
 copy_to_vmboxes(AccountId, Id, OldBoxId, ?NE_BINARY = NewBoxId, Funs) ->
     copy_to_vmboxes(AccountId, Id, OldBoxId, [NewBoxId], Funs);
 copy_to_vmboxes(AccountId, ?NE_BINARY = Id, OldBoxId, NewBoxIds, Funs) ->

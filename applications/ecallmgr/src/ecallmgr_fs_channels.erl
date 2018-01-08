@@ -212,7 +212,7 @@ updates(UUID, Updates) ->
 -spec count() -> non_neg_integer().
 count() -> ets:info(?CHANNELS_TBL, 'size').
 
--spec match_presence(kz_term:ne_binary()) -> kz_proplist_kv(kz_term:ne_binary(), atom()).
+-spec match_presence(kz_term:ne_binary()) -> kz_term:proplist_kv(kz_term:ne_binary(), atom()).
 match_presence(PresenceId) ->
     MatchSpec = [{#channel{uuid = '$1'
                           ,presence_id = '$2'

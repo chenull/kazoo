@@ -29,7 +29,7 @@
 -type call_waiting() :: #call_waiting{}.
 
 -type switch_fun() :: fun((boolean()) -> boolean()).
--spec actions() -> kz_proplist_kv(kz_term:ne_binary(), switch_fun()).
+-spec actions() -> kz_term:proplist_kv(kz_term:ne_binary(), switch_fun()).
 actions() ->
     [{<<"toggle">>, fun (Enabled) -> not Enabled end}
     ,{<<"activate">>, fun (_Enabled) -> 'true' end}

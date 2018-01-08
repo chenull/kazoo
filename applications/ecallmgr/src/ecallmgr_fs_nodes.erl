@@ -137,7 +137,7 @@ nodeup(Node) when is_atom(Node) ->
 remove(Node) when is_atom(Node) ->
     gen_server:cast(?SERVER, {'rm_fs_node', Node}).
 
--spec connected() -> kz_term:atoms() | kz_proplist_kv(atom(), kz_time:gregorian_seconds()).
+-spec connected() -> kz_term:atoms() | kz_term:proplist_kv(atom(), kz_time:gregorian_seconds()).
 connected() ->
     connected('false').
 

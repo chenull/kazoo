@@ -94,7 +94,7 @@
 -record(state, {zone = 'local' :: atom()
                ,zones = [] :: kz_term:proplist()
                ,queue :: kz_term:api_binary()
-               ,node = kz_types:kz_node() :: atom()
+               ,node = node() :: atom()
                ,is_consuming = 'false' :: boolean()
                ,has_ets = 'false' :: boolean()
                }).
@@ -379,7 +379,7 @@ handle_info(_Info, State) ->
 %%--------------------------------------------------------------------
 -spec handle_event(kz_json:object(), kz_term:proplist()) -> gen_listener:handle_event_return().
 handle_event(JObj, State) ->
-    case kz_api:node(JObj) =:= kz_term:to_binary(kz_types:kz_node()) of
+    case kz_api:node(JObj) =:= kz_term:to_binary(node()) of
         'true' -> 'ignore';
         'false' ->
             {'reply', [{'state', State}
