@@ -14,9 +14,9 @@
 %% for setting types on dicts
 -type dict(K,V) :: [{K, V}].
 
--type kz_timeout() :: non_neg_integer() | 'infinity'.
+-type timeout() :: non_neg_integer() | 'infinity'.
 
--type kz_ip_list() :: ne_binaries().
+-type ip_list() :: ne_binaries().
 
 %% Recreate the non-exported types defined in the Erlang supervisor source
 -type sup_child_spec() :: supervisor:child_spec().
@@ -124,13 +124,13 @@
 -type media_server() :: {ne_binary(), kz_json:object()}.
 -type media_servers() :: [media_server()].
 
--type kz_node() :: #kz_node{}.
--type kz_nodes() :: [kz_node()].
+-type node() :: #kz_node{}.
+-type nodes() :: [node()].
 
 -export_type([mail_message_body/0
              ,dict/2
-             ,kz_timeout/0
-             ,kz_ip_list/0
+             ,timeout/0
+             ,ip_list/0
              ,sup_child_spec/0
              ,sup_child_specs/0
              ,sup_start_flags/0
@@ -169,6 +169,6 @@
              ,kapps_info/0
              ,media_server/0
              ,media_servers/0
-             ,kz_node/0
-             ,kz_nodes/0
+             ,node/0
+             ,nodes/0
              ]).
