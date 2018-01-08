@@ -277,6 +277,47 @@ dedupe() {
     replace kapps_util get_event_type kz_util get_event_type
 }
 
+get_types() {
+    pushd $ROOT > /dev/null
+    local FILE="$1"
+    erl +A0 -noinput -boot start_clean -eval \
+        "{ok, Src} = epp_dodger:quick_parse_file(\"$ROOT/$FILE\", [{no_fail, false}]), \
+        {attribute,_,export_type,Exports} = lists:keyfind(export_type, 3, Src),
+        [io:format(\"~p \", [E]) || {E, _Arity} <- Exports],
+        halt()."
+    popd >/dev/null
+}
+
+
+change_to_module_type() {
+    local ERL_FILE="$1"
+    local MODULE="${ERL_FILE##*/}"
+
+    local TYPES=$(`echo -n get_types "$ERL_FILE"` | tr ' ' '|' | sed 's/|$//g')
+    local GREP_PATTERN="[ ,([{>](kz_)?($TYPES) ?\\("
+    # local SED_PATTERN="([ ,([{>])(kz_)?($TYPES) ?(\()"
+
+    local TYPE_TYPE_REGEX="[a-zA-Z?_\[\]\(\),\s]"
+    local SED_PATTERN="([ ,([{>])(kz_)?($TYPES)\s*((\(\s*\)|\($TYPE_TYPE_REGEX\)|\($TYPE_TYPE_REGEX\s*,?\s*$TYPE_TYPE_REGEX\)))"
+
+    local FILES=`grep -Elr --include=*.erl --include=*.hrl --include=*.escript --exclude="$MODULE" "$GREP_PATTERN" core/* applications/* scripts/*`
+
+    local TO_MOD="${MODULE%.*}"
+
+    for FILE in $FILES; do
+        sed -ri "s/$SED_PATTERN/\1$TO_MOD:\3\4/g" "$FILE" 2>/dev/null
+    done
+}
+
+kz_type_modules() {
+    echo "  * ensuring core types migration"
+    change_to_module_type "core/kazoo_stdlib/src/kz_types.erl"
+    echo "  * ensuring term types migration"
+    change_to_module_type "core/kazoo_stdlib/src/kz_term.erl"
+    echo "  * ensuring time types migration"
+    change_to_module_type "core/kazoo_stdlib/src/kz_time.erl"
+}
+
 echo "ensuring kz_term is used"
 kz_util_to_term
 echo "ensuring kz_binary is used"
@@ -299,5 +340,7 @@ echo "ensuring includes from kazoo are moved to kazoo_stdlib"
 kz_includes
 echo 'ensuring utility calls are not duplicated all over the place'
 dedupe
+echo "ensuring kz_types migration to module is performed"
+kz_type_modules
 
 popd >/dev/null
