@@ -27,7 +27,7 @@ get_name(#bt_descriptor{name=Name}) ->
 %%--------------------------------------------------------------------
 %% @public
 %% @doc
-%% Contert the given XML to a descriptor record
+%% Convert the given XML to a descriptor record
 %% @end
 %%--------------------------------------------------------------------
 -spec xml_to_record(bt_xml()) -> bt_descriptor().
@@ -44,13 +44,15 @@ xml_to_record(Xml, Base) ->
 %%--------------------------------------------------------------------
 %% @public
 %% @doc
-%% Contert the given XML to a descriptor record
+%% Convert the given XML to a descriptor record
 %% @end
 %%--------------------------------------------------------------------
 -spec record_to_xml(bt_descriptor()) -> kz_term:proplist() | bt_xml() | 'undefined'.
-record_to_xml('undefined', _ToString) -> 'undefined';
+record_to_xml(Descriptor) ->
+    record_to_xml(Descriptor, 'false').
 
 -spec record_to_xml(bt_descriptor(), boolean()) -> kz_term:proplist() | bt_xml() | 'undefined'.
+record_to_xml('undefined', _ToString) -> 'undefined';
 record_to_xml(Descriptor, ToString) ->
     Props = [{'name', Descriptor#bt_descriptor.name}
             ,{'phone', Descriptor#bt_descriptor.phone}

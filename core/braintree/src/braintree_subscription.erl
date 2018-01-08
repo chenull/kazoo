@@ -37,7 +37,7 @@
 
 -include("bt.hrl").
 
--type changes() :: [{atom(), kz_term:proplist(), [kz_proplist()]}].
+-type changes() :: [{atom(), kz_term:proplist(), [kz_term:proplist()]}].
 -type subscription() :: bt_subscription().
 -type subscriptions() :: bt_subscriptions().
 

@@ -194,22 +194,11 @@ allow_carrier(Name, IP0, 'false') ->
                ,fun ecallmgr_config:set_node/2
                ).
 
-<<<<<<< HEAD
--spec deny_carrier(ne_binary()) -> 'no_return'.
+-spec deny_carrier(kz_term:ne_binary()) -> 'no_return'.
 deny_carrier(Name) -> deny_carrier(Name, Name, 'false').
 
--spec deny_carrier(ne_binary(), ne_binary()) -> 'no_return'.
-deny_carrier(Name, IP) -> deny_carrier(Name, IP, 'false').
-=======
 -spec deny_carrier(kz_term:ne_binary(), kz_term:ne_binary()) -> 'no_return'.
-deny_carrier(Name, IP) ->
-    modify_acls(kz_term:to_binary(Name)
-               ,kz_term:to_binary(IP)
-               ,get_acls()
-               ,fun(_) -> carrier_acl(IP, <<"deny">>) end
-               ,fun ecallmgr_config:set/2
-               ).
->>>>>>> the great types convert
+deny_carrier(Name, IP) -> deny_carrier(Name, IP, 'false').
 
 -spec deny_carrier(kz_term:ne_binary(), kz_term:ne_binary(), boolean() | kz_term:text()) -> 'no_return'.
 deny_carrier(Name, IP, AsDefault) when not is_boolean(AsDefault) ->
@@ -255,22 +244,11 @@ test_sbc_ip(IP, [Node|Nodes]) ->
 test_sbc_ip(IP, Node) ->
     test_ip_against_acl(IP, Node, ?FS_SBC_ACL_LIST).
 
-<<<<<<< HEAD
--spec allow_sbc(ne_binary()) -> 'no_return'.
+-spec allow_sbc(kz_term:ne_binary()) -> 'no_return'.
 allow_sbc(Name) -> allow_sbc(Name, Name, 'false').
 
--spec allow_sbc(ne_binary(), ne_binary()) -> 'no_return'.
-allow_sbc(Name, IP) -> allow_sbc(Name, IP, 'false').
-=======
 -spec allow_sbc(kz_term:ne_binary(), kz_term:ne_binary()) -> 'no_return'.
-allow_sbc(Name, IP) ->
-    modify_acls(kz_term:to_binary(Name)
-               ,kz_term:to_binary(IP)
-               ,get_acls()
-               ,fun sbc_acl/1
-               ,fun ecallmgr_config:set/2
-               ).
->>>>>>> the great types convert
+allow_sbc(Name, IP) -> allow_sbc(Name, IP, 'false').
 
 -spec allow_sbc(kz_term:ne_binary(), kz_term:ne_binary(), boolean() | kz_term:text()) -> 'no_return'.
 allow_sbc(Name, IP, AsDefault) when not is_boolean(AsDefault) ->
@@ -292,22 +270,11 @@ allow_sbc(Name, IP0, 'false') ->
                ,fun ecallmgr_config:set_node/2
                ).
 
-<<<<<<< HEAD
--spec deny_sbc(ne_binary()) -> 'no_return'.
+-spec deny_sbc(kz_term:ne_binary()) -> 'no_return'.
 deny_sbc(Name) -> deny_sbc(Name, Name, 'false').
 
--spec deny_sbc(ne_binary(), ne_binary()) -> 'no_return'.
-deny_sbc(Name, IP) -> deny_sbc(Name, IP, 'false').
-=======
 -spec deny_sbc(kz_term:ne_binary(), kz_term:ne_binary()) -> 'no_return'.
-deny_sbc(Name, IP) ->
-    modify_acls(kz_term:to_binary(Name)
-               ,kz_term:to_binary(IP)
-               ,get_acls()
-               ,fun(_) -> sbc_acl(IP, <<"deny">>) end
-               ,fun ecallmgr_config:set/2
-               ).
->>>>>>> the great types convert
+deny_sbc(Name, IP) -> deny_sbc(Name, IP, 'false').
 
 -spec deny_sbc(kz_term:ne_binary(), kz_term:ne_binary(), boolean() | kz_term:text()) -> 'no_return'.
 deny_sbc(Name, IP, AsDefault) when not is_boolean(AsDefault) ->

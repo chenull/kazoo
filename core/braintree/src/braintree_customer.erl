@@ -249,8 +249,8 @@ update_subsciption(NewPaymentToken, UpdatedCustomer) ->
     %%get all the new user info
     find(UpdatedCustomer).
 
--spec update_subsciption_with_token(bt_subscription(), ne_binary()) -> 'ok'.
--spec update_subsciption_with_token(bt_subscription(), ne_binary(), boolean()) -> 'ok'.
+-spec update_subsciption_with_token(bt_subscription(), kz_term:ne_binary()) -> 'ok'.
+-spec update_subsciption_with_token(bt_subscription(), kz_term:ne_binary(), boolean()) -> 'ok'.
 update_subsciption_with_token(Sub, NewPaymentToken) ->
     ShouldUpdate = not braintree_subscription:is_cancelled(Sub)
         andalso not braintree_subscription:is_expired(Sub),
@@ -268,7 +268,7 @@ delete_old_cards_and_addresses(OldCards, #bt_card{billing_address_id=NewAddressI
                  ,OldCards
                  ).
 
--spec delete_old_stuff(bt_card(), ne_binary()) -> bt_card().
+-spec delete_old_stuff(bt_card(), kz_term:ne_binary()) -> bt_card().
 delete_old_stuff(#bt_card{billing_address_id='undefined'}=OldCard, _NewAddressId) ->
     braintree_card:delete(OldCard);
 delete_old_stuff(#bt_card{billing_address_id=NewAddressId}=OldCard, NewAddressId) ->
