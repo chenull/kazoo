@@ -110,7 +110,7 @@
              ,proplist_property/0
              ,proplist/0
              ,proplists/0
-             ,proplist_kv/0
+             ,proplist_kv/2
              ,pid_ref/0
              ,pid_refs/0
              ,api_pid_ref/0
