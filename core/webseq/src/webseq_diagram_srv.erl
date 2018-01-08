@@ -157,7 +157,7 @@ init({'db', Name, Database}=Type) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call('stop', _, State) ->
     {'stop', 'normal', 'ok', State};
 handle_call({'who', P}, _, #state{who_registry=Who}=State) when is_pid(P) ->
@@ -184,7 +184,7 @@ handle_call(_,_,S) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'write', Str, Args}, #state{type={'file', _Name, _Filename}
                                         ,io_device=IO
                                         }=State) ->
@@ -231,7 +231,7 @@ handle_cast(_Msg, S) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Info, S) ->
     lager:debug("unhandled message: ~p", [_Info]),
     {'noreply', S}.

@@ -246,7 +246,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), globals_state()) -> handle_call_ret_state(globals_state()).
+-spec handle_call(any(), kz_term:pid_ref(), globals_state()) -> kz_types:handle_call_ret_state(globals_state()).
 handle_call('flush', _From, State) ->
     ets:delete_all_objects(?TAB_NAME),
     lager:debug("flushed table"),
@@ -301,7 +301,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), globals_state()) -> handle_cast_ret_state(globals_state()).
+-spec handle_cast(any(), globals_state()) -> kz_types:handle_cast_ret_state(globals_state()).
 handle_cast({'amqp_delete', Global, 'undefined'}, State) ->
     kz_global_proxy:stop(kz_global:pid(Global)),
     {'noreply', State};
@@ -352,7 +352,7 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), globals_state()) -> handle_info_ret_state(globals_state()).
+-spec handle_info(any(), globals_state()) -> kz_types:handle_info_ret_state(globals_state()).
 handle_info({'DOWN', Ref, 'process', Pid, Reason}, State) ->
     lager:debug("monitor ~p detected process ~p exited with reason ~p", [Ref, Pid, Reason]),
     erlang:demonitor(Ref, ['flush']),

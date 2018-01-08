@@ -80,11 +80,11 @@ init([PrinterId]) ->
     gen_server:cast(self(), 'start'),
     {'ok', #state{faxbox_id=PrinterId}, ?POLLING_INTERVAL}.
 
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', 'ok', State}.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast('start', #state{faxbox_id=FaxBoxId} = State) ->
     case kz_datamgr:open_doc(?KZ_FAXES_DB, FaxBoxId) of
         {'ok', JObj} ->
@@ -127,7 +127,7 @@ handle_cast('subscribe', #state{jid=MyJID
 handle_cast('stop', State) -> {'stop', 'normal', State};
 handle_cast(_Msg, State) -> {'noreply', State}.
 
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info({'stanza', _Client, #xmlel{}=Packet}, State) ->
     process_received_packet(Packet, State),
     {'noreply', State, ?POLLING_INTERVAL};

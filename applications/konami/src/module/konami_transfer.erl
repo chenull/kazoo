@@ -148,7 +148,7 @@ handle(Data, Call) ->
 get_extension([Ext|_]) -> Ext;
 get_extension(<<_/binary>> = Ext) -> Ext.
 
--spec pre_originate(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec pre_originate(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 pre_originate('cast', ?EVENT(UUID, <<"CHANNEL_UNBRIDGE">>, _Evt)
              ,#state{call=Call
                     ,moh=MOH
@@ -185,7 +185,7 @@ pre_originate('cast', ?EVENT(_CallId, _EventName, _Evt), State) ->
 pre_originate('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec attended_wait(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec attended_wait(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 attended_wait('cast', ?EVENT(Transferor, <<"DTMF">>, Evt), #state{transferor=Transferor}=State) ->
     handle_transferor_dtmf(Evt, 'attended_wait', State);
 attended_wait('cast', ?EVENT(Transferee, <<"CHANNEL_DESTROY">>, _Evt)
@@ -451,7 +451,7 @@ attended_wait('cast', Msg, State) ->
 attended_wait('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec partial_wait(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec partial_wait(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 partial_wait('cast', ?EVENT(Transferee, <<"CHANNEL_BRIDGE">>, Evt)
             ,#state{transferee=Transferee
                    ,target=Target
@@ -603,7 +603,7 @@ partial_wait('cast', Msg, State) ->
 partial_wait('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec attended_answer(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec attended_answer(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 attended_answer('cast', ?EVENT(Transferor, <<"DTMF">>, Evt), #state{transferor=Transferor}=State) ->
     handle_transferor_dtmf(Evt, 'attended_answer', State);
 attended_answer('cast', ?EVENT(Transferor, <<"CHANNEL_BRIDGE">>, Evt)
@@ -717,7 +717,7 @@ attended_answer('cast', Msg, State) ->
 attended_answer('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec finished(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec finished(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 finished('cast', ?EVENT(Transferor, <<"CHANNEL_BRIDGE">>, Evt)
         ,#state{transferee=_Transferee
                ,target=Target
@@ -815,7 +815,7 @@ finished('cast', _Msg, State) ->
 finished('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec takeback(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec takeback(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 takeback('cast', ?EVENT(Transferor, <<"CHANNEL_UNBRIDGE">>, _Evt)
         ,#state{transferor=Transferor
                ,call=Call
@@ -934,7 +934,7 @@ takeback('cast', _Msg, State) ->
 takeback('info', Evt, State) ->
     handle_info(Evt, ?FUNCTION_NAME, State).
 
--spec handle_info(any(), atom(), state()) -> handle_fsm_ret(state()).
+-spec handle_info(any(), atom(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_info({'amqp_msg', JObj}, StateName, #state{event_node='undefined'}=State) ->
     send_event(JObj),
     {'next_state', StateName, State};

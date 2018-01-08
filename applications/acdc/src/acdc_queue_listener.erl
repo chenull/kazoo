@@ -226,7 +226,7 @@ init([WorkerSup, MgrPid, AccountId, QueueId]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call('delivery', _From, #state{delivery=D}=State) ->
     {'reply', D, State};
 handle_call('config', _From, #state{account_id=AccountId
@@ -270,7 +270,7 @@ start_shared_queue(#state{account_id=AccountId
                            ,my_id = acdc_util:proc_id(FSMPid)
                  }}.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'start_friends', QueueJObj}, #state{worker_sup=WorkerSup
                                                 ,mgr_pid=MgrPid
                                                 }=State) ->
@@ -489,7 +489,7 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Info, State) ->
     lager:debug("unhandled message: ~p", [_Info]),
     {'noreply', State}.

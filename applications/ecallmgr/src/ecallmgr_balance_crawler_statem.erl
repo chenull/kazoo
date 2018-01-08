@@ -66,7 +66,7 @@ init(_Args) ->
 callback_mode() ->
     'state_functions'.
 
--spec handle_info(any(), atom(), statem_state()) -> handle_fsm_ret(statem_state()).
+-spec handle_info(any(), atom(), statem_state()) -> kz_types:handle_fsm_ret(statem_state()).
 handle_info({'EXIT', WorkerPid, Reason}, StateName, WorkerPid) ->
     lager:debug("worker: ~p exited with reason ~p", [WorkerPid, Reason]),
     gen_statem:cast(self(), 'worker_stop'),

@@ -190,7 +190,7 @@ init([Name, _CandidateNodes, _OptArgs, Mod, Arg, _Options]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), {pid(), any()}, state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), {pid(), any()}, state()) -> kz_types:handle_call_ret_state(state()).
 handle_call(s, _, State) ->
     {reply, {self(), State}, State};
 handle_call({'leader_call', Msg}, From, State) when ?is_leader ->
@@ -215,7 +215,7 @@ handle_call(Call, From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'init', Arg}, State) ->
     init(State, Arg);
 handle_cast({'leader_cast', Msg}, State) when ?is_leader ->
@@ -240,7 +240,7 @@ handle_cast(Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(#?MODULE{from = From, msg = 'join'} = Msg, State) when ?is_leader ->
     lager:debug("message ~p", [Msg]),
     Routines = [{fun announce_leader/2, {From, 'me'}}

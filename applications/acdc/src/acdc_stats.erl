@@ -356,11 +356,11 @@ start_archive_timer() ->
 start_cleanup_timer() ->
     erlang:send_after(?CLEANUP_PERIOD, self(), ?CLEANUP_MSG).
 
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call(_Req, _From, State) ->
     {'reply', 'ok', State}.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'create_call', #call_stat{id=_Id}=Stat}, State) ->
     lager:debug("creating new call stat ~s", [_Id]),
     ets:insert_new(call_table_id(), Stat),
@@ -408,7 +408,7 @@ handle_cast(_Req, State) ->
     lager:debug("unhandled cast: ~p", [_Req]),
     {'noreply', State}.
 
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info({'ETS-TRANSFER', _TblId, _From, _Data}, State) ->
     lager:debug("ETS control for ~p transferred to me for writing", [_TblId]),
     {'noreply', State};

@@ -305,7 +305,7 @@ init([Node, Options]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call({'sip_external_ip', Profile}, _, #state{interfaces=Interfaces}=State) ->
     ExternalIP = case props:get_value(Profile, Interfaces) of
                      'undefined' -> 'undefined';
@@ -336,7 +336,7 @@ handle_call('node', _, #state{node=Node}=State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast('sync_interfaces', #state{node=Node
                                      ,interfaces=Interfaces
                                      }=State) ->
@@ -365,7 +365,7 @@ handle_cast(_Req, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info('sync_interfaces', #state{node=Node
                                      ,interfaces=Interfaces
                                      }=State) ->

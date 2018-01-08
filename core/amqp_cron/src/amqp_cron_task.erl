@@ -232,7 +232,7 @@ init([{Schedule, Exec}]) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call('status', _From, State) ->
     Status = State#state.status,
     Next = State#state.next,
@@ -246,7 +246,7 @@ handle_call('status', _From, State) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'error', Message}, State) ->
     {'noreply', State#state{status = 'error', next = Message}};
 handle_cast({'done', Schedule}, State) ->
@@ -265,7 +265,7 @@ handle_cast('stop', State) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Info, State) ->
     {'noreply', State}.
 

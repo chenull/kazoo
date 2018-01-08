@@ -576,7 +576,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), nodes_state()) -> handle_call_ret_state(nodes_state()).
+-spec handle_call(any(), kz_term:pid_ref(), nodes_state()) -> kz_types:handle_call_ret_state(nodes_state()).
 handle_call({'print_status', Nodes}, _From, State) ->
     print_status(Nodes, State),
     {'reply', 'ok', State};
@@ -595,7 +595,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), nodes_state()) -> handle_cast_ret_state(nodes_state()).
+-spec handle_cast(any(), nodes_state()) -> kz_types:handle_cast_ret_state(nodes_state()).
 handle_cast({'notify_new', Pid}, #state{notify_new=Set}=State) ->
     _ = erlang:monitor('process', Pid),
     {'noreply', State#state{notify_new=sets:add_element(Pid, Set)}};
@@ -631,7 +631,7 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), nodes_state()) -> handle_info_ret_state(nodes_state()).
+-spec handle_info(any(), nodes_state()) -> kz_types:handle_info_ret_state(nodes_state()).
 handle_info('expire_nodes', #state{node=ThisNode, tab=Tab}=State) ->
     Now = kz_time:now_ms(),
     FindSpec = [{#kz_node{node='$1'

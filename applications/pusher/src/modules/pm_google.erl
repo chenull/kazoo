@@ -28,11 +28,11 @@ init([]) ->
     lager:debug("starting server"),
     {'ok', #state{tab=ets:new(?MODULE, [])}}.
 
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'push', JObj}, #state{tab=ETS}=State) ->
     lager:debug("process a push"),
     TokenApp = kz_json:get_value(<<"Token-App">>, JObj),
@@ -41,7 +41,7 @@ handle_cast({'push', JObj}, #state{tab=ETS}=State) ->
 handle_cast('stop', State) ->
     {'stop', 'normal', State}.
 
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Request, State) ->
     {'noreply', State}.
 

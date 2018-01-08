@@ -126,7 +126,7 @@ init([FSMPid]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call('deliveries', _From, #state{deliveries=Ds}=State) ->
     {'reply', Ds, State};
 handle_call(_Request, _From, State) ->
@@ -142,7 +142,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast({'delivery', Delivery}, #state{deliveries=Ds}=State) ->
     {'noreply', State#state{deliveries=[Delivery|Ds]}};
 handle_cast({'ack', Delivery}, #state{deliveries=Ds}=State) ->
@@ -167,7 +167,7 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info({'basic.cancel',_,'true'}, State) ->
     lager:debug("recv basic.cancel...no!!!"),
     {'noreply', State};

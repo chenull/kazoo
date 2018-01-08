@@ -124,7 +124,7 @@ start_link() ->
 init([]) ->
     {'ok', #state{}}.
 
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call({'trace_file', TraceOptions}, _From, #state{traces=Traces}=State) ->
     case start_trace(TraceOptions) of
         {'ok', TraceResult} ->
@@ -162,11 +162,11 @@ handle_call({'stop_trace', TraceRef}
             end
     end.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast(_Req, State) ->
     {'noreply', State}.
 
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Msg, State) ->
     {'noreply', State}.
 

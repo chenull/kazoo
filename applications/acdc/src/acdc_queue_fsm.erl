@@ -243,7 +243,7 @@ callback_mode() ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec ready(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec ready(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 ready('cast', {'member_call', CallJObj, Delivery}, #state{queue_proc=QueueSrv
                                                          ,manager_proc=MgrSrv
                                                          }=State) ->
@@ -296,7 +296,7 @@ ready({'call', From}, Event, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec connect_req(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec connect_req(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 connect_req('cast', {'member_call', CallJObj, Delivery}, #state{queue_proc=Srv}=State) ->
     lager:debug("recv a member_call while processing a different member"),
     CallId = kz_json:get_value(<<"Call-ID">>, CallJObj),
@@ -444,7 +444,7 @@ connect_req('info', {'timeout', ConnRef, ?CONNECTION_TIMEOUT_MESSAGE}, #state{qu
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec connecting(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec connecting(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 connecting('cast', {'member_call', CallJObj, Delivery}, #state{queue_proc=Srv}=State) ->
     lager:debug("recv a member_call while connecting"),
     acdc_queue_listener:cancel_member_call(Srv, CallJObj, Delivery),
@@ -617,7 +617,7 @@ connecting('info', {'timeout', ConnRef, ?CONNECTION_TIMEOUT_MESSAGE}, #state{que
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec handle_event(any(), atom(), state()) -> handle_fsm_ret(state()).
+-spec handle_event(any(), atom(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_event({'refresh', QueueJObj}, StateName, State) ->
     lager:debug("refreshing queue configs"),
     {'next_state', StateName, update_properties(QueueJObj, State), 'hibernate'};
@@ -813,7 +813,7 @@ maybe_delay_connect_req(Call, CallJObj, Delivery, #state{queue_proc=QueueSrv
 %%                   state()
 %% @end
 %%--------------------------------------------------------------------
--spec maybe_connect_re_req(pid(), pid(), state()) -> handle_fsm_ret(state()).
+-spec maybe_connect_re_req(pid(), pid(), state()) -> kz_types:handle_fsm_ret(state()).
 maybe_connect_re_req(MgrSrv, ListenerSrv, #state{account_id=AccountId
                                                 ,queue_id=QueueId
                                                 ,member_call=Call

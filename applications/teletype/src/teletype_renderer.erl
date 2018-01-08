@@ -120,7 +120,7 @@ init(_) ->
     lager:debug("starting template renderer, using ~s as compiled module name", [Module]),
     {'ok', Module}.
 
--spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> kz_types:handle_call_ret_state(state()).
 handle_call({'render', _TemplateId, Template, TemplateData}, _From, TemplateModule) ->
     %% l?LOG_DEBUG("trying to compile template ~s as ~s for ~w", [_TemplateId, TemplateModule, _From]),
     lager:debug("trying to compile template ~s as ~s for ~w", [_TemplateId, TemplateModule, _From]),
@@ -132,11 +132,11 @@ handle_call({'render', _TemplateId, Template, TemplateData}, _From, TemplateModu
 handle_call(_Req, _From, TemplateModule) ->
     {'noreply', TemplateModule}.
 
--spec handle_cast(any(), state()) -> handle_cast_ret_state(state()).
+-spec handle_cast(any(), state()) -> kz_types:handle_cast_ret_state(state()).
 handle_cast(_Req, TemplateModule) ->
     {'noreply', TemplateModule}.
 
--spec handle_info(any(), state()) -> handle_info_ret_state(state()).
+-spec handle_info(any(), state()) -> kz_types:handle_info_ret_state(state()).
 handle_info(_Msg, TemplateModule) ->
     {'noreply', TemplateModule}.
 

@@ -142,7 +142,7 @@ init({Call, JObj}) ->
 callback_mode() ->
     'state_functions'.
 
--spec unarmed(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec unarmed(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 unarmed('cast', {'dtmf', CallId, BindingDigit}, #state{call_id=CallId
                                                       ,listen_on='a'
                                                       ,binding_digit=BindingDigit
@@ -185,7 +185,7 @@ unarmed('cast', Evt, State) ->
 unarmed('info', _, State) ->
     {'next_state', ?FUNCTION_NAME, State}.
 
--spec armed(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec armed(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 armed('cast', {'dtmf', CallId, DTMF}, #state{call_id=CallId
                                             ,a_leg_armed='true'
                                             }=State) ->
@@ -211,7 +211,7 @@ armed('info', {'timeout', Ref, 'digit_timeout'}, #state{b_digit_timeout_ref = Re
     ?WSD_NOTE(_OtherLeg, 'right', <<"disarming">>),
     {'next_state', 'unarmed', disarm_state(State), 'hibernate'}.
 
--spec handle_event(any(), atom(), state()) -> handle_fsm_ret(state()).
+-spec handle_event(any(), atom(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_event(?EVENT(CallId, <<"metaflow_exe">>, Metaflow), StateName, #state{call=Call}=State) ->
     _Pid = proc_lib:spawn('konami_code_exe', 'handle', [Metaflow, Call]),
     lager:debug("recv metaflow exe request for ~s, processing in ~p", [CallId, _Pid]),

@@ -450,7 +450,7 @@ callback_mode() ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec wait(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec wait(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 wait('cast', {'listener', AgentListener, NextState, SyncRef}, #state{account_id=AccountId
                                                                     ,agent_id=AgentId
                                                                     }=State) ->
@@ -477,7 +477,7 @@ wait('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec sync(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec sync(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 sync('cast', 'send_sync_event', #state{agent_listener=AgentListener
                                       ,agent_listener_id=_AProcId
                                       }=State) ->
@@ -552,7 +552,7 @@ sync('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec ready(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec ready(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 ready('cast', {'sync_req', JObj}, #state{agent_listener=AgentListener}=State) ->
     lager:debug("recv sync_req from ~s", [kz_json:get_value(<<"Server-ID">>, JObj)]),
     acdc_agent_listener:send_sync_resp(AgentListener, 'ready', JObj),
@@ -696,7 +696,7 @@ ready('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec ringing(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec ringing(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 ringing('cast', {'member_connect_req', _}, State) ->
     {'next_state', 'ringing', State};
 ringing('cast', {'member_connect_win', JObj}, #state{agent_listener=AgentListener}=State) ->
@@ -955,7 +955,7 @@ ringing('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec answered(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec answered(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 answered('cast', {'member_connect_req', _}, State) ->
     {'next_state', 'answered', State};
 answered('cast', {'member_connect_win', JObj}, #state{agent_listener=AgentListener}=State) ->
@@ -1124,7 +1124,7 @@ answered('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec wrapup(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec wrapup(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 wrapup('cast', {'pause', Timeout}, #state{account_id=AccountId
                                          ,agent_id=AgentId
                                          ,agent_listener=AgentListener
@@ -1192,7 +1192,7 @@ wrapup('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec paused(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec paused(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 paused('cast', {'sync_req', JObj}, #state{agent_listener=AgentListener
                                          ,pause_ref=Ref
                                          }=State) ->
@@ -1249,7 +1249,7 @@ paused('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec outbound(gen_statem:event_type(), any(), state()) -> handle_fsm_ret(state()).
+-spec outbound(gen_statem:event_type(), any(), state()) -> kz_types:handle_fsm_ret(state()).
 outbound('cast', {'channel_hungup', CallId, Cause}, #state{agent_listener=AgentListener
                                                           ,outbound_call_ids=OutboundCallIds
                                                           }=State) ->
@@ -1335,7 +1335,7 @@ outbound('info', Evt, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec handle_event(any(), atom(), state()) -> handle_fsm_ret(state()).
+-spec handle_event(any(), atom(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_event({'agent_logout'}=Event, StateName, #state{agent_state_updates=Queue}=State) ->
     case valid_state_for_logout(StateName) of
         'true' -> handle_agent_logout(State);
@@ -1410,7 +1410,7 @@ handle_event(Event, StateName, State) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec handle_info(any(), atom(), state()) -> handle_fsm_ret(state()).
+-spec handle_info(any(), atom(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_info({'timeout', _Ref, ?SYNC_RESPONSE_MESSAGE}=Msg, StateName, State) ->
     gen_statem:cast(self(), Msg),
     {'next_state', StateName, State};
@@ -1649,7 +1649,7 @@ start_outbound_call_handling(CallId, #state{agent_listener=AgentListener
 start_outbound_call_handling(Call, State) ->
     start_outbound_call_handling(kapps_call:call_id(Call), State).
 
--spec outbound_hungup(state()) -> handle_fsm_ret(state()).
+-spec outbound_hungup(state()) -> kz_types:handle_fsm_ret(state()).
 outbound_hungup(#state{agent_listener=AgentListener
                       ,wrapup_ref=WRef
                       ,pause_ref=PRef
@@ -1884,7 +1884,7 @@ uri(URI, QueryString) ->
             kz_http_util:urlunsplit({Scheme, Host, Path, <<QS/binary, "&", (kz_term:to_binary(QueryString))/binary>>, Fragment})
     end.
 
--spec apply_state_updates(state()) -> handle_fsm_ret(state()).
+-spec apply_state_updates(state()) -> kz_types:handle_fsm_ret(state()).
 apply_state_updates(#state{agent_state_updates=Q
                           ,wrapup_ref=WRef
                           ,pause_ref=PRef
@@ -1900,7 +1900,7 @@ apply_state_updates(#state{agent_state_updates=Q
     lager:debug("default state for applying state updates ~s", [FoldDefaultState]),
     apply_state_updates_fold({'next_state', FoldDefaultState, State#state{agent_state_updates=[]}}, lists:reverse(Q)).
 
--spec apply_state_updates_fold({'next_state', atom(), state()}, list()) -> handle_fsm_ret(state()).
+-spec apply_state_updates_fold({'next_state', atom(), state()}, list()) -> kz_types:handle_fsm_ret(state()).
 apply_state_updates_fold({_, StateName, #state{account_id=AccountId
                                               ,agent_id=AgentId
                                               ,agent_listener=AgentListener
@@ -1936,7 +1936,7 @@ valid_state_for_logout('wrapup') -> 'true';
 valid_state_for_logout('paused') -> 'true';
 valid_state_for_logout(_) -> 'false'.
 
--spec handle_agent_logout(state()) -> handle_fsm_ret(state()).
+-spec handle_agent_logout(state()) -> kz_types:handle_fsm_ret(state()).
 handle_agent_logout(#state{account_id = AccountId
                           ,agent_id = AgentId
                           }=State) ->
@@ -1952,7 +1952,7 @@ handle_presence_update(PresenceId, PresenceState, #state{agent_id = AgentId
     acdc_agent_listener:maybe_update_presence_id(Listener, PresenceId),
     acdc_agent_listener:presence_update(Listener, PresenceState).
 
--spec handle_resume(state()) -> handle_fsm_ret(state()).
+-spec handle_resume(state()) -> kz_types:handle_fsm_ret(state()).
 handle_resume(#state{agent_listener=AgentListener
                     ,pause_ref=Ref
                     }=State) ->
@@ -1965,7 +1965,7 @@ handle_resume(#state{agent_listener=AgentListener
     acdc_agent_listener:presence_update(AgentListener, ?PRESENCE_GREEN),
     {'next_state', 'ready', State#state{pause_ref='undefined'}}.
 
--spec handle_pause(integer(), state()) -> handle_fsm_ret(state()).
+-spec handle_pause(integer(), state()) -> kz_types:handle_fsm_ret(state()).
 handle_pause(Timeout, #state{agent_listener=AgentListener}=State) ->
     acdc_agent_listener:presence_update(AgentListener, ?PRESENCE_RED_FLASH),
     Ref = start_pause_timer(Timeout),
