@@ -89,7 +89,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
--export_type([sleeper/0, cron/0, execargs/0, datetime/0, status/0, schedule/0]).
+-export_type([sleeper/0, cron/0, execargs/0, status/0, schedule/0]).
 
 -include_lib("kazoo_stdlib/include/kz_types.hrl").
 
@@ -148,7 +148,6 @@
 -type funcargs() :: {Function :: fun(), Args :: [term()]}.
 %% Anonymous function execution definition.
 
--type kz_time:datetime() :: calendar:datetime().
 %% Date and time.
 
 %%%===================================================================

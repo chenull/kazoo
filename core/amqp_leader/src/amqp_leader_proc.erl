@@ -119,13 +119,13 @@ call(Name, Request, Timeout) ->
 
 -spec reply({pid(), any()}, any()) -> term().
 reply({Pid, _} = From, Reply) when is_pid(Pid)
-                                   andalso erlang:node(Pid) =:= kz_types:kz_node() ->
+                                   andalso erlang:node(Pid) =:= node() ->
     gen_server:reply(From, Reply);
 reply({From, Tag}, Reply) ->
     send(From, {Tag, Reply}).
 
 -spec alive(sign()) -> kz_term:atoms().
-alive(_) -> [kz_types:kz_node()].
+alive(_) -> [node()].
 %alive(#sign{candidates = Candidates}) ->
 %    Candidates.
 
@@ -136,7 +136,7 @@ down(_) -> [].
 workers(_) -> [].
 
 -spec candidates(sign()) -> kz_term:atoms().
-candidates(_) -> [kz_types:kz_node()].
+candidates(_) -> [node()].
 
 -type msg() :: {'from_leader', any()}.
 
@@ -198,7 +198,7 @@ handle_call({'leader_call', Msg}, From, State) when ?is_leader ->
                ],
     noreply(State, Routines);
 handle_call({'leader_call', Msg}, From, #state{name = Name} = State) ->
-    send(leader(State), {'leader_call', {{Name, kz_types:kz_node()}, From}, Msg}),
+    send(leader(State), {'leader_call', {{Name, node()}, From}, Msg}),
     noreply(State, []);
 handle_call(Call, From, State) ->
     Routines = [{fun call_handle_call/2, {From, Call}}
@@ -305,7 +305,7 @@ handle_info({'leader_call', From, Request}, State) when ?is_leader ->
     noreply(State, Routines);
 
 handle_info({{Pid, _} = From, Reply}, State) when is_pid(Pid)
-                                                  andalso erlang:node(Pid) =:= kz_types:kz_node() ->
+                                                  andalso erlang:node(Pid) =:= node() ->
     gen_server:reply(From, Reply),
     noreply(State, []);
 
@@ -349,7 +349,7 @@ handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 -spec terminate(any(), state()) -> 'ok'.
 terminate(_Reason, State) ->
-    send({name(State), 'broadcast'}, {'DOWN', kz_types:kz_node()}),
+    send({name(State), 'broadcast'}, {'DOWN', node()}),
     'ok'.
 
 %%--------------------------------------------------------------------
@@ -597,7 +597,7 @@ announce_leader(State, {To, #sign{} = From}) ->
     State.
 
 -spec send(recipient(), any()) -> 'ok'.
-send(Pid, Msg) when is_atom(Pid); kz_types:kz_node() =:= erlang:node(Pid); kz_types:kz_node() =:= element(2, Pid) ->
+send(Pid, Msg) when is_atom(Pid); node() =:= erlang:node(Pid); node() =:= element(2, Pid) ->
     lager:debug("local message ~p: ~p", [Msg, Pid]),
     Pid ! Msg;
 send({Name, Node}, Msg) when is_atom(Name)

@@ -350,7 +350,7 @@ send_tasks(Tasks, Election) ->
 stop_tasks(State) ->
     Tasks = State#state.tasks,
     Tasks1 = lists:foldl(
-               fun({Name, Pid, Schedule, Exec}, Acc) when node(Pid) =:= kz_types:kz_node() ->
+               fun({Name, Pid, Schedule, Exec}, Acc) when node(Pid) =:= node() ->
                        'ok' = amqp_cron_task:stop(Pid),
                        [{Name, 'undefined', Schedule, Exec}|Acc];
                   (Task, Acc) ->

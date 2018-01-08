@@ -174,7 +174,7 @@ gc_top_mem_consumers(N) ->
     {Top, _} = top_mem_consumers(N),
     gc_pids([P || {P,_} <- Top]).
 
--type consumers() :: {kz_proplist_kv(pid(), integer()), kz_proplist_kv(pid(), integer())}.
+-type consumers() :: {kz_term:proplist_kv(pid(), integer()), kz_term:proplist_kv(pid(), integer())}.
 -spec top_mem_consumers() -> consumers().
 -spec top_mem_consumers(pos_integer()) -> consumers().
 top_mem_consumers() ->
