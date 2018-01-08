@@ -136,7 +136,7 @@ get_cookie(Options, Node) ->
             {"", []} -> print_no_setcookie()
         end,
     Cookie = kz_term:to_atom(CookieStr, 'true'),
-    'true' = erlang:set_cookie(kz_types:kz_node(), Cookie),
+    'true' = erlang:set_cookie(node(), Cookie),
     Cookie.
 
 -spec get_host() -> nonempty_string().
@@ -152,7 +152,7 @@ get_host() ->
             print_unresolvable_host(Host)
     end.
 
--spec my_name() -> kz_types:kz_node().
+-spec my_name() -> node().
 my_name() ->
     Name = iolist_to_binary(["sup_", kz_binary:rand_hex(2), $@, localhost()]),
     kz_term:to_atom(Name, true).

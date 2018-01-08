@@ -33,11 +33,11 @@
 start_link() ->
     supervisor:start_link({'local', ?SERVER}, ?MODULE, []).
 
--spec start_conference_control(kz_types:kz_node(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:sup_startchild_ret().
+-spec start_conference_control(node(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:sup_startchild_ret().
 start_conference_control(Node, ConferenceId, InstanceId) ->
     supervisor:start_child(?SERVER, [Node, ConferenceId, InstanceId]).
 
--spec stop_conference_control(kz_types:kz_node(), kz_term:ne_binary(), kz_term:ne_binary()) -> any().
+-spec stop_conference_control(node(), kz_term:ne_binary(), kz_term:ne_binary()) -> any().
 stop_conference_control(Node, ConferenceId, InstanceId) ->
     [Pid ! {'stop', {Node, ConferenceId, InstanceId}}
      || {_, Pid, _, _}

@@ -58,7 +58,7 @@
 -spec start_link(atom(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:startlink_ret().
 start_link(Node, ConferenceId, InstanceId) ->
     lager:debug("starting conference ~s control instance ~s for node ~s in ~s"
-               ,[ConferenceId, InstanceId, Node, kz_types:kz_node()]
+               ,[ConferenceId, InstanceId, Node, node()]
                ),
     gen_listener:start_link(?SERVER
                            ,[{'responders', ?RESPONDERS}

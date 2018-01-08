@@ -121,7 +121,7 @@ maybe_set_emails(DataJObj) ->
 
 -spec maybe_set_from(kz_json:object()) -> kz_json:object().
 maybe_set_from(DataJObj) ->
-    SystemFrom = kz_term:to_binary(kz_types:kz_node()),
+    SystemFrom = kz_term:to_binary(node()),
     PortRequest = kz_json:get_value(<<"port_request">>, DataJObj),
     DefaultFrom = kz_json:get_value(<<"from">>, DataJObj, SystemFrom),
 

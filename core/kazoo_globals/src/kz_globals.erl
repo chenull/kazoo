@@ -834,7 +834,7 @@ delete_by_pid(Pid, Reason) ->
 
 -spec delete_by_node(atom()) -> 'ok'.
 delete_by_node(Node)
-  when Node =:= kz_types:kz_node() ->
+  when Node =:= node() ->
     'ok';
 delete_by_node(Node) ->
     _Res = [begin
@@ -850,7 +850,7 @@ delete_by_node(Node) ->
 delete_global(Global, Reason) ->
     delete_global(Global, Reason, kz_global:node(Global)).
 
-delete_global(Global, Reason, Node) when Node =:= kz_types:kz_node() ->
+delete_global(Global, Reason, Node) when Node =:= node() ->
     do_amqp_unregister(Global, Reason);
 delete_global(Global, _Reason, _Node) ->
     lager:debug("deleting ~p", [Global]),

@@ -545,7 +545,7 @@ create_fax_doc(JObj, #state{owner_id = OwnerId
               ,{<<"cdr_doc_id">>, CdrId}
               ,{<<"_id">>, FaxDocId}
               ,{<<"rx_result">>, rx_result(JObj)}
-              ,{<<"pvt_job_node">>, kz_term:to_binary(kz_types:kz_node())}
+              ,{<<"pvt_job_node">>, kz_term:to_binary(node())}
               ,{<<"notifications">>, Notify}
               ]),
 

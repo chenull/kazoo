@@ -131,10 +131,10 @@ get_raw_string(Section, Key, Default) ->
 %%--------------------------------------------------------------------
 -spec get_node_section_name() -> atom().
 get_node_section_name() ->
-    Node = kz_term:to_binary(kz_types:kz_node()),
+    Node = kz_term:to_binary(node()),
     case binary:split(Node, <<"@">>) of
         [Name, _] -> kz_term:to_atom(Name, 'true');
-        _Else -> kz_types:kz_node()
+        _Else -> node()
     end.
 
 %%--------------------------------------------------------------------

@@ -680,7 +680,7 @@ expire_object({[#registration{id=Id}=Reg], Continuation}) ->
 -spec maybe_resp_to_query(kz_json:object(), integer()) -> 'ok'.
 maybe_resp_to_query(JObj, RegistrarAge) ->
     case kz_json:get_value(<<"Node">>, JObj)
-        =:= kz_term:to_binary(kz_types:kz_node())
+        =:= kz_term:to_binary(node())
         andalso kz_json:get_value(<<"App-Name">>, JObj)
         =:= ?APP_NAME
     of
@@ -1207,7 +1207,7 @@ to_props(Reg) ->
 -spec oldest_registrar() -> boolean().
 oldest_registrar() ->
     kz_nodes:whapp_zone_count(?APP_NAME) =:= 1
-        orelse kz_nodes:whapp_oldest_node(?APP_NAME, 'true') =:= kz_types:kz_node().
+        orelse kz_nodes:whapp_oldest_node(?APP_NAME, 'true') =:= node().
 
 -spec get_fs_contact(kz_term:proplist()) -> kz_term:ne_binary().
 get_fs_contact(Props) ->

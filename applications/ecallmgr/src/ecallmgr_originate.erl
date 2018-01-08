@@ -128,7 +128,7 @@ handle_originate_execute(JObj, Props) ->
 %% @doc
 %% Initializes the server
 %%--------------------------------------------------------------------
--spec init([kz_types:kz_node() | kz_json:object()]) -> {'stop', 'normal'} |
+-spec init([node() | kz_json:object()]) -> {'stop', 'normal'} |
                                            {'ok', state()}.
 init([Node, JObj]) ->
     _ = kz_util:put_callid(JObj),
@@ -534,7 +534,7 @@ build_originate_args_from_endpoints(Action, Endpoints, JObj, FetchId) ->
 -spec get_channel_vars(kz_json:object(), kz_term:ne_binary()) -> iolist().
 get_channel_vars(JObj, FetchId) ->
     CCVs = [{<<"Fetch-ID">>, FetchId}
-           ,{<<"Ecallmgr-Node">>, kz_term:to_binary(kz_types:kz_node())}
+           ,{<<"Ecallmgr-Node">>, kz_term:to_binary(node())}
            ,{<<?CALL_INTERACTION_ID>>, ?CALL_INTERACTION_DEFAULT}
            ],
     J = kz_json:from_list_recursive([{<<"Custom-Channel-Vars">>, add_ccvs(JObj, CCVs)}]),

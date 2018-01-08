@@ -39,12 +39,12 @@
                ,callback_module        :: atom()
                ,callback_state         :: any()
                ,down = []              :: kz_term:atoms()
-               ,candidates = [kz_types:kz_node()]  :: kz_term:atoms()
+               ,candidates = [node()]  :: kz_term:atoms()
                }).
 
 -record(sign, {elected                  :: integer()
               ,restarted               :: integer()
-              ,node = kz_types:kz_node()           :: atom()
+              ,node = node()           :: atom()
               ,name                    :: atom()
               ,sync                    :: any()
               }).

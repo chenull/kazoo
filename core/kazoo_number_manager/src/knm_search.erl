@@ -112,7 +112,7 @@ start_link() ->
 %%--------------------------------------------------------------------
 -spec init([]) -> {'ok', state(), timeout()}.
 init([]) ->
-    State = #{node => kz_term:to_binary(kz_types:kz_node())
+    State = #{node => kz_term:to_binary(node())
              ,cache => ets:new(?ETS_DISCOVERY_CACHE, ?ETS_DISCOVERY_CACHE_OPTIONS)
              },
     {'ok', State, ?POLLING_INTERVAL}.

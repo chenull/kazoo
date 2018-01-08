@@ -783,7 +783,7 @@ start_preconfigured_servers() ->
             end
     end.
 
--spec get_configured_nodes() -> 'ok' | [kz_types:kz_node()].
+-spec get_configured_nodes() -> 'ok' | [node()].
 get_configured_nodes() ->
     case ecallmgr_config:get(<<"fs_nodes">>) of
         [] ->
@@ -799,7 +799,7 @@ get_configured_nodes() ->
 
 -spec default_fs_host() -> list().
 default_fs_host() ->
-    Node = erlang:atom_to_list(kz_types:kz_node()),
+    Node = erlang:atom_to_list(node()),
     case string:tokens(Node, "@") of
         [_Name] -> "";
         [_Name, Host] -> "@" ++ Host

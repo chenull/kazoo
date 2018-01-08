@@ -212,7 +212,7 @@ store_value(Operation, Realm, Key, Value ,State=#state{sip=SipList}) when is_int
 %%% send_stats collects and sends the statistics to the kazoo_stats_master
 %%% process. All node (VMs) send memory usage
 send_stats(VarList, SipList) when is_list(VarList), is_list(SipList) ->
-    Vals = [{'nodename', kz_types:kz_node()},
+    Vals = [{'nodename', node()},
             {'memory-total', erlang:memory(total)},
             {'memory-processes', erlang:memory(processes)},
             {'memory-system', erlang:memory(system)},
@@ -232,7 +232,7 @@ get_sip_values(SipList) ->
     [{<<"sip">>, SipList}].
 
 get_ecallmgr_values(VarList) ->
-    case atom_to_list(kz_types:kz_node()) of
+    case atom_to_list(node()) of
         "ecallmgr@" ++ _ ->
             get_ecallmgr_values2(VarList);
         _ -> []

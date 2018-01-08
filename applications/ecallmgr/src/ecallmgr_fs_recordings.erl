@@ -255,9 +255,9 @@ handling_locally(Props) ->
 -spec handling_locally(kz_term:proplist(), kz_term:api_binary()) -> boolean().
 handling_locally(Props, 'undefined') ->
     props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props)
-        =:= kz_term:to_binary(kz_types:kz_node());
+        =:= kz_term:to_binary(node());
 handling_locally(Props, OtherLeg) ->
-    Node = kz_term:to_binary(kz_types:kz_node()),
+    Node = kz_term:to_binary(node()),
     case props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props) of
         Node -> 'true';
         _ -> other_leg_handling_locally(OtherLeg)

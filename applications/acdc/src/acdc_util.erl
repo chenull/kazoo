@@ -131,5 +131,5 @@ unbind_from_call_events(Call, Pid) -> unbind_from_call_events(kapps_call:call_id
 -spec proc_id(pid()) -> kz_term:ne_binary().
 -spec proc_id(pid(), atom() | kz_term:ne_binary()) -> kz_term:ne_binary().
 proc_id() -> proc_id(self()).
-proc_id(Pid) -> proc_id(Pid, kz_types:kz_node()).
+proc_id(Pid) -> proc_id(Pid, node()).
 proc_id(Pid, Node) -> list_to_binary([kz_term:to_binary(Node), "-", pid_to_list(Pid)]).

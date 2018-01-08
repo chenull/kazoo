@@ -33,7 +33,7 @@
 -include("ecallmgr.hrl").
 -include_lib("kazoo_stdlib/include/kz_databases.hrl").
 
--type node_specific() :: kz_types:kz_node() | kz_term:ne_binary().
+-type node_specific() :: node() | kz_term:ne_binary().
 -type api_node_specific() :: 'undefined' | node_specific().
 
 -spec flush() -> 'ok'.
@@ -90,7 +90,7 @@ get(Key) ->
     get(Key, 'undefined').
 
 get(Key, Default) ->
-    get(Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get(Key, Default, kz_term:to_binary(node())).
 
 get(Key, Default, 'undefined') ->
     get(Key, Default);
@@ -260,12 +260,12 @@ fetch(Key) ->
     fetch(Key, 'undefined').
 
 fetch(Key, Default) ->
-    fetch(Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    fetch(Key, Default, kz_term:to_binary(node())).
 
 fetch(Key, Default, 'undefined') ->
     fetch(Key, Default);
 fetch(Key, Default, Timeout) when is_integer(Timeout) ->
-    fetch(Key, Default, kz_term:to_binary(kz_types:kz_node()), Timeout);
+    fetch(Key, Default, kz_term:to_binary(node()), Timeout);
 fetch(Key, Default, Node) when not is_binary(Key) ->
     fetch(kz_term:to_binary(Key), Default, Node);
 fetch(Key, Default, Node) when not is_binary(Node) ->
@@ -310,7 +310,7 @@ maybe_cache_resp(Key, Node, Value) ->
 
 -spec set(kz_json:path(), kz_json:json_term()) -> 'ok'.
 set(Key, Value) ->
-    set(Key, Value, kz_term:to_binary(kz_types:kz_node()), []).
+    set(Key, Value, kz_term:to_binary(node()), []).
 
 -spec set_default(kz_json:path(), kz_json:json_term()) -> 'ok'.
 set_default(Key, Value) ->
@@ -318,7 +318,7 @@ set_default(Key, Value) ->
 
 -spec set_node(kz_json:path(), kz_json:json_term()) -> 'ok'.
 set_node(Key, Value) ->
-    set_node(Key, Value, kz_types:kz_node()).
+    set_node(Key, Value, node()).
 
 -spec set_node(kz_json:path(), kz_json:json_term(), node_specific()) -> 'ok'.
 set_node(Key, Value, Node) when is_atom(Node) ->

@@ -100,7 +100,7 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec start_link([kz_types:kz_node()]) -> kz_types:startlink_ret().
+-spec start_link([node()]) -> kz_types:startlink_ret().
 start_link(Nodes) ->
     Opts = [],
     amqp_leader:start_link(?SERVER, Nodes, Opts, ?MODULE, [], []).
@@ -292,7 +292,7 @@ from_leader({'tasks', Tasks}, State, _Election) ->
     State1 = save_tasks(State, Tasks),
     {'ok', State1}.
 
--spec handle_DOWN(kz_types:kz_node(), state(), any()) -> {'ok', state()}.
+-spec handle_DOWN(node(), state(), any()) -> {'ok', state()}.
 handle_DOWN(_Node, State, _Election) ->
     {'ok', State}.
 
@@ -303,7 +303,7 @@ handle_call('status', _From, State, Election) ->
             ,{'down', amqp_leader_proc:down(Election)}
             ,{'candidates', amqp_leader_proc:candidates(Election)}
             ,{'workers', amqp_leader_proc:workers(Election)}
-            ,{'me', kz_types:kz_node()}
+            ,{'me', node()}
             ],
     {'reply', Reply, State};
 handle_call(_Request, _From, State, _Election) ->
@@ -336,7 +336,7 @@ save_tasks(State, Tasks) ->
       Tasks :: [task()],
       Election :: any().
 send_tasks(Tasks, Election) ->
-    case amqp_leader_proc:alive(Election) -- [kz_types:kz_node()] of
+    case amqp_leader_proc:alive(Election) -- [node()] of
         [] -> 'ok';
         Alive ->
             Election = amqp_leader_proc:broadcast({'from_leader', {'tasks', Tasks}}

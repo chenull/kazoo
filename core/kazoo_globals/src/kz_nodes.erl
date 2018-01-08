@@ -90,7 +90,7 @@
                ,tab :: ets:tid()
                ,notify_new = sets:new() :: sets:set()
                ,notify_expire = sets:new() :: sets:set()
-               ,node = kz_types:kz_node() :: atom()
+               ,node = node() :: atom()
                ,md5 :: kz_term:ne_binary()
                ,zone = 'local' :: atom()
                ,version :: kz_term:ne_binary()
@@ -119,7 +119,7 @@ start_link() ->
                            ,[]
                            ).
 
--spec is_up(kz_types:kz_node()) -> boolean().
+-spec is_up(node()) -> boolean().
 is_up(Node) ->
     case ets:match(?MODULE, #kz_node{node = Node
                                     ,expires = '$2'
@@ -163,7 +163,7 @@ globals_scope() ->
                           }
                  ,[{'andalso'
                    ,{'=/=', '$1', []}
-                   ,{'=/=', '$2', {'const', kz_types:kz_node()}}
+                   ,{'=/=', '$2', {'const', node()}}
                    }]
                  ,['$1']
                  }],
@@ -1037,7 +1037,7 @@ whapp_oldest_node(Whapp, Zone)
     determine_whapp_oldest_node(kz_term:to_binary(Whapp), MatchSpec).
 
 -spec determine_whapp_oldest_node(kz_term:ne_binary(), ets:match_spec()) ->
-                                         'undefined' | kz_types:kz_node().
+                                         'undefined' | node().
 determine_whapp_oldest_node(Whapp, MatchSpec) ->
     case oldest_whapp_node(Whapp, MatchSpec) of
         {Node, _Start} -> Node;
@@ -1045,7 +1045,7 @@ determine_whapp_oldest_node(Whapp, MatchSpec) ->
     end.
 
 -type oldest_whapp_node() :: 'undefined' |
-                             {kz_types:kz_node(), kz_time:gregorian_seconds()}.
+                             {node(), kz_time:gregorian_seconds()}.
 
 -spec oldest_whapp_node(kz_term:ne_binary(), ets:match_spec()) ->
                                oldest_whapp_node().
@@ -1057,7 +1057,7 @@ oldest_whapp_node(Whapp, MatchSpec) ->
                ,ets:select(?MODULE, MatchSpec)
                ).
 
--spec determine_whapp_oldest_node_fold({kz_types:kapps_info(), kz_types:kz_node()}, oldest_whapp_node(), kz_term:ne_binary()) ->
+-spec determine_whapp_oldest_node_fold({kz_types:kapps_info(), node()}, oldest_whapp_node(), kz_term:ne_binary()) ->
                                               oldest_whapp_node().
 determine_whapp_oldest_node_fold({Whapps, Node}, 'undefined', Whapp) ->
     case props:get_value(Whapp, Whapps) of
@@ -1107,7 +1107,7 @@ pool_state(Name, State, Workers, Overflow, Monitors) ->
 node_encoded() ->
     case application:get_env(?APP_NAME_ATOM, 'node_encoded') of
         'undefined' ->
-            Encoded = kz_base64url:encode(crypto:hash(md5, kz_term:to_binary(kz_types:kz_node()))),
+            Encoded = kz_base64url:encode(crypto:hash(md5, kz_term:to_binary(node()))),
             application:set_env(?APP_NAME_ATOM, 'node_encoded', Encoded),
             Encoded;
         {'ok', Encoded} -> Encoded

@@ -162,7 +162,7 @@ get_admin_send_from(Admin) ->
 
 -spec get_default_from() -> kz_term:ne_binary().
 get_default_from() ->
-    DefaultFrom = kz_term:to_binary(kz_types:kz_node()),
+    DefaultFrom = kz_term:to_binary(node()),
     kapps_config:get_binary(?MOD_CONFIG_CAT, <<"default_from">>, DefaultFrom).
 
 -spec find_numbers(kz_term:proplist(), kz_json:object()) -> kz_term:ne_binaries().

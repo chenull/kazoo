@@ -740,7 +740,7 @@ new_queue(Queue, Options) when is_binary(Queue) ->
 
 -spec new_queue_name() -> kz_term:ne_binary().
 new_queue_name() ->
-    list_to_binary(io_lib:format("~s-~p-~s", [kz_types:kz_node(), self(), kz_binary:rand_hex(4)])).
+    list_to_binary(io_lib:format("~s-~p-~s", [node(), self(), kz_binary:rand_hex(4)])).
 
 -spec queue_arguments(kz_term:proplist()) -> amqp_properties().
 queue_arguments(Arguments) ->

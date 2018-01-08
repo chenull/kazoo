@@ -632,7 +632,7 @@ process_event(UUID, Props, Node, Pid) ->
 process_specific_event(<<"CHANNEL_CREATE">>, UUID, Props, Node) ->
     _ = maybe_publish_channel_state(Props, Node),
     case props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props)
-        =:= kz_term:to_binary(kz_types:kz_node())
+        =:= kz_term:to_binary(node())
     of
         'true' ->
             case ecallmgr_fs_authz:authorize(Props, UUID, Node) of
@@ -688,7 +688,7 @@ maybe_publish_channel_state(Props, Node) ->
 
 -spec maybe_publish_restricted(kz_term:proplist()) -> 'ok'.
 maybe_publish_restricted(Props) ->
-    EcallmgrNode = kz_term:to_binary(kz_types:kz_node()),
+    EcallmgrNode = kz_term:to_binary(node()),
     Event = ecallmgr_call_events:get_event_name(Props),
 
     case props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props) of
@@ -755,9 +755,9 @@ other_leg_handling_locally(OtherLeg) ->
 -spec handling_locally(kz_term:proplist(), kz_term:api_binary()) -> boolean().
 handling_locally(Props, 'undefined') ->
     props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props)
-        =:= kz_term:to_binary(kz_types:kz_node());
+        =:= kz_term:to_binary(node());
 handling_locally(Props, OtherLeg) ->
-    Node = kz_term:to_binary(kz_types:kz_node()),
+    Node = kz_term:to_binary(node()),
     case props:get_value(?GET_CCV(<<"Ecallmgr-Node">>), Props) of
         Node -> 'true';
         _ -> other_leg_handling_locally(OtherLeg)

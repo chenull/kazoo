@@ -85,7 +85,7 @@ get_string(Category, Key) ->
         Else -> kz_term:to_list(Else)
     end.
 get_string(Category, Key, Default) ->
-    get_string(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_string(Category, Key, Default, kz_term:to_binary(node())).
 get_string(Category, Key, Default, Node) ->
     kz_term:to_list(get(Category, Key, Default, Node)).
 
@@ -105,7 +105,7 @@ get_binary(Category, Key) ->
         Else -> kz_term:to_binary(Else)
     end.
 get_binary(Category, Key, Default) ->
-    get_binary(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_binary(Category, Key, Default, kz_term:to_binary(node())).
 get_binary(Category, Key, Default, Node) ->
     kz_term:to_binary(get(Category, Key, Default, Node)).
 
@@ -135,7 +135,7 @@ as_json_value(V, Default) ->
     end.
 
 get_json(Category, Key, Default) ->
-    get_json(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_json(Category, Key, Default, kz_term:to_binary(node())).
 get_json(Category, Key, Default, Node) ->
     V = get(Category, Key, Default, Node),
     as_json_value(V, Default).
@@ -160,7 +160,7 @@ as_jsons_value(V, Default) ->
     end.
 
 get_jsons(Category, Key, Default) ->
-    get_jsons(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_jsons(Category, Key, Default, kz_term:to_binary(node())).
 get_jsons(Category, Key, Default, Node) ->
     V = get(Category, Key, Default, Node),
     as_jsons_value(V, Default).
@@ -181,7 +181,7 @@ get_atom(Category, Key) ->
         Else -> kz_term:to_atom(Else, 'true')
     end.
 get_atom(Category, Key, Default) ->
-    get_atom(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_atom(Category, Key, Default, kz_term:to_binary(node())).
 get_atom(Category, Key, Default, Node) ->
     kz_term:to_atom(get(Category, Key, Default, Node), 'true').
 
@@ -202,7 +202,7 @@ get_integer(Category, Key) ->
     end.
 
 get_integer(Category, Key, Default) ->
-    get_integer(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_integer(Category, Key, Default, kz_term:to_binary(node())).
 get_integer(Category, Key, Default, Node) ->
     case get(Category, Key, Default, Node) of
         'undefined' -> 'undefined';
@@ -225,7 +225,7 @@ get_pos_integer(Category, Key) ->
         Else -> to_pos_integer(Else, undefined)
     end.
 get_pos_integer(Category, Key, Default) ->
-    get_pos_integer(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_pos_integer(Category, Key, Default, kz_term:to_binary(node())).
 get_pos_integer(Category, Key, Default, Node) ->
     to_pos_integer(get(Category, Key, Default, Node), Default).
 
@@ -252,7 +252,7 @@ get_non_neg_integer(Category, Key) ->
         Else -> to_non_neg_integer(Else, undefined)
     end.
 get_non_neg_integer(Category, Key, Default) ->
-    get_non_neg_integer(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_non_neg_integer(Category, Key, Default, kz_term:to_binary(node())).
 get_non_neg_integer(Category, Key, Default, Node) ->
     to_non_neg_integer(get(Category, Key, Default, Node), Default).
 
@@ -279,7 +279,7 @@ get_float(Category, Key) ->
         Else -> kz_term:to_float(Else)
     end.
 get_float(Category, Key, Default) ->
-    get_float(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_float(Category, Key, Default, kz_term:to_binary(node())).
 get_float(Category, Key, Default, Node) ->
     kz_term:to_float(get(Category, Key, Default, Node)).
 
@@ -299,7 +299,7 @@ get_is_false(Category, Key) ->
         Else -> kz_term:is_false(Else)
     end.
 get_is_false(Category, Key, Default) ->
-    get_is_false(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_is_false(Category, Key, Default, kz_term:to_binary(node())).
 get_is_false(Category, Key, Default, Node) ->
     kz_term:is_false(get(Category, Key, Default, Node)).
 
@@ -319,7 +319,7 @@ get_is_true(Category, Key) ->
         Else -> kz_term:is_true(Else)
     end.
 get_is_true(Category, Key, Default) ->
-    get_is_true(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_is_true(Category, Key, Default, kz_term:to_binary(node())).
 get_is_true(Category, Key, Default, Node) ->
     kz_term:is_true(get(Category, Key, Default, Node)).
 
@@ -330,7 +330,7 @@ get_is_true(Category, Key, Default, Node) ->
 get_ne_binary_or_ne_binaries(Category, Key) ->
     get_ne_binary_or_ne_binaries(Category, Key, 'undefined').
 get_ne_binary_or_ne_binaries(Category, Key, Default) ->
-    get_ne_binary_or_ne_binaries(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_ne_binary_or_ne_binaries(Category, Key, Default, kz_term:to_binary(node())).
 get_ne_binary_or_ne_binaries(Category, Key, Default, Node) ->
     ValueOrValues = get(Category, Key, Default, Node),
     case kz_term:is_empty(ValueOrValues) of
@@ -353,7 +353,7 @@ get_ne_binary_or_ne_binaries(Category, Key, Default, Node) ->
 get_ne_binary(Category, Key) ->
     get_ne_binary(Category, Key, 'undefined').
 get_ne_binary(Category, Key, Default) ->
-    get_ne_binary(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_ne_binary(Category, Key, Default, kz_term:to_binary(node())).
 get_ne_binary(Category, Key, Default, Node) ->
     Value = get(Category, Key, Default, Node),
     case kz_term:is_empty(Value) of
@@ -368,7 +368,7 @@ get_ne_binary(Category, Key, Default, Node) ->
 get_ne_binaries(Category, Key) ->
     get_ne_binaries(Category, Key, 'undefined').
 get_ne_binaries(Category, Key, Default) ->
-    get_ne_binaries(Category, Key, Default, kz_term:to_binary(kz_types:kz_node())).
+    get_ne_binaries(Category, Key, Default, kz_term:to_binary(node())).
 get_ne_binaries(Category, Key, Default, Node) ->
     Values = get(Category, Key, Default, Node),
     case kz_term:is_empty(Values) of
@@ -396,7 +396,7 @@ get_node_value(Category, Key) ->
     get_node_value(Category, Key, 'undefined').
 
 get_node_value(Category, Key, Default) ->
-    get_node_value(Category, Key, Default, kz_types:kz_node()).
+    get_node_value(Category, Key, Default, node()).
 
 get_node_value(Category, Key, Default, Node) when not is_list(Key) ->
     get_node_value(Category, [kz_term:to_binary(Key)], Default, Node);
@@ -407,7 +407,7 @@ get_node_value(Category, Keys, Default, Node) when not is_binary(Node) ->
 get_node_value(Category, Keys, Default, Node) ->
     case get_category(Category) of
         {'ok', JObj} ->
-            Node = kz_term:to_binary(kz_types:kz_node()),
+            Node = kz_term:to_binary(node()),
             kz_json:get_value([Node | Keys], JObj);
         {'error', 'not_found'} ->
             lager:debug("missing category ~s ~p: ~p", [Category, Keys, Default]),
@@ -431,7 +431,7 @@ get(Category, Key) ->
     get(Category, Key, 'undefined').
 
 get(Category, Key, Default) ->
-    get(Category, Key, Default, kz_types:kz_node()).
+    get(Category, Key, Default, node()).
 
 get(Category, Key, Default, 'undefined') ->
     get(Category, Key, Default, ?KEY_DEFAULT);
@@ -460,7 +460,7 @@ get(Category, Keys, Default, Node) ->
 get_current(Category, Key) ->
     get_current(Category, Key, 'undefined').
 get_current(Category, Key, Default) ->
-    get_current(Category, Key, Default, kz_types:kz_node()).
+    get_current(Category, Key, Default, node()).
 
 get_current(Category, Key, Default, 'undefined') ->
     get_current(Category, Key, Default, ?KEY_DEFAULT);
@@ -522,7 +522,7 @@ get_default_value(Category, Keys, Default, JObj) ->
 get_all_kvs(Category) ->
     case get_category(Category) of
         {'error', _} -> [];
-        {'ok', JObj} -> get_all_kvs(kz_term:to_binary(kz_types:kz_node()), JObj)
+        {'ok', JObj} -> get_all_kvs(kz_term:to_binary(node()), JObj)
     end.
 
 -spec get_all_kvs(kz_term:ne_binary(), kz_json:object()) -> kz_term:proplist().
@@ -579,7 +579,7 @@ set_json(Category, Key, Value) ->
 -spec set(config_category(), config_key(), any()) ->
                  {'ok', kz_json:object()}.
 set(Category, Key, Value) ->
-    set(Category, Key, Value, kz_types:kz_node()).
+    set(Category, Key, Value, node()).
 
 -spec set(config_category(), config_key(), any(), kz_term:ne_binary() | atom()) ->
                  {'ok', kz_json:object()}.

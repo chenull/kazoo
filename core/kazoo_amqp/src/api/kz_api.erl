@@ -162,7 +162,7 @@ default_headers(ServerID, AppName, AppVsn) ->
     [{?KEY_SERVER_ID, ServerID}
     ,{?KEY_APP_NAME, AppName}
     ,{?KEY_APP_VERSION, AppVsn}
-    ,{?KEY_NODE, kz_term:to_binary(kz_types:kz_node())}
+    ,{?KEY_NODE, kz_term:to_binary(node())}
     ].
 
 default_headers(EvtCat, EvtName, AppName, AppVsn) ->
@@ -174,7 +174,7 @@ default_headers(ServerID, EvtCat, EvtName, AppName, AppVsn) ->
     ,{?KEY_EVENT_NAME, EvtName}
     ,{?KEY_APP_NAME, AppName}
     ,{?KEY_APP_VERSION, AppVsn}
-    ,{?KEY_NODE, kz_term:to_binary(kz_types:kz_node())}
+    ,{?KEY_NODE, kz_term:to_binary(node())}
     ].
 
 default_headers_v(Props) when is_list(Props) ->

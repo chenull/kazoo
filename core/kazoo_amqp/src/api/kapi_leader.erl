@@ -28,7 +28,7 @@ whoami() ->
 -spec whoami(pid()) -> pid() | {'registered_name', atom()}.
 whoami(Pid) when is_pid(Pid) ->
     case erlang:process_info(Pid, 'registered_name') of
-        {'registered_name', Name} -> {Name, kz_types:kz_node()};
+        {'registered_name', Name} -> {Name, node()};
         _ -> Pid
     end.
 
@@ -44,7 +44,7 @@ queue(Pid) when is_pid(Pid) ->
             queue(Name)
     end;
 queue(Name) when is_atom(Name) ->
-    queue(Name, kz_types:kz_node());
+    queue(Name, node());
 queue({Name, Node}) ->
     queue(Name, Node).
 
@@ -61,7 +61,7 @@ route(Pid) when is_pid(Pid) ->
     {'registered_name', Name} = erlang:process_info(Pid, 'registered_name'),
     route(Name);
 route(Name) when is_atom(Name) ->
-    route(Name, kz_types:kz_node()).
+    route(Name, node()).
 
 -spec route(atom(), atom()) -> kz_term:ne_binary().
 route(Name, Node) ->
@@ -101,7 +101,7 @@ publish_req(Routing, Req, ContentType) ->
 
 -spec bind_q(kz_term:ne_binary(), kz_term:proplist()) -> 'ok'.
 bind_q(Queue, [{'name', Name}]) ->
-    Node = kz_types:kz_node(),
+    Node = node(),
     ProcessQ = iolist_to_binary(io_lib:format("~s.~s", [Name, Node])),
     BroadcastQ = iolist_to_binary(io_lib:format("~s.broadcast", [Name])),
     _ = ['ok' = amqp_util:bind_q_to_leader(Queue, Bind) || Bind <- [ProcessQ, BroadcastQ]],

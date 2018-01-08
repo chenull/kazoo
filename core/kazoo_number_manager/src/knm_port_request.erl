@@ -540,7 +540,7 @@ maybe_send_request(JObj, Url)->
 -spec send_request(kz_json:object(), kz_term:ne_binary()) -> 'error' | 'ok'.
 send_request(JObj, Url) ->
     Headers = [{"Content-Type", "application/json"}
-              ,{"User-Agent", kz_term:to_list(kz_types:kz_node())}
+              ,{"User-Agent", kz_term:to_list(node())}
               ],
     Uri = kz_term:to_list(<<Url/binary, "/", (kz_doc:id(JObj))/binary>>),
     Remove = [?PORT_PVT_REV
@@ -609,7 +609,7 @@ fetch_and_send(Url, JObj) ->
 send_attachment(Url, Id, Name, Options, Attachment) ->
     ContentType = kz_json:get_value(<<"content_type">>, Options),
     Headers = [{"Content-Type", kz_term:to_list(ContentType)}
-              ,{"User-Agent", kz_term:to_list(kz_types:kz_node())}
+              ,{"User-Agent", kz_term:to_list(node())}
               ],
     Uri = kz_term:to_list(<<Url/binary, "/", Id/binary, "/", Name/binary>>),
     case kz_http:post(Uri, Headers, Attachment) of
