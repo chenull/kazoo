@@ -39,7 +39,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(kapps_call:call()) -> startlink_ret().
+-spec start_link(kapps_call:call()) -> kz_types:startlink_ret().
 start_link(Call) ->
     CallId = kapps_call:call_id(Call),
     Bindings = [{'call', [{'callid', CallId}]}
@@ -86,7 +86,7 @@ init([Call]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 
@@ -166,7 +166,7 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
     {'ok', State}.
 
--spec handle_answer(kz_json:object(), kz_proplist()) -> ok.
+-spec handle_answer(kz_json:object(), kz_term:proplist()) -> ok.
 handle_answer(JObj, Props) ->
     Srv = props:get_value('server', Props),
     case kz_util:get_event_type(JObj) of
@@ -236,7 +236,7 @@ pin_collect(Call, Retries) ->
             pin_collect(Call, Retries - 1)
     end.
 
--spec handle_entered_pin(kapps_call:call(), integer(), ne_binary()) -> 'ok'.
+-spec handle_entered_pin(kapps_call:call(), integer(), kz_term:ne_binary()) -> 'ok'.
 handle_entered_pin(Call, Retries, EnteredPin) ->
     case cccp_util:authorize(EnteredPin, <<"cccps/pin_listing">>) of
         {'ok', AuthJObj} ->

@@ -88,7 +88,7 @@ summary(Context) ->
     Req = [{<<"Category">>, ?ECALLMGR}
           ,{<<"Key">>, ?ECALLMGR_ACLS}
           ,{<<"Default">>, kz_json:new()}
-          ,{<<"Node">>, kz_term:to_binary(node())}
+          ,{<<"Node">>, kz_term:to_binary(kz_types:node())}
           ,{<<"Msg-ID">>, kz_binary:rand_hex(16)}
            | kz_api:default_headers(?APP_NAME, ?APP_VERSION)
           ],

@@ -24,15 +24,15 @@
 
 -include("webseq.hrl").
 
--spec what(what()) -> ne_binary().
+-spec what(what()) -> kz_term:ne_binary().
 what(B) when is_binary(B) -> B;
 what(IO) when is_list(IO) -> iolist_to_binary(IO).
 
 -define(GPROC_KEY(Type), {'n', 'l', type_key(Type)}).
 
--type type_key() :: {?MODULE, ne_binary() | '_' | '$1'}.
+-type type_key() :: {?MODULE, kz_term:ne_binary() | '_' | '$1'}.
 
--spec type_key(diagram_type() | ne_binary() | atom()) -> type_key().
+-spec type_key(diagram_type() | kz_term:ne_binary() | atom()) -> type_key().
 type_key({'file', Filename}) -> type_key(Filename);
 type_key({'file', Name, _Filename}) -> type_key(Name);
 type_key({'db', Database}) -> type_key(Database);
@@ -40,11 +40,11 @@ type_key({'db', Name, _Database}) -> type_key(Name);
 type_key(<<_/binary>>=Name) -> {?MODULE, Name};
 type_key(A) when is_atom(A) -> {?MODULE, A}.
 
--type webseq_srv() :: server_ref() | diagram_type() | ne_binary().
+-type webseq_srv() :: kz_types:server_ref() | diagram_type() | kz_term:ne_binary().
 
 -spec start(diagram_type()) ->
-                   {'ok', server_ref()} |
-                   {'error', 'already_started', server_ref()}.
+                   {'ok', kz_types:server_ref()} |
+                   {'error', 'already_started', kz_types:server_ref()}.
 start(Type) ->
     case server_ref(Type) of
         'undefined' -> start_srv(Type);
@@ -90,7 +90,7 @@ running() ->
     lager:debug("running: ~p", [Running]),
     [{Pid, Type} || [Pid, Type] <- Running, erlang:is_process_alive(Pid)].
 
--spec server_ref(webseq_srv()) -> api_pid().
+-spec server_ref(webseq_srv()) -> kz_term:api_pid().
 server_ref(Pid) when is_pid(Pid) -> Pid;
 server_ref(Type) ->
     try gproc:lookup_value(?GPROC_KEY(Type)) of
@@ -99,7 +99,7 @@ server_ref(Type) ->
         _:_ -> 'undefined'
     end.
 
--spec start_srv(diagram_type()) -> startlink_ret().
+-spec start_srv(diagram_type()) -> kz_types:startlink_ret().
 start_srv(Type) ->
     case webseq_diagram_srv:start(Type) of
         {'error', _E}=E ->
@@ -130,7 +130,7 @@ note(Ref, Who, Dir, Note) ->
 trunc(Srv) -> gen_server:cast(server_ref(Srv), 'trunc').
 rotate(Srv) -> gen_server:cast(server_ref(Srv), 'rotate').
 
--spec process_pid(kz_json:object()) -> ne_binary().
+-spec process_pid(kz_json:object()) -> kz_term:ne_binary().
 process_pid(P) ->
     ProcId = kz_json:get_value(<<"Process-ID">>, P),
     case re:run(ProcId, <<".*(<.*>)">>, [{'capture', [1], 'binary'}]) of
@@ -139,10 +139,10 @@ process_pid(P) ->
         _ -> ProcId
     end.
 
--spec reg_who(webseq_srv(), pid(), ne_binary()) -> 'ok'.
+-spec reg_who(webseq_srv(), pid(), kz_term:ne_binary()) -> 'ok'.
 reg_who(Srv, P, W) -> gen_server:cast(server_ref(Srv), {'reg_who', P, W}).
 
--spec who(webseq_srv(), ne_binary() | pid()) -> ne_binary().
+-spec who(webseq_srv(), kz_term:ne_binary() | pid()) -> kz_term:ne_binary().
 who(Srv, P) ->
     case catch gen_server:call(server_ref(Srv), {'who', P}) of
         {'EXIT', _} when is_pid(P) -> pid_to_list(P);

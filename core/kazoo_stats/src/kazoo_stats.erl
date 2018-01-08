@@ -44,8 +44,8 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
--spec start_link(pos_integer()) -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
+-spec start_link(pos_integer()) -> kz_types:startlink_ret().
 start_link() -> start_link(?SEND_INTERVAL).
 start_link(Send_stats) ->
     gen_server:start_link({'local', ?SERVER}, ?MODULE, [Send_stats], []).
@@ -107,7 +107,7 @@ init([Send_stats]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call('get_db', _From, State) ->
     {'reply', State, State};
 handle_call(Other,_From,State) ->
@@ -212,7 +212,7 @@ store_value(Operation, Realm, Key, Value ,State=#state{sip=SipList}) when is_int
 %%% send_stats collects and sends the statistics to the kazoo_stats_master
 %%% process. All node (VMs) send memory usage
 send_stats(VarList, SipList) when is_list(VarList), is_list(SipList) ->
-    Vals = [{'nodename', node()},
+    Vals = [{'nodename', kz_types:node()},
             {'memory-total', erlang:memory(total)},
             {'memory-processes', erlang:memory(processes)},
             {'memory-system', erlang:memory(system)},
@@ -232,7 +232,7 @@ get_sip_values(SipList) ->
     [{<<"sip">>, SipList}].
 
 get_ecallmgr_values(VarList) ->
-    case atom_to_list(node()) of
+    case atom_to_list(kz_types:node()) of
         "ecallmgr@" ++ _ ->
             get_ecallmgr_values2(VarList);
         _ -> []

@@ -38,13 +38,13 @@
                ,restarted = 0          :: integer()
                ,callback_module        :: atom()
                ,callback_state         :: any()
-               ,down = []              :: atoms()
-               ,candidates = [node()]  :: atoms()
+               ,down = []              :: kz_term:atoms()
+               ,candidates = [kz_types:node()]  :: kz_term:atoms()
                }).
 
 -record(sign, {elected                  :: integer()
               ,restarted               :: integer()
-              ,node = node()           :: atom()
+              ,node = kz_types:node()           :: atom()
               ,name                    :: atom()
               ,sync                    :: any()
               }).
@@ -65,7 +65,7 @@
                     | {state(), atom()}
                     | {atom(), sign()}
                     | sign()
-                    | ne_binary().
+                    | kz_term:ne_binary().
 -type from() :: any().
 
 -include("amqp_leader.hrl").
@@ -81,15 +81,15 @@
 %%%===================================================================
 %%% API functions
 %%%===================================================================
--spec start(atom(), atoms(), list(), atom(), list(), list()) -> startlink_ret().
+-spec start(atom(), kz_term:atoms(), list(), atom(), list(), list()) -> kz_types:startlink_ret().
 start(Name, CandidateNodes, OptArgs, Mod, Arg, Options) ->
     start_it('start', Name, CandidateNodes, OptArgs, Mod, Arg, Options).
 
--spec start_link(atom(), atoms(), list(), atom(), list(), list()) -> startlink_ret().
+-spec start_link(atom(), kz_term:atoms(), list(), atom(), list(), list()) -> kz_types:startlink_ret().
 start_link(Name, CandidateNodes, OptArgs, Mod, Arg, Options) ->
     start_it('start_link', Name, CandidateNodes, OptArgs, Mod, Arg, Options).
 
--spec start_it(atom(), atom(), atoms(), list(), atom(), list(), list()) -> startlink_ret().
+-spec start_it(atom(), atom(), kz_term:atoms(), list(), atom(), list(), list()) -> kz_types:startlink_ret().
 start_it(StartFun, Name, CandidateNodes, OptArgs, Mod, Arg, Options) ->
     gen_server:StartFun({'local', Name}, ?MODULE, [Name, CandidateNodes, OptArgs, Mod, Arg, Options], []).
 
@@ -119,28 +119,28 @@ call(Name, Request, Timeout) ->
 
 -spec reply({pid(), any()}, any()) -> term().
 reply({Pid, _} = From, Reply) when is_pid(Pid)
-                                   andalso erlang:node(Pid) =:= node() ->
+                                   andalso erlang:node(Pid) =:= kz_types:node() ->
     gen_server:reply(From, Reply);
 reply({From, Tag}, Reply) ->
     send(From, {Tag, Reply}).
 
--spec alive(sign()) -> atoms().
-alive(_) -> [node()].
+-spec alive(sign()) -> kz_term:atoms().
+alive(_) -> [kz_types:node()].
 %alive(#sign{candidates = Candidates}) ->
 %    Candidates.
 
--spec down(sign()) -> atoms().
+-spec down(sign()) -> kz_term:atoms().
 down(_) -> [].
 
--spec workers(sign()) -> atoms().
+-spec workers(sign()) -> kz_term:atoms().
 workers(_) -> [].
 
--spec candidates(sign()) -> atoms().
-candidates(_) -> [node()].
+-spec candidates(sign()) -> kz_term:atoms().
+candidates(_) -> [kz_types:node()].
 
 -type msg() :: {'from_leader', any()}.
 
--spec broadcast(msg(), atoms(), sign()) -> sign().
+-spec broadcast(msg(), kz_term:atoms(), sign()) -> sign().
 broadcast(Msg, _Nodes, #sign{name = Name} = Sign) ->
     send({Name, 'broadcast'}, Msg),
     Sign.
@@ -198,7 +198,7 @@ handle_call({'leader_call', Msg}, From, State) when ?is_leader ->
                ],
     noreply(State, Routines);
 handle_call({'leader_call', Msg}, From, #state{name = Name} = State) ->
-    send(leader(State), {'leader_call', {{Name, node()}, From}, Msg}),
+    send(leader(State), {'leader_call', {{Name, kz_types:node()}, From}, Msg}),
     noreply(State, []);
 handle_call(Call, From, State) ->
     Routines = [{fun call_handle_call/2, {From, Call}}
@@ -305,7 +305,7 @@ handle_info({'leader_call', From, Request}, State) when ?is_leader ->
     noreply(State, Routines);
 
 handle_info({{Pid, _} = From, Reply}, State) when is_pid(Pid)
-                                                  andalso erlang:node(Pid) =:= node() ->
+                                                  andalso erlang:node(Pid) =:= kz_types:node() ->
     gen_server:reply(From, Reply),
     noreply(State, []);
 
@@ -349,7 +349,7 @@ handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 -spec terminate(any(), state()) -> 'ok'.
 terminate(_Reason, State) ->
-    send({name(State), 'broadcast'}, {'DOWN', node()}),
+    send({name(State), 'broadcast'}, {'DOWN', kz_types:node()}),
     'ok'.
 
 %%--------------------------------------------------------------------
@@ -554,7 +554,7 @@ noreply(#state{} = State, [{Fun, Data} | Rest]) when is_function(Fun, 2) ->
 increase_elected(#state{elected = Elected} = State, []) ->
     State#state{elected = Elected + 1}.
 
--spec add_candidates(state(), sign() | atoms()) -> state().
+-spec add_candidates(state(), sign() | kz_term:atoms()) -> state().
 add_candidates(#state{} = State, #sign{node = Node}) ->
     add_candidates(State, [Node]);
 add_candidates(#state{candidates = MyCandidates} = State, Candidates) ->
@@ -597,7 +597,7 @@ announce_leader(State, {To, #sign{} = From}) ->
     State.
 
 -spec send(recipient(), any()) -> 'ok'.
-send(Pid, Msg) when is_atom(Pid); node() =:= erlang:node(Pid); node() =:= element(2, Pid) ->
+send(Pid, Msg) when is_atom(Pid); kz_types:node() =:= erlang:node(Pid); kz_types:node() =:= element(2, Pid) ->
     lager:debug("local message ~p: ~p", [Msg, Pid]),
     Pid ! Msg;
 send({Name, Node}, Msg) when is_atom(Name)

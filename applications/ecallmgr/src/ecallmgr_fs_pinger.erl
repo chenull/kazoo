@@ -27,7 +27,7 @@
 -define(SERVER, ?MODULE).
 
 -record(state, {node = 'undefined' :: atom()
-               ,options = [] :: kz_proplist()
+               ,options = [] :: kz_term:proplist()
                ,timeout = 2 * ?MILLISECONDS_IN_SECOND
                }).
 -type state() :: #state{}.
@@ -35,7 +35,7 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
--spec start_link(atom(), kz_proplist()) -> startlink_ret().
+-spec start_link(atom(), kz_term:proplist()) -> kz_types:startlink_ret().
 start_link(Node, Options) ->
     gen_server:start_link(?SERVER, [Node, Options], []).
 
@@ -54,7 +54,7 @@ start_link(Node, Options) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([atom() | kz_proplist()]) -> {'ok', state()}.
+-spec init([atom() | kz_term:proplist()]) -> {'ok', state()}.
 init([Node, Props]) ->
     kz_util:put_callid(Node),
     self() ! 'initialize_pinger',
@@ -76,7 +76,7 @@ init([Node, Props]) ->
 %% @end
 %% #state{nodes=[{FSNode, HandlerPid}]}
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, #state{timeout=Timeout}=State) ->
     {'reply', {'error', 'not_implemented'}, State, Timeout}.
 
@@ -107,7 +107,7 @@ handle_cast(_Msg, #state{timeout=Timeout}=State) ->
 %%--------------------------------------------------------------------
 -spec handle_info(any(), state()) -> handle_info_ret_state(state()).
 handle_info('initialize_pinger', #state{node=Node, options=Props}=State) ->
-    kz_notify:system_alert("node ~s disconnected from ~s", [Node, node()]),
+    kz_notify:system_alert("node ~s disconnected from ~s", [Node, kz_types:node()]),
     _ = case props:get_value('cookie', Props) of
             'undefined' -> 'ok';
             Cookie when is_atom(Cookie) ->
@@ -128,7 +128,7 @@ handle_info('check_node_status', #state{node=Node, timeout=Timeout}=State) ->
         'pong' ->
             %% give the node a moment to init
             timer:sleep(?MILLISECONDS_IN_SECOND),
-            kz_notify:system_alert("node ~s connected to ~s", [Node, node()]),
+            kz_notify:system_alert("node ~s connected to ~s", [Node, kz_types:node()]),
             'ok' = ecallmgr_fs_nodes:nodeup(Node),
             {'stop', 'normal', State};
         _Else ->

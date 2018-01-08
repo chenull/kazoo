@@ -48,9 +48,9 @@
              ]).
 
 -record(state, {table_id :: atom()
-               ,give_away_pid :: api_pid()
+               ,give_away_pid :: kz_term:api_pid()
                ,find_me_fun :: find_me_fun() | undefined
-               ,find_me_pid_ref :: api_pid_ref()
+               ,find_me_pid_ref :: kz_term:api_pid_ref()
                ,gift_data :: any()
                }).
 -type state() :: #state{}.
@@ -62,12 +62,12 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(start_args()) -> startlink_ret().
+-spec start_link(start_args()) -> kz_types:startlink_ret().
 start_link(Opts) ->
     'true' = valid_options(Opts),
     gen_server:start_link(?SERVER, [Opts], []).
 
--spec start_link(atom(), start_args()) -> startlink_ret().
+-spec start_link(atom(), start_args()) -> kz_types:startlink_ret().
 start_link(Name, Opts) ->
     'true' = valid_options(Opts),
     gen_server:start_link({'local', Name}, ?MODULE, [Opts], []).
@@ -140,7 +140,7 @@ opt_gift_data(Opts) -> props:get_value('gift_data', Opts, 'ok').
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     lager:debug("unhandled call: ~p", [_Request]),
     {'reply', {'error', 'not_implemented'}, State}.

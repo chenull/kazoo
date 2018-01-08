@@ -95,7 +95,7 @@ unix_seconds_to_gregorian_seconds(UnixSeconds) ->
 unix_timestamp_to_gregorian_seconds(UnixTimestamp) ->
     ?UNIX_EPOCH_IN_GREGORIAN + (kz_term:to_integer(UnixTimestamp) div ?MILLISECONDS_IN_SECOND).
 
--spec to_gregorian_seconds(kz_datetime(), api_ne_binary()) -> gregorian_seconds().
+-spec to_gregorian_seconds(kz_datetime(), kz_term:api_ne_binary()) -> gregorian_seconds().
 -ifdef(TEST).
 to_gregorian_seconds(Datetime, 'undefined') ->
     to_gregorian_seconds(Datetime, <<"America/Los_Angeles">>);
@@ -111,7 +111,7 @@ to_gregorian_seconds({{_,_,_},{_,_,_}}=Datetime, ?NE_BINARY=FromTimezone) ->
      ).
 -endif.
 
--spec pretty_print_datetime(kz_datetime() | integer()) -> ne_binary().
+-spec pretty_print_datetime(kz_datetime() | integer()) -> kz_term:ne_binary().
 pretty_print_datetime(Timestamp) when is_integer(Timestamp) ->
     pretty_print_datetime(calendar:gregorian_seconds_to_datetime(Timestamp));
 pretty_print_datetime({{Y,Mo,D},{H,Mi,S}}) ->
@@ -119,8 +119,8 @@ pretty_print_datetime({{Y,Mo,D},{H,Mi,S}}) ->
                                   ,[Y, Mo, D, H, Mi, S]
                                   )).
 
--spec rfc1036(calendar:datetime() | gregorian_seconds()) -> ne_binary().
--spec rfc1036(calendar:datetime() | gregorian_seconds(), ne_binary()) -> ne_binary().
+-spec rfc1036(calendar:datetime() | gregorian_seconds()) -> kz_term:ne_binary().
+-spec rfc1036(calendar:datetime() | gregorian_seconds(), kz_term:ne_binary()) -> kz_term:ne_binary().
 rfc1036(DateTime) ->
     rfc1036(DateTime, <<"GMT">>).
 
@@ -138,7 +138,7 @@ rfc1036({Date = {Y, Mo, D}, {H, Mi, S}}, TZ) ->
 rfc1036(Timestamp, TZ) when is_integer(Timestamp) ->
     rfc1036(calendar:gregorian_seconds_to_datetime(Timestamp), TZ).
 
--spec iso8601_time(calendar:time() | calendar:datetime() | gregorian_seconds()) -> ne_binary().
+-spec iso8601_time(calendar:time() | calendar:datetime() | gregorian_seconds()) -> kz_term:ne_binary().
 iso8601_time({Hours, Mins, Secs}) ->
     H = kz_binary:pad_left(kz_term:to_binary(Hours), 2, <<"0">>),
     M = kz_binary:pad_left(kz_term:to_binary(Mins), 2, <<"0">>),
@@ -150,7 +150,7 @@ iso8601_time({{_,_,_}, {_H, _M, _S}=Time}) ->
 iso8601_time(Timestamp) when is_integer(Timestamp) ->
     iso8601_time(calendar:gregorian_seconds_to_datetime(Timestamp)).
 
--spec iso8601(calendar:datetime() | gregorian_seconds()) -> ne_binary().
+-spec iso8601(calendar:datetime() | gregorian_seconds()) -> kz_term:ne_binary().
 iso8601({_Y,_M,_D}=Date) ->
     kz_date:to_iso8601_extended(Date);
 iso8601({{_Y,_M,_D}=Date, {0, 0, 0}}) ->
@@ -184,7 +184,7 @@ month(10) -> <<"Oct">>;
 month(11) -> <<"Nov">>;
 month(12) -> <<"Dec">>.
 
--spec pretty_print_elapsed_s(non_neg_integer()) -> ne_binary().
+-spec pretty_print_elapsed_s(non_neg_integer()) -> kz_term:ne_binary().
 pretty_print_elapsed_s(0) -> <<"0s">>;
 pretty_print_elapsed_s(Seconds) ->
     iolist_to_binary(unitfy_seconds(Seconds)).
@@ -203,8 +203,8 @@ unitfy_seconds(Seconds) ->
     D = Seconds div ?SECONDS_IN_DAY,
     [kz_term:to_binary(D), "d", unitfy_seconds(Seconds - (D * ?SECONDS_IN_DAY))].
 
--spec decr_timeout(kz_timeout(), kz_now() | gregorian_seconds()) -> kz_timeout().
--spec decr_timeout(kz_timeout(), kz_now() | gregorian_seconds(), kz_now() | gregorian_seconds()) -> kz_timeout().
+-spec decr_timeout(kz_types:timeout(), kz_now() | gregorian_seconds()) -> kz_types:timeout().
+-spec decr_timeout(kz_types:timeout(), kz_now() | gregorian_seconds(), kz_now() | gregorian_seconds()) -> kz_types:timeout().
 decr_timeout('infinity', _) -> 'infinity';
 decr_timeout(Timeout, {_Mega, _S, _Micro}=Start) when is_integer(Timeout) ->
     decr_timeout(Timeout, Start, now());

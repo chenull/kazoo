@@ -13,7 +13,7 @@
 
 %% API
 
--spec graphite_metrics(ne_binary(), ne_binary(), ne_binary()) -> no_return.
+-spec graphite_metrics(kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) -> no_return.
 graphite_metrics(Account, Cluster, Zone) ->
     Scheme = scheme(Account, Cluster, Zone),
     F = fun ({Metric, Measured}) -> graphite(Scheme, Metric, Measured) end,
@@ -59,7 +59,7 @@ collect() ->
     plists:map(fun (Metric) -> {Metric, measure(Metric)} end, Metrics, Malt).
 
 scheme(Account, Cluster, Zone) ->
-    [Service, Hostname0] = binary:split(kz_term:to_binary(node()), <<$@>>),
+    [Service, Hostname0] = binary:split(kz_term:to_binary(kz_types:node()), <<$@>>),
     Hostname = binary:replace(Hostname0, <<$.>>, <<"::">>, [global]),
     kz_util:iolist_join($., [Account, Cluster, Zone, Hostname, Service]).
 

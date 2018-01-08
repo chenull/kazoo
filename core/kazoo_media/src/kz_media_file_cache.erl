@@ -32,9 +32,9 @@
 -define(TIMEOUT_LIFETIME, 600 * ?MILLISECONDS_IN_SECOND).
 -define(TIMEOUT_MESSAGE, {'$kz_media_file_cache', 'file_timeout'}).
 
--record(state, {db :: ne_binary()
-               ,doc :: ne_binary()
-               ,attach :: ne_binary()
+-record(state, {db :: kz_term:ne_binary()
+               ,doc :: kz_term:ne_binary()
+               ,attach :: kz_term:ne_binary()
                ,meta :: kz_json:object()
                ,contents = <<>> :: binary()
                ,stream_ref :: reference()
@@ -51,7 +51,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(ne_binary(), ne_binary(), ne_binary()) -> startlink_ret().
+-spec start_link(kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:startlink_ret().
 start_link(Db, Id, Attachment) ->
     gen_server:start_link(?SERVER, [Db, Id, Attachment, get('callid')], []).
 
@@ -85,7 +85,7 @@ init([Db, Id, Attachment, CallId]) ->
     end,
     maybe_start_file_cache(Db, Id, Attachment).
 
--spec maybe_start_file_cache(ne_binary(), ne_binary(), ne_binary()) ->
+-spec maybe_start_file_cache(kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) ->
                                     {'stop', _} |
                                     {'ok', state()}.
 maybe_start_file_cache(Db, Id, Attachment) ->
@@ -126,7 +126,7 @@ maybe_start_file_cache(Db, Id, Attachment) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call('single', _From, #state{meta=Meta
                                    ,contents=Contents
                                    ,status='ready'

@@ -50,7 +50,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     gen_listener:start_link(?SERVER
                            ,[{'bindings', ?BINDINGS}
@@ -59,8 +59,8 @@ start_link() ->
                            ,[]
                            ).
 
--spec handle_config(kz_json:object(), kz_proplist()) -> 'ok'.
--spec handle_config(kz_json:object(), pid(), ne_binary()) -> 'ok'.
+-spec handle_config(kz_json:object(), kz_term:proplist()) -> 'ok'.
+-spec handle_config(kz_json:object(), pid(), kz_term:ne_binary()) -> 'ok'.
 handle_config(JObj, Props) ->
     'true' = kapi_conf:doc_update_v(JObj),
     handle_config(JObj
@@ -163,7 +163,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 
@@ -234,7 +234,7 @@ handle_info(_Info, State) ->
 %% @spec handle_event(JObj, State) -> {reply, Options}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_event(kz_json:object(), kz_proplist()) -> gen_listener:handle_event_return().
+-spec handle_event(kz_json:object(), kz_term:proplist()) -> gen_listener:handle_event_return().
 handle_event(_JObj, _State) ->
     {'reply', []}.
 

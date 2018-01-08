@@ -42,9 +42,9 @@
 %%% Application callbacks
 %%%===================================================================
 
--spec start(application:start_type(), any()) -> startapp_ret().
+-spec start(application:start_type(), any()) -> kz_types:startapp_ret().
 start(_StartType, _StartArgs) ->
-    amqp_cron_sup:start_link([node()|nodes()]).
+    amqp_cron_sup:start_link([kz_types:node()|nodes()]).
 
 -spec stop(any()) -> 'ok'.
 stop(_State) ->

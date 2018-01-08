@@ -110,7 +110,7 @@
 -type schedule() :: oneshot() | sleeper() | cron().
 %% A cron schedule.
 
--type oneshot() :: {'oneshot', Millis::pos_integer() | datetime()}.
+-type oneshot() :: {'oneshot', Millis::pos_integer() | kz_time:datetime()}.
 %% Schedule a task once after a delay or on a particular date.
 
 -type sleeper() :: {'sleeper', Millis::pos_integer()}.
@@ -148,7 +148,7 @@
 -type funcargs() :: {Function :: fun(), Args :: [term()]}.
 %% Anonymous function execution definition.
 
--type datetime() :: calendar:datetime().
+-type kz_time:datetime() :: calendar:datetime().
 %% Date and time.
 
 %%%===================================================================
@@ -163,7 +163,7 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec start_link(Schedule, Exec) -> startlink_ret() when
+-spec start_link(Schedule, Exec) -> kz_types:startlink_ret() when
       Schedule :: schedule(),
       Exec :: execargs().
 
@@ -181,7 +181,7 @@ start_link(Schedule, Exec) ->
 %%--------------------------------------------------------------------
 -spec status(pid()) -> {Status, ScheduleTime, TaskPid} when
       Status :: status(),
-      ScheduleTime :: datetime() | pos_integer() | {'error', Reason},
+      ScheduleTime :: kz_time:datetime() | pos_integer() | {'error', Reason},
       Reason :: any(),
       TaskPid :: pid().
 
@@ -232,7 +232,7 @@ init([{Schedule, Exec}]) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call('status', _From, State) ->
     Status = State#state.status,
     Next = State#state.next,
@@ -355,21 +355,21 @@ apply_task(Exec) ->
             error_logger:error_report(Message)
     end.
 
--spec time_to_wait_millis(datetime(), datetime()) -> integer().
+-spec time_to_wait_millis(kz_time:datetime(), kz_time:datetime()) -> integer().
 time_to_wait_millis(CurrentDateTime, NextDateTime) ->
     CurrentSeconds = calendar:datetime_to_gregorian_seconds(CurrentDateTime),
     NextSeconds = calendar:datetime_to_gregorian_seconds(NextDateTime),
     SecondsToSleep = NextSeconds - CurrentSeconds,
     SecondsToSleep * 1000.
 
--spec next_valid_datetime(cron(), datetime()) -> datetime().
+-spec next_valid_datetime(cron(), kz_time:datetime()) -> kz_time:datetime().
 next_valid_datetime({'cron', _Schedule} = Cron, DateTime) ->
     DateTime1 = advance_seconds(DateTime, ?MINUTE_IN_SECONDS),
     {{Y, Mo, D}, {H, M, _}} = DateTime1,
     DateTime2 = {{Y, Mo, D}, {H, M, 0}},
     next_valid_datetime('not_done', Cron, DateTime2).
 
--spec next_valid_datetime('done' | 'not_done', cron(), datetime()) -> datetime().
+-spec next_valid_datetime('done' | 'not_done', cron(), kz_time:datetime()) -> kz_time:datetime().
 next_valid_datetime('done', _, DateTime) ->
     DateTime;
 next_valid_datetime('not_done', {'cron', Schedule} = Cron, DateTime) ->
@@ -435,7 +435,7 @@ value_valid(Spec, Min, Max, Value) when Value >= Min, Value =< Max->
                       end, ValidValues)
     end.
 
--spec advance_seconds(datetime(), integer()) -> datetime().
+-spec advance_seconds(kz_time:datetime(), integer()) -> kz_time:datetime().
 advance_seconds(DateTime, Seconds) ->
     Seconds1 = calendar:datetime_to_gregorian_seconds(DateTime) + Seconds,
     calendar:gregorian_seconds_to_datetime(Seconds1).

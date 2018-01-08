@@ -36,7 +36,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     case gen_server:start_link(?SERVER, ?MODULE, [], []) of
         {'error', {'already_started', Pid}}
@@ -61,7 +61,7 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([]) -> {'ok', state(), kz_timeout()}.
+-spec init([]) -> {'ok', state(), kz_types:timeout()}.
 init([]) ->
     {'ok', #state{}, ?POLLING_INTERVAL}.
 
@@ -79,7 +79,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State, ?POLLING_INTERVAL}.
 
@@ -163,13 +163,13 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--spec distribute_accounts(ne_binaries()) -> ne_binaries().
+-spec distribute_accounts(kz_term:ne_binaries()) -> kz_term:ne_binaries().
 distribute_accounts([]) -> [];
 distribute_accounts([AccountId|AccountIds]) ->
     maybe_start_account(fax_jobs:is_running(AccountId), AccountId),
     distribute_accounts(AccountIds).
 
--spec maybe_start_account(boolean(), ne_binary()) -> 'ok'.
+-spec maybe_start_account(boolean(), kz_term:ne_binary()) -> 'ok'.
 maybe_start_account('true', _AccountId) -> 'ok';
 maybe_start_account('false', AccountId) ->
     lager:debug("sending start fax account jobs for ~s", [AccountId]),

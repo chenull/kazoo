@@ -25,7 +25,7 @@
 -define(SERVER, ?MODULE).
 
 -record(state, {cleanup_ref = cleanup_cycle_timer() :: reference()
-               ,account_ids = [] :: ne_binaries()
+               ,account_ids = [] :: kz_term:ne_binaries()
                }).
 -type state() :: #state{}.
 
@@ -44,7 +44,7 @@
 %% Starts the server
 %% @end
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     gen_server:start_link(?SERVER, [], []).
 
@@ -52,7 +52,7 @@ start_link() ->
 stop() ->
     gen_server:cast(?SERVER, stop).
 
--spec check(ne_binary()) -> 'ok'.
+-spec check(kz_term:ne_binary()) -> 'ok'.
 check(Account)
   when is_binary(Account) ->
     AccountId = kz_util:format_account_id(Account),
@@ -86,7 +86,7 @@ init([]) ->
 %% Handling call messages
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 
@@ -186,7 +186,7 @@ cleanup_timer() ->
 cleanup_cycle_timer() ->
     erlang:start_timer(?TIME_BETWEEN_WHOLE_CRAWLS, self(), 'ok').
 
--spec crawl_account(ne_binary()) -> ok.
+-spec crawl_account(kz_term:ne_binary()) -> ok.
 crawl_account(AccountId) ->
     lager:debug("crawling account ~s", [AccountId]),
     %% do not open the account def in the account db or we will
@@ -194,7 +194,7 @@ crawl_account(AccountId) ->
     OpenResult = kz_datamgr:open_doc(?KZ_ACCOUNTS_DB, AccountId),
     check_then_process_account(AccountId, OpenResult).
 
--spec check_then_process_account(ne_binary(), {'ok', kz_account:doc()} | {'error',any()}) -> 'ok'.
+-spec check_then_process_account(kz_term:ne_binary(), {'ok', kz_account:doc()} | {'error',any()}) -> 'ok'.
 check_then_process_account(AccountId, {'ok', AccountJObj}) ->
     case kz_doc:is_soft_deleted(AccountJObj)
         orelse not kz_account:is_enabled(AccountJObj) of
@@ -206,7 +206,7 @@ check_then_process_account(AccountId, {'ok', AccountJObj}) ->
 check_then_process_account(AccountId, {'error', _R}) ->
     lager:warning("unable to open account definition for ~s: ~p", [AccountId, _R]).
 
--spec process_account(ne_binary(), kz_account:doc()) -> 'ok'.
+-spec process_account(kz_term:ne_binary(), kz_account:doc()) -> 'ok'.
 process_account(AccountId, AccountJObj) ->
     lager:debug("account crawler processing account ~s", [AccountId]),
     _ = tasks_bindings:pmap(<<"tasks.account_crawler">>, [AccountId, AccountJObj]),

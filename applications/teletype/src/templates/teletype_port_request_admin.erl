@@ -106,7 +106,7 @@ handle_port_request(DataJObj) ->
         {'error', Reason} -> teletype_util:notification_failed(?TEMPLATE_ID, Reason)
     end.
 
--spec account_tree(ne_binary()) -> kz_proplist().
+-spec account_tree(kz_term:ne_binary()) -> kz_term:proplist().
 account_tree(AccountId) ->
     {'ok', AccountJObj} = kz_account:fetch(AccountId),
     [{AncestorId, kz_account:fetch_name(AncestorId)}
@@ -121,7 +121,7 @@ maybe_set_emails(DataJObj) ->
 
 -spec maybe_set_from(kz_json:object()) -> kz_json:object().
 maybe_set_from(DataJObj) ->
-    SystemFrom = kz_term:to_binary(node()),
+    SystemFrom = kz_term:to_binary(kz_types:node()),
     PortRequest = kz_json:get_value(<<"port_request">>, DataJObj),
     DefaultFrom = kz_json:get_value(<<"from">>, DataJObj, SystemFrom),
 
@@ -144,7 +144,7 @@ maybe_set_to(DataJObj) ->
             DataJObj
     end.
 
--spec find_port_authority(ne_binary(), ne_binary()) -> api_binary() | ne_binaries().
+-spec find_port_authority(kz_term:ne_binary(), kz_term:ne_binary()) -> kz_term:api_binary() | kz_term:ne_binaries().
 find_port_authority(MasterAccountId, MasterAccountId) ->
     case kz_whitelabel:fetch(MasterAccountId) of
         {'error', _R} ->

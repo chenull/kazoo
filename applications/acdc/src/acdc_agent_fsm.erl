@@ -88,32 +88,32 @@
 
 -define(RESOURCE_TYPE_AUDIO, <<"audio">>).
 
--record(state, {account_id :: ne_binary()
-               ,account_db :: ne_binary()
-               ,agent_id :: ne_binary()
-               ,agent_listener :: server_ref()
-               ,agent_listener_id :: api_ne_binary()
-               ,agent_name :: api_binary()
+-record(state, {account_id :: kz_term:ne_binary()
+               ,account_db :: kz_term:ne_binary()
+               ,agent_id :: kz_term:ne_binary()
+               ,agent_listener :: kz_types:server_ref()
+               ,agent_listener_id :: kz_term:api_ne_binary()
+               ,agent_name :: kz_term:api_binary()
 
                ,wrapup_timeout = 0 :: integer() % optionally set on win
-               ,wrapup_ref :: api_reference()
+               ,wrapup_ref :: kz_term:api_reference()
 
-               ,sync_ref :: api_reference()
-               ,pause_ref :: api_reference()
+               ,sync_ref :: kz_term:api_reference()
+               ,pause_ref :: kz_term:api_reference()
 
                ,member_call :: kapps_call:call() | 'undefined'
-               ,member_call_id :: api_binary()
-               ,member_call_queue_id :: api_binary()
-               ,member_call_start :: kz_now() | 'undefined'
-               ,caller_exit_key = <<"#">> :: ne_binary()
-               ,queue_notifications :: api_object()
+               ,member_call_id :: kz_term:api_binary()
+               ,member_call_queue_id :: kz_term:api_binary()
+               ,member_call_start :: kz_time:now() | 'undefined'
+               ,caller_exit_key = <<"#">> :: kz_term:ne_binary()
+               ,queue_notifications :: kz_term:api_object()
 
-               ,agent_call_id :: api_binary()
-               ,next_status :: api_binary()
-               ,statem_call_id :: api_binary() % used when no call-ids are available
+               ,agent_call_id :: kz_term:api_binary()
+               ,next_status :: kz_term:api_binary()
+               ,statem_call_id :: kz_term:api_binary() % used when no call-ids are available
                ,endpoints = [] :: kz_json:objects()
-               ,outbound_call_ids = [] :: ne_binaries()
-               ,max_connect_failures :: kz_timeout()
+               ,outbound_call_ids = [] :: kz_term:ne_binaries()
+               ,max_connect_failures :: kz_types:timeout()
                ,connect_failures = 0 :: non_neg_integer()
                ,agent_state_updates = [] :: list()
                }).
@@ -155,7 +155,7 @@ agent_timeout(ServerRef, JObj) ->
 %%   for bridge and hangup events).
 %% @end
 %%--------------------------------------------------------------------
--spec call_event(pid(), ne_binary(), ne_binary(), kz_json:object()) -> 'ok'.
+-spec call_event(pid(), kz_term:ne_binary(), kz_term:ne_binary(), kz_json:object()) -> 'ok'.
 call_event(ServerRef, <<"call_event">>, <<"CHANNEL_BRIDGE">>, JObj) ->
     gen_statem:cast(ServerRef, {'channel_bridged', call_id(JObj)});
 call_event(ServerRef, <<"call_event">>, <<"CHANNEL_UNBRIDGE">>, JObj) ->
@@ -192,7 +192,7 @@ call_event(_, _C, _E, _) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec maybe_send_execute_complete(pid(), ne_binary(), kz_json:object()) -> 'ok'.
+-spec maybe_send_execute_complete(pid(), kz_term:ne_binary(), kz_json:object()) -> 'ok'.
 maybe_send_execute_complete(ServerRef, <<"bridge">>, JObj) ->
     lager:info("Send EXECUTE_COMPLETE,bridge to ~p with ci: ~s, olci: ~s",
                [ServerRef
@@ -208,19 +208,19 @@ maybe_send_execute_complete(_, _, _) -> 'ok'.
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec originate_ready(server_ref(), kz_json:object()) -> 'ok'.
+-spec originate_ready(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 originate_ready(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'originate_ready', JObj}).
 
--spec originate_resp(server_ref(), kz_json:object()) -> 'ok'.
+-spec originate_resp(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 originate_resp(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'originate_resp', kz_json:get_value(<<"Call-ID">>, JObj)}).
 
--spec originate_started(server_ref(), kz_json:object()) -> 'ok'.
+-spec originate_started(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 originate_started(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'originate_started', kz_json:get_value(<<"Call-ID">>, JObj)}).
 
--spec originate_uuid(server_ref(), kz_json:object()) -> 'ok'.
+-spec originate_uuid(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 originate_uuid(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'originate_uuid'
                                ,kz_json:get_value(<<"Outbound-Call-ID">>, JObj)
@@ -231,7 +231,7 @@ originate_uuid(ServerRef, JObj) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec originate_failed(server_ref(), kz_json:object()) -> 'ok'.
+-spec originate_failed(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 originate_failed(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'originate_failed', JObj}).
 
@@ -239,7 +239,7 @@ originate_failed(ServerRef, JObj) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec sync_req(server_ref(), kz_json:object()) -> 'ok'.
+-spec sync_req(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 sync_req(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'sync_req', JObj}).
 
@@ -247,7 +247,7 @@ sync_req(ServerRef, JObj) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec sync_resp(server_ref(), kz_json:object()) -> 'ok'.
+-spec sync_resp(kz_types:server_ref(), kz_json:object()) -> 'ok'.
 sync_resp(ServerRef, JObj) ->
     gen_statem:cast(ServerRef, {'sync_resp', JObj}).
 
@@ -255,7 +255,7 @@ sync_resp(ServerRef, JObj) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec pause(server_ref(), kz_timeout()) -> 'ok'.
+-spec pause(kz_types:server_ref(), kz_types:timeout()) -> 'ok'.
 pause(ServerRef, Timeout) ->
     gen_statem:cast(ServerRef, {'pause', Timeout}).
 
@@ -263,7 +263,7 @@ pause(ServerRef, Timeout) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec resume(server_ref()) -> 'ok'.
+-spec resume(kz_types:server_ref()) -> 'ok'.
 resume(ServerRef) ->
     gen_statem:cast(ServerRef, {'resume'}).
 
@@ -273,7 +273,7 @@ resume(ServerRef) ->
 %% availability update depending on agent state
 %% @end
 %%--------------------------------------------------------------------
--spec add_acdc_queue(server_ref(), ne_binary()) -> 'ok'.
+-spec add_acdc_queue(kz_types:server_ref(), kz_term:ne_binary()) -> 'ok'.
 add_acdc_queue(ServerRef, QueueId) ->
     gen_statem:cast(ServerRef, {'add_acdc_queue', QueueId}).
 
@@ -283,7 +283,7 @@ add_acdc_queue(ServerRef, QueueId) ->
 %% unavailability update
 %% @end
 %%--------------------------------------------------------------------
--spec rm_acdc_queue(server_ref(), ne_binary()) -> 'ok'.
+-spec rm_acdc_queue(kz_types:server_ref(), kz_term:ne_binary()) -> 'ok'.
 rm_acdc_queue(ServerRef, QueueId) ->
     gen_statem:cast(ServerRef, {'rm_acdc_queue', QueueId}).
 
@@ -291,7 +291,7 @@ rm_acdc_queue(ServerRef, QueueId) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec update_presence(server_ref(), ne_binary(), ne_binary()) -> 'ok'.
+-spec update_presence(kz_types:server_ref(), kz_term:ne_binary(), kz_term:ne_binary()) -> 'ok'.
 update_presence(ServerRef, PresenceId, PresenceState) ->
     gen_statem:cast(ServerRef, {'update_presence', PresenceId, PresenceState}).
 
@@ -299,7 +299,7 @@ update_presence(ServerRef, PresenceId, PresenceState) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec agent_logout(server_ref()) -> 'ok'.
+-spec agent_logout(kz_types:server_ref()) -> 'ok'.
 agent_logout(ServerRef) ->
     gen_statem:cast(ServerRef, {'agent_logout'}).
 
@@ -310,10 +310,10 @@ agent_logout(ServerRef) ->
 -spec refresh(pid(), kz_json:object()) -> 'ok'.
 refresh(ServerRef, AgentJObj) -> gen_statem:cast(ServerRef, {'refresh', AgentJObj}).
 
--spec current_call(pid()) -> api_object().
+-spec current_call(pid()) -> kz_term:api_object().
 current_call(ServerRef) -> gen_statem:call(ServerRef, 'current_call').
 
--spec status(pid()) -> kz_proplist().
+-spec status(pid()) -> kz_term:proplist().
 status(ServerRef) -> gen_statem:call(ServerRef, 'status').
 
 %%--------------------------------------------------------------------
@@ -323,9 +323,9 @@ status(ServerRef) -> gen_statem:call(ServerRef, 'status').
 %% function does not return until Module:init/1 has returned.
 %% @end
 %%--------------------------------------------------------------------
--spec start_link(pid(), kz_json:object()) -> startlink_ret().
--spec start_link(pid(), kapps_call:call(), ne_binary()) -> startlink_ret().
--spec start_link(ne_binary(), ne_binary(), pid(), kz_proplist()) -> startlink_ret().
+-spec start_link(pid(), kz_json:object()) -> kz_types:startlink_ret().
+-spec start_link(pid(), kapps_call:call(), kz_term:ne_binary()) -> kz_types:startlink_ret().
+-spec start_link(kz_term:ne_binary(), kz_term:ne_binary(), pid(), kz_term:proplist()) -> kz_types:startlink_ret().
 
 start_link(Supervisor, AgentJObj) when is_pid(Supervisor) ->
     pvt_start_link(kz_doc:account_id(AgentJObj)
@@ -344,7 +344,7 @@ start_link(Supervisor, ThiefCall, _QueueId) ->
 start_link(AccountId, AgentId, Supervisor, Props) ->
     pvt_start_link(AccountId, AgentId, Supervisor, Props, 'false').
 
--spec start_link(pid(), any(), ne_binary(), ne_binary(), any()) -> startlink_ret().
+-spec start_link(pid(), any(), kz_term:ne_binary(), kz_term:ne_binary(), any()) -> kz_types:startlink_ret().
 start_link(Supervisor, _AgentJObj, AccountId, AgentId, _Queues) ->
     pvt_start_link(AccountId, AgentId, Supervisor, [], 'false').
 
@@ -405,7 +405,7 @@ init([AccountId, AgentId, Supervisor, Props, IsThief]) ->
            }
     }.
 
--spec max_failures(ne_binary() | kz_json:object()) -> non_neg_integer().
+-spec max_failures(kz_term:ne_binary() | kz_json:object()) -> non_neg_integer().
 max_failures(Account) when is_binary(Account) ->
     case kz_account:fetch(Account) of
         {'ok', AccountJObj} -> max_failures(AccountJObj);
@@ -414,7 +414,7 @@ max_failures(Account) when is_binary(Account) ->
 max_failures(JObj) ->
     kz_json:get_integer_value(?MAX_CONNECT_FAILURES, JObj, ?MAX_FAILURES).
 
--spec wait_for_listener(pid(), pid(), kz_proplist(), boolean()) -> 'ok'.
+-spec wait_for_listener(pid(), pid(), kz_term:proplist(), boolean()) -> 'ok'.
 wait_for_listener(Supervisor, ServerRef, Props, IsThief) ->
     case acdc_agent_sup:listener(Supervisor) of
         'undefined' ->
@@ -1512,20 +1512,20 @@ start_sync_timer(P) ->
 start_resync_timer() ->
     erlang:start_timer(?RESYNC_RESPONSE_TIMEOUT, self(), ?RESYNC_RESPONSE_MESSAGE).
 
--spec start_pause_timer(pos_integer()) -> api_reference().
+-spec start_pause_timer(pos_integer()) -> kz_term:api_reference().
 start_pause_timer('undefined') -> start_pause_timer(1);
 start_pause_timer(0) -> 'undefined';
 start_pause_timer(Timeout) ->
     erlang:start_timer(Timeout * 1000, self(), ?PAUSE_MESSAGE).
 
--spec call_id(kz_json:object()) -> api_binary().
+-spec call_id(kz_json:object()) -> kz_term:api_binary().
 call_id(JObj) ->
     case kz_json:get_value(<<"Call-ID">>, JObj) of
         'undefined' -> kz_json:get_value([<<"Call">>, <<"Call-ID">>], JObj);
         CallId -> CallId
     end.
 
--spec hangup_cause(kz_json:object()) -> ne_binary().
+-spec hangup_cause(kz_json:object()) -> kz_term:ne_binary().
 hangup_cause(JObj) ->
     case kz_json:get_value(<<"Hangup-Cause">>, JObj) of
         'undefined' -> <<"unknown">>;
@@ -1533,7 +1533,7 @@ hangup_cause(JObj) ->
     end.
 
 %% returns time left in seconds
--spec time_left(reference() | 'false' | api_integer()) -> api_integer().
+-spec time_left(reference() | 'false' | kz_term:api_integer()) -> kz_term:api_integer().
 time_left(Ref) when is_reference(Ref) ->
     time_left(erlang:read_timer(Ref));
 time_left('false') -> 'undefined';
@@ -1579,8 +1579,8 @@ clear_call(#state{statem_call_id=StateMCallId
                ,caller_exit_key = <<"#">>
                }.
 
--spec current_call(kapps_call:call() | 'undefined', atom(), ne_binary(), 'undefined' | kz_now()) ->
-                          api_object().
+-spec current_call(kapps_call:call() | 'undefined', atom(), kz_term:ne_binary(), 'undefined' | kz_time:now()) ->
+                          kz_term:api_object().
 current_call('undefined', _, _, _) -> 'undefined';
 current_call(Call, AgentState, QueueId, Start) ->
     kz_json:from_list([{<<"call_id">>, kapps_call:call_id(Call)}
@@ -1593,7 +1593,7 @@ current_call(Call, AgentState, QueueId, Start) ->
                       ,{<<"queue_id">>, QueueId}
                       ]).
 
--spec elapsed('undefined' | kz_now()) -> api_integer().
+-spec elapsed('undefined' | kz_time:now()) -> kz_term:api_integer().
 elapsed('undefined') -> 'undefined';
 elapsed(Start) -> kz_time:elapsed_s(Start).
 
@@ -1625,8 +1625,8 @@ hangup_call(#state{agent_listener=AgentListener
     maybe_notify(Ns, ?NOTIFY_HANGUP, State),
     wrapup_timer(State).
 
--spec maybe_stop_timer(api_reference()) -> 'ok'.
--spec maybe_stop_timer(api_reference(), boolean()) -> 'ok'.
+-spec maybe_stop_timer(kz_term:api_reference()) -> 'ok'.
+-spec maybe_stop_timer(kz_term:api_reference(), boolean()) -> 'ok'.
 maybe_stop_timer('undefined') -> 'ok';
 maybe_stop_timer(ConnRef) when is_reference(ConnRef) ->
     _ = erlang:cancel_timer(ConnRef),
@@ -1635,7 +1635,7 @@ maybe_stop_timer(ConnRef) when is_reference(ConnRef) ->
 maybe_stop_timer(TimerRef, 'true') -> maybe_stop_timer(TimerRef);
 maybe_stop_timer(_, 'false') -> 'ok'.
 
--spec start_outbound_call_handling(ne_binary() | kapps_call:call(), state()) -> state().
+-spec start_outbound_call_handling(kz_term:ne_binary() | kapps_call:call(), state()) -> state().
 start_outbound_call_handling(CallId, #state{agent_listener=AgentListener
                                            ,account_id=AccountId
                                            ,agent_id=AgentId
@@ -1670,7 +1670,7 @@ outbound_hungup(State) ->
     lager:debug("agent still has some outbound calls active"),
     {'next_state', 'outbound', State}.
 
--spec missed_reason(ne_binary()) -> ne_binary().
+-spec missed_reason(kz_term:ne_binary()) -> kz_term:ne_binary().
 missed_reason(<<"-ERR ", Reason/binary>>) ->
     missed_reason(binary:replace(Reason, <<"\n">>, <<>>, ['global']));
 missed_reason(<<"ALLOTTED_TIMEOUT">>) -> <<"timeout">>;
@@ -1679,16 +1679,16 @@ missed_reason(<<"CALL_REJECTED">>) -> <<"rejected">>;
 missed_reason(<<"USER_BUSY">>) -> <<"rejected">>;
 missed_reason(Reason) -> Reason.
 
--spec find_username(kz_json:object()) -> api_binary().
+-spec find_username(kz_json:object()) -> kz_term:api_binary().
 find_username(EP) ->
     find_sip_username(EP, kz_device:sip_username(EP)).
 
--spec find_sip_username(kz_json:object(), api_binary()) -> api_binary().
+-spec find_sip_username(kz_json:object(), kz_term:api_binary()) -> kz_term:api_binary().
 find_sip_username(EP, 'undefined') -> kz_json:get_value(<<"To-User">>, EP);
 find_sip_username(_EP, Username) -> Username.
 
--spec find_endpoint_id(kz_json:object()) -> api_binary().
--spec find_endpoint_id(kz_json:object(), api_binary()) -> api_binary().
+-spec find_endpoint_id(kz_json:object()) -> kz_term:api_binary().
+-spec find_endpoint_id(kz_json:object(), kz_term:api_binary()) -> kz_term:api_binary().
 
 find_endpoint_id(EP) ->
     find_endpoint_id(EP, kz_doc:id(EP)).
@@ -1696,7 +1696,7 @@ find_endpoint_id(EP) ->
 find_endpoint_id(EP, 'undefined') -> kz_json:get_value(<<"Endpoint-ID">>, EP);
 find_endpoint_id(_EP, EPId) -> EPId.
 
--spec monitor_endpoint(kz_json:object(), ne_binary(), server_ref()) -> any().
+-spec monitor_endpoint(kz_json:object(), kz_term:ne_binary(), kz_types:server_ref()) -> any().
 monitor_endpoint(EP, AccountId, AgentListener) ->
     %% Bind for outbound call requests
     acdc_agent_listener:add_endpoint_bindings(AgentListener
@@ -1707,7 +1707,7 @@ monitor_endpoint(EP, AccountId, AgentListener) ->
     catch gproc:reg(?ENDPOINT_UPDATE_REG(AccountId, find_endpoint_id(EP))),
     catch gproc:reg(?NEW_CHANNEL_REG(AccountId, find_username(EP))).
 
--spec unmonitor_endpoint(kz_json:object(), ne_binary(), server_ref()) -> any().
+-spec unmonitor_endpoint(kz_json:object(), kz_term:ne_binary(), kz_types:server_ref()) -> any().
 unmonitor_endpoint(EP, AccountId, AgentListener) ->
     %% Bind for outbound call requests
     acdc_agent_listener:remove_endpoint_bindings(AgentListener
@@ -1718,7 +1718,7 @@ unmonitor_endpoint(EP, AccountId, AgentListener) ->
     catch gproc:unreg(?ENDPOINT_UPDATE_REG(AccountId, kz_doc:id(EP))),
     catch gproc:unreg(?NEW_CHANNEL_REG(AccountId, find_username(EP))).
 
--spec maybe_add_endpoint(ne_binary(), kz_json:object(), kz_json:objects(), ne_binary(), server_ref()) -> any().
+-spec maybe_add_endpoint(kz_term:ne_binary(), kz_json:object(), kz_json:objects(), kz_term:ne_binary(), kz_types:server_ref()) -> any().
 maybe_add_endpoint(EPId, EP, EPs, AccountId, AgentListener) ->
     case lists:partition(fun(E) -> kz_doc:id(E) =:= EPId end, EPs) of
         {[], _} ->
@@ -1727,7 +1727,7 @@ maybe_add_endpoint(EPId, EP, EPs, AccountId, AgentListener) ->
         {_, _} -> EPs
     end.
 
--spec maybe_remove_endpoint(ne_binary(), kz_json:objects(), ne_binary(), server_ref()) -> kz_json:objects().
+-spec maybe_remove_endpoint(kz_term:ne_binary(), kz_json:objects(), kz_term:ne_binary(), kz_types:server_ref()) -> kz_json:objects().
 maybe_remove_endpoint(EPId, EPs, AccountId, AgentListener) ->
     case lists:partition(fun(EP) -> kz_doc:id(EP) =:= EPId end, EPs) of
         {[], _} -> EPs; %% unknown endpoint
@@ -1737,7 +1737,7 @@ maybe_remove_endpoint(EPId, EPs, AccountId, AgentListener) ->
             EPs1
     end.
 
--spec get_endpoints(kz_json:objects(), server_ref(), kapps_call:call(), api_binary(), api_binary()) ->
+-spec get_endpoints(kz_json:objects(), kz_types:server_ref(), kapps_call:call(), kz_term:api_binary(), kz_term:api_binary()) ->
                            {'ok', kz_json:objects()} |
                            {'error', any()}.
 get_endpoints(OrigEPs, AgentListener, Call, AgentId, QueueId) ->
@@ -1812,11 +1812,11 @@ get_method(Ns) ->
         M -> standardize_method(kz_term:to_lower_binary(M))
     end.
 
--spec standardize_method(ne_binary()) -> 'get' | 'post'.
+-spec standardize_method(kz_term:ne_binary()) -> 'get' | 'post'.
 standardize_method(<<"post">>) -> 'post';
 standardize_method(_) -> 'get'.
 
--spec notify(ne_binary(), 'get' | 'post', ne_binary(), state()) -> 'ok'.
+-spec notify(kz_term:ne_binary(), 'get' | 'post', kz_term:ne_binary(), state()) -> 'ok'.
 notify(Url, Method, Key, #state{account_id=AccountId
                                ,agent_id=AgentId
                                ,member_call=MemberCall
@@ -1837,7 +1837,7 @@ notify(Url, Method, Key, #state{account_id=AccountId
              ]),
     notify(Url, Method, Data).
 
--spec notify(ne_binary(), 'get' | 'post', kz_json:object()) -> 'ok'.
+-spec notify(kz_term:ne_binary(), 'get' | 'post', kz_json:object()) -> 'ok'.
 notify(Url, 'post', Data) ->
     notify(Url, [], 'post', kz_json:encode(Data)
           ,[{'content_type', "application/json"}]
@@ -1847,7 +1847,7 @@ notify(Url, 'get', Data) ->
           ,[], 'get', <<>>, []
           ).
 
--spec notify(iolist(), [], 'get' | 'post', binary(), kz_proplist()) -> 'ok'.
+-spec notify(iolist(), [], 'get' | 'post', binary(), kz_term:proplist()) -> 'ok'.
 notify(Uri, Headers, Method, Body, Opts) ->
     Options = [{'connect_timeout', 200}
               ,{'timeout', 1000}
@@ -1861,21 +1861,21 @@ notify(Uri, Headers, Method, Body, Opts) ->
             lager:debug("failed to send request to ~s: ~p", [Uri, _E])
     end.
 
--spec cdr_url(kz_json:object()) -> api_binary().
+-spec cdr_url(kz_json:object()) -> kz_term:api_binary().
 cdr_url(JObj) ->
     case kz_json:get_value([<<"Notifications">>, ?NOTIFY_CDR], JObj) of
         'undefined' -> kz_json:get_ne_value(<<"CDR-Url">>, JObj);
         Url -> Url
     end.
 
--spec recording_url(kz_json:object()) -> api_binary().
+-spec recording_url(kz_json:object()) -> kz_term:api_binary().
 recording_url(JObj) ->
     case kz_json:get_value([<<"Notifications">>, ?NOTIFY_RECORDING], JObj) of
         'undefined' -> kz_json:get_ne_value(<<"Recording-URL">>, JObj);
         Url -> Url
     end.
 
--spec uri(ne_binary(), iolist()) -> iolist().
+-spec uri(kz_term:ne_binary(), iolist()) -> iolist().
 uri(URI, QueryString) ->
     case kz_http_util:urlsplit(URI) of
         {Scheme, Host, Path, <<>>, Fragment} ->
@@ -1943,7 +1943,7 @@ handle_agent_logout(#state{account_id = AccountId
     acdc_agent_stats:agent_logged_out(AccountId, AgentId),
     {'stop', 'normal', State}.
 
--spec handle_presence_update(ne_binary(), ne_binary(), state()) -> 'ok'.
+-spec handle_presence_update(kz_term:ne_binary(), kz_term:ne_binary(), state()) -> 'ok'.
 handle_presence_update(PresenceId, PresenceState, #state{agent_id = AgentId
                                                         ,account_id = AccountId
                                                         }) ->

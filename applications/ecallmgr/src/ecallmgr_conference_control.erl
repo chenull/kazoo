@@ -43,8 +43,8 @@
 -define(CONSUME_OPTIONS, [{'exclusive', 'false'}]).
 
 -record(state, {node :: atom()
-               ,conference_id :: ne_binary()
-               ,instance_id :: ne_binary()
+               ,conference_id :: kz_term:ne_binary()
+               ,instance_id :: kz_term:ne_binary()
                }).
 -type state() :: #state{}.
 
@@ -55,10 +55,10 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(atom(), ne_binary(), ne_binary()) -> startlink_ret().
+-spec start_link(atom(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:startlink_ret().
 start_link(Node, ConferenceId, InstanceId) ->
     lager:debug("starting conference ~s control instance ~s for node ~s in ~s"
-               ,[ConferenceId, InstanceId, Node, node()]
+               ,[ConferenceId, InstanceId, Node, kz_types:node()]
                ),
     gen_listener:start_link(?SERVER
                            ,[{'responders', ?RESPONDERS}
@@ -70,7 +70,7 @@ start_link(Node, ConferenceId, InstanceId) ->
                            ,[Node, ConferenceId, InstanceId]
                            ).
 
--spec handle_conference_command(kz_json:object(), kz_proplist()) -> any().
+-spec handle_conference_command(kz_json:object(), kz_term:proplist()) -> any().
 handle_conference_command(JObj, Props) ->
     Node = props:get_value('node', Props),
     ConferenceId = props:get_value('conference_id', Props),
@@ -86,7 +86,7 @@ handle_conference_command(JObj, Props) ->
 %% Initializes the server
 %% @end
 %%--------------------------------------------------------------------
--spec init([atom() | ne_binary()]) -> {'ok', state()}.
+-spec init([atom() | kz_term:ne_binary()]) -> {'ok', state()}.
 init([Node, ConferenceId, InstanceId]) ->
     kz_util:put_callid(ConferenceId),
     lager:info("starting new conference control for ~s", [ConferenceId]),
@@ -110,7 +110,7 @@ init([Node, ConferenceId, InstanceId]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 

@@ -33,7 +33,7 @@ dying_task(TimeToLiveMillis) ->
 all_test_() ->
     {'foreach',
      fun() ->
-             amqp_cron:start_link([node()]),
+             amqp_cron:start_link([kz_types:node()]),
              Tasks = amqp_cron:task_list(),
              lists:foreach(fun({_, Pid, _, _}) ->
                                    'ok' = amqp_cron:cancel_task(Pid)

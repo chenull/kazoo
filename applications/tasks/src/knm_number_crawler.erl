@@ -55,7 +55,7 @@
 %% Starts the server
 %% @end
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     gen_server:start_link(?SERVER, [], []).
 
@@ -93,7 +93,7 @@ init([]) ->
 %% Handling call messages
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 
@@ -155,7 +155,7 @@ code_change(_OldVsn, State, _Extra) ->
 cleanup_timer() ->
     erlang:start_timer(?TIME_BETWEEN_CRAWLS, self(), 'ok').
 
--spec crawl_number_db(ne_binary()) -> ok.
+-spec crawl_number_db(kz_term:ne_binary()) -> ok.
 crawl_number_db(Db) ->
     case kz_datamgr:all_docs(Db, [include_docs]) of
         {error, _E} ->

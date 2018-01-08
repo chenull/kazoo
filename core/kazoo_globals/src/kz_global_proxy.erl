@@ -26,7 +26,7 @@
 
 -type state() :: any().
 
--spec start_link(any()) -> startlink_ret().
+-spec start_link(any()) -> kz_types:startlink_ret().
 start_link(Global) ->
     gen_server:start_link(?MODULE, [Global], []).
 
@@ -46,7 +46,7 @@ send(Pid, Message) ->
 init([Global]) ->
     {'ok', Global}.
 
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(Request, _From, Global) ->
     {'reply', amqp_call(Global, Request), Global}.
 

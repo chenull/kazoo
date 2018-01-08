@@ -42,12 +42,12 @@
 
 -include("kazoo_globals.hrl").
 
--record(kz_global, {node = node() :: atom() | '_'
+-record(kz_global, {node = kz_types:node() :: atom() | '_'
                    ,zone :: atom() | '_'
-                   ,pid :: api_pid() | '$2' | '_'
+                   ,pid :: kz_term:api_pid() | '$2' | '_'
                    ,server :: any() | '_'
                    ,name :: name() | '$1' | '_'
-                   ,monitor :: api_reference() | '_'
+                   ,monitor :: kz_term:api_reference() | '_'
                    ,state = 'none' :: kapi_globals:state() | '_' | '$1'
                    ,timestamp = new_timestamp() :: integer() | '_'
                    }).
@@ -69,17 +69,17 @@ from_jobj(JObj, Zone) ->
               ,timestamp = kapi_globals:timestamp(JObj)
               }.
 
--spec new_global(name(), pid(), atom(), ne_binary()) -> global().
+-spec new_global(name(), pid(), atom(), kz_term:ne_binary()) -> global().
 new_global(Name, Pid, Zone, Queue) ->
     new_global(Name, Pid, Zone, Queue, 'local').
 
--spec new_global(name(), pid(), atom(), ne_binary(), atom()) -> global().
+-spec new_global(name(), pid(), atom(), kz_term:ne_binary(), atom()) -> global().
 new_global(Name, Pid, Zone, Queue, State) ->
     new_global(Name, Pid, Zone, Queue, State, new_timestamp()).
 
--spec new_global(name(), pid(), atom(), ne_binary(), atom(), integer()) -> global().
+-spec new_global(name(), pid(), atom(), kz_term:ne_binary(), atom(), integer()) -> global().
 new_global(Name, Pid, Zone, Queue, State, Timestamp) ->
-    #kz_global{node = node()
+    #kz_global{node = kz_types:node()
               ,zone = Zone
               ,server = Queue
               ,pid = Pid
@@ -88,7 +88,7 @@ new_global(Name, Pid, Zone, Queue, State, Timestamp) ->
               ,timestamp=Timestamp
               }.
 
--spec update_with_pid_ref(global(), pid_ref()) -> global().
+-spec update_with_pid_ref(global(), kz_term:pid_ref()) -> global().
 -spec update_with_pid_ref(global(), pid(), reference()) -> global().
 update_with_pid_ref(Global, {Pid, Ref}) ->
     update_with_pid_ref(Global, Pid, Ref).
@@ -106,7 +106,7 @@ all_names(Table) ->
     MatchSpec = [{#kz_global{name = '$1', _ = '_'} ,[],['$1']}],
     ets:select(Table, MatchSpec).
 
--spec stats(ets:tab()) -> kz_proplist().
+-spec stats(ets:tab()) -> kz_term:proplist().
 stats(Table) ->
     MatchSpec = [{#kz_global{state = '$1', _ = '_'} ,[],['$1']}],
     lists:foldl(fun(State, Props) ->
@@ -150,7 +150,7 @@ pid(#kz_global{pid=Pid}) -> Pid.
 -spec zone(global()) -> atom().
 zone(#kz_global{zone=Zone}) -> Zone.
 
--spec server(global()) -> api_binary().
+-spec server(global()) -> kz_term:api_binary().
 server(#kz_global{server=Queue}) -> Queue.
 
 -spec node(global()) -> atom().
@@ -165,7 +165,7 @@ new_timestamp() ->
 
 -spec is_local_node(global()) -> boolean().
 is_local_node(#kz_global{node=Node}) ->
-    Node =:= node().
+    Node =:= kz_types:node().
 
 -spec state(global()) -> kapi_globals:state().
 state(#kz_global{state=State}) -> State.

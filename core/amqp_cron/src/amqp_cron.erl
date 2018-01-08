@@ -100,7 +100,7 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec start_link([node()]) -> startlink_ret().
+-spec start_link([kz_types:node()]) -> kz_types:startlink_ret().
 start_link(Nodes) ->
     Opts = [],
     amqp_leader:start_link(?SERVER, Nodes, Opts, ?MODULE, [], []).
@@ -223,7 +223,7 @@ surrendered(State, Sync, _Election) ->
     State3 = State2#state{is_leader = 'false'},
     {'ok', State3}.
 
--spec handle_leader_call(any(), pid_ref(), state(), any()) -> handle_call_ret_state(state()).
+-spec handle_leader_call(any(), kz_term:pid_ref(), state(), any()) -> handle_call_ret_state(state()).
 handle_leader_call({'cancel', Name}, From, State, Election) when
       is_binary(Name); is_atom(Name) ->
     case pid_for_name(Name, State#state.tasks) of
@@ -292,18 +292,18 @@ from_leader({'tasks', Tasks}, State, _Election) ->
     State1 = save_tasks(State, Tasks),
     {'ok', State1}.
 
--spec handle_DOWN(node(), state(), any()) -> {'ok', state()}.
+-spec handle_DOWN(kz_types:node(), state(), any()) -> {'ok', state()}.
 handle_DOWN(_Node, State, _Election) ->
     {'ok', State}.
 
--spec handle_call(any(), pid_ref(), state(), any()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state(), any()) -> handle_call_ret_state(state()).
 handle_call('status', _From, State, Election) ->
     Reply = [{'leader', amqp_leader_proc:leader_node(Election)}
             ,{'alive', amqp_leader_proc:alive(Election)}
             ,{'down', amqp_leader_proc:down(Election)}
             ,{'candidates', amqp_leader_proc:candidates(Election)}
             ,{'workers', amqp_leader_proc:workers(Election)}
-            ,{'me', node()}
+            ,{'me', kz_types:node()}
             ],
     {'reply', Reply, State};
 handle_call(_Request, _From, State, _Election) ->
@@ -336,7 +336,7 @@ save_tasks(State, Tasks) ->
       Tasks :: [task()],
       Election :: any().
 send_tasks(Tasks, Election) ->
-    case amqp_leader_proc:alive(Election) -- [node()] of
+    case amqp_leader_proc:alive(Election) -- [kz_types:node()] of
         [] -> 'ok';
         Alive ->
             Election = amqp_leader_proc:broadcast({'from_leader', {'tasks', Tasks}}
@@ -350,7 +350,7 @@ send_tasks(Tasks, Election) ->
 stop_tasks(State) ->
     Tasks = State#state.tasks,
     Tasks1 = lists:foldl(
-               fun({Name, Pid, Schedule, Exec}, Acc) when node(Pid) =:= node() ->
+               fun({Name, Pid, Schedule, Exec}, Acc) when node(Pid) =:= kz_types:node() ->
                        'ok' = amqp_cron_task:stop(Pid),
                        [{Name, 'undefined', Schedule, Exec}|Acc];
                   (Task, Acc) ->

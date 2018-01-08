@@ -26,8 +26,8 @@
 -define(SERVER, ?MODULE).
 
 -record(state, {table_id :: ets:tid() | 'undefined'
-               ,etssrv :: api_pid()
-               ,give_away_ref :: api_reference()
+               ,etssrv :: kz_term:api_pid()
+               ,give_away_ref :: kz_term:api_reference()
                }).
 -type state() :: #state{}.
 
@@ -38,7 +38,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(ets:tab(), any()) -> startlink_ret().
+-spec start_link(ets:tab(), any()) -> kz_types:startlink_ret().
 start_link(TableId, TableOptions) ->
     gen_server:start_link(?SERVER, [TableId, TableOptions], []).
 
@@ -74,7 +74,7 @@ init([TableId, TableOptions]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     lager:debug("unhandled call: ~p", [_Request]),
     {'reply', {'error', 'not_implemented'}, State}.

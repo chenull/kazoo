@@ -81,7 +81,7 @@
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     case gen_server:start_link(?SERVER, ?MODULE, [], []) of
         {'error', {'already_started', Pid}} ->
@@ -317,7 +317,7 @@ init([]) ->
     kz_datamgr:revise_views_from_folder(?KZ_TASKS_DB, ?APP),
     {'ok', #state{}}.
 
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call({'start_task', TaskId}, _From, State) ->
     lager:debug("attempting to start ~s", [TaskId]),
     %% Running tasks are stored in server State then promptly removed.
@@ -563,7 +563,7 @@ handle_call_start_task(Task=#{id := TaskId
         Pid ->
             Task1 = Task#{started => kz_time:now_s()
                          ,worker_pid => Pid
-                         ,worker_node => kz_term:to_binary(node())
+                         ,worker_node => kz_term:to_binary(kz_types:node())
                          },
             {'ok', JObj} = update_task(Task1),
             State1 = add_task(Task1, State),
@@ -605,7 +605,7 @@ set_last_worker_update(TaskId,
                        State = #state{last_worker_update = LWU}) ->
     State#state{last_worker_update = LWU#{TaskId => ProcessedSoFar}}.
 
--spec task_api(ne_binary(), ne_binary()) -> kz_json:object().
+-spec task_api(kz_term:ne_binary(), kz_term:ne_binary()) -> kz_json:object().
 task_api(Category, Action) ->
     {'ok', JObj} = kz_tasks_help:help(Category, Action),
     kz_json:set_values([{<<"category">>, Category}

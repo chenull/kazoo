@@ -36,7 +36,7 @@
 %% @doc Convert a Gregorian seconds integer to kz_date taking into consideration timezone
 %% @end
 %%--------------------------------------------------------------------
--spec from_gregorian_seconds(gregorian_seconds(), ne_binary()) -> kz_date().
+-spec from_gregorian_seconds(kz_time:gregorian_seconds(), kz_term:ne_binary()) -> kz_time:date().
 from_gregorian_seconds(Seconds, <<_/binary>>=TZ) when is_integer(Seconds) ->
     {Date, _} = localtime:utc_to_local(calendar:gregorian_seconds_to_datetime(Seconds)
                                       ,kz_term:to_list(TZ)
@@ -48,7 +48,7 @@ from_gregorian_seconds(Seconds, <<_/binary>>=TZ) when is_integer(Seconds) ->
 %% Calculates the date of a given ISO 8601 week
 %% @end
 %%--------------------------------------------------------------------
--spec from_iso_week(kz_iso_week()) -> kz_date().
+-spec from_iso_week(kz_time:iso_week()) -> kz_time:date().
 from_iso_week({Year, Week}) ->
     Jan1 = calendar:date_to_gregorian_days(Year, 1, 1),
     Offset = 4 - calendar:day_of_the_week(Year, 1, 4),
@@ -67,7 +67,7 @@ from_iso_week({Year, Week}) ->
 %% I have been referring to this as 'spanning a month/year border'
 %% @end
 %%--------------------------------------------------------------------
--spec normalize(kz_date()) -> kz_date().
+-spec normalize(kz_time:date()) -> kz_time:date().
 normalize({Y, 13, D}) ->
     normalize({Y + 1, 1, D});
 normalize({Y, 0, D}) ->
@@ -92,7 +92,7 @@ normalize({Y, M, D}=Date) ->
 %% @doc Calculate when the second date is in time, relative to the first
 %% @end
 %%--------------------------------------------------------------------
--spec relative_difference(kz_datetime(), kz_datetime()) -> 'future' | 'equal' | 'past'.
+-spec relative_difference(kz_time:datetime(), kz_time:datetime()) -> 'future' | 'equal' | 'past'.
 relative_difference(Date1, Date2) ->
     case calendar:time_difference(Date1, Date2) of
         {D, _} when D > 0 -> 'future';
@@ -110,7 +110,7 @@ relative_difference(Date1, Date2) ->
 %% It is possible for this function to cross month/year boundaries.
 %% @end
 %%--------------------------------------------------------------------
--spec find_next_weekday(kz_date(), ne_binary()) -> kz_date().
+-spec find_next_weekday(kz_time:date(), kz_term:ne_binary()) -> kz_time:date().
 find_next_weekday({Y, M, D}, Weekday) ->
     RefDOW = wday_to_dow(Weekday),
     case calendar:day_of_the_week({Y, M, D}) of
@@ -126,7 +126,7 @@ find_next_weekday({Y, M, D}, Weekday) ->
             normalize({Y, M, D + ( 7 - DOW ) + RefDOW})
     end.
 
--spec from_iso8601(binary()) -> kz_date() | 'error'.
+-spec from_iso8601(binary()) -> kz_time:date() | 'error'.
 from_iso8601(<<Year:4/binary, Month:2/binary, Day:2/binary>>) ->
     {kz_term:to_integer(Year), kz_term:to_integer(Month), kz_term:to_integer(Day)};
 
@@ -136,7 +136,7 @@ from_iso8601(<<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary>>) ->
 from_iso8601(_NotValid) ->
     'error'.
 
--spec to_iso8601(calendar:date() | calendar:datetime() | gregorian_seconds()) -> ne_binary().
+-spec to_iso8601(calendar:date() | calendar:datetime() | kz_time:gregorian_seconds()) -> kz_term:ne_binary().
 to_iso8601({Year, Month, Day}) ->
     Y = kz_term:to_binary(Year),
     M = kz_binary:pad_left(kz_term:to_binary(Month), 2, <<"0">>),
@@ -150,7 +150,7 @@ to_iso8601({{_Y,_M,_D}=Date, _}) ->
 to_iso8601(Timestamp) ->
     to_iso8601(calendar:gregorian_seconds_to_datetime(Timestamp)).
 
--spec to_iso8601_extended(calendar:date() | calendar:datetime() | gregorian_seconds()) -> ne_binary().
+-spec to_iso8601_extended(calendar:date() | calendar:datetime() | kz_time:gregorian_seconds()) -> kz_term:ne_binary().
 to_iso8601_extended({Year, Month, Day}) ->
     Y = kz_term:to_binary(Year),
     M = kz_binary:pad_left(kz_term:to_binary(Month), 2, <<"0">>),
@@ -170,7 +170,7 @@ to_iso8601_extended(Timestamp) ->
 %% the position
 %% @end
 %%--------------------------------------------------------------------
--spec ordinal_to_position(ne_binary()) -> 0..4.
+-spec ordinal_to_position(kz_term:ne_binary()) -> 0..4.
 ordinal_to_position(<<"first">>) -> 0;
 ordinal_to_position(<<"second">>) -> 1;
 ordinal_to_position(<<"third">>) -> 2;
@@ -183,7 +183,7 @@ ordinal_to_position(<<"fifth">>) -> 4.
 %% position, in accordance with ISO 8601
 %% @end
 %%--------------------------------------------------------------------
--spec wday_to_dow(ne_binary()) -> kz_daynum().
+-spec wday_to_dow(kz_term:ne_binary()) -> kz_time:daynum().
 wday_to_dow(<<"monday">>) -> 1;
 wday_to_dow(<<"tuesday">>) -> 2;
 wday_to_dow(<<"wednesday">>) -> 3;
@@ -198,7 +198,7 @@ wday_to_dow(<<"sunday">>) -> 7.
 %% Map the position of a week day to its textual representation.
 %% @end
 %%--------------------------------------------------------------------
--spec dow_to_wday(kz_daynum()) -> ne_binary().
+-spec dow_to_wday(kz_time:daynum()) -> kz_term:ne_binary().
 dow_to_wday(1) -> <<"monday">>;
 dow_to_wday(2) -> <<"tuesday">>;
 dow_to_wday(3) -> <<"wednesday">>;
@@ -207,10 +207,10 @@ dow_to_wday(5) -> <<"friday">>;
 dow_to_wday(6) -> <<"saturday">>;
 dow_to_wday(7) -> <<"sunday">>.
 
--spec pad_month(kz_month() | ne_binary()) -> ne_binary().
+-spec pad_month(kz_time:month() | kz_term:ne_binary()) -> kz_term:ne_binary().
 pad_month(Month) ->
     kz_binary:pad_left(kz_term:to_binary(Month), 2, <<"0">>).
 
--spec pad_day(kz_day() | ne_binary()) -> ne_binary().
+-spec pad_day(kz_time:day() | kz_term:ne_binary()) -> kz_term:ne_binary().
 pad_day(Day) ->
     kz_binary:pad_left(kz_term:to_binary(Day), 2, <<"0">>).

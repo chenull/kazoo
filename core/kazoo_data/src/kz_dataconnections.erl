@@ -40,7 +40,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     gen_server:start_link({'local', ?SERVER}, ?MODULE, [], []).
 
@@ -56,7 +56,7 @@ add(#data_connection{}=Connection) ->
 
 -spec wait_for_connection() -> 'ok' | 'no_connection'.
 -spec wait_for_connection(any()) -> 'ok' | 'no_connection'.
--spec wait_for_connection(any(), kz_timeout()) -> 'ok' | 'no_connection'.
+-spec wait_for_connection(any(), kz_types:timeout()) -> 'ok' | 'no_connection'.
 
 wait_for_connection() ->
     wait_for_connection('local').
@@ -152,7 +152,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call(_Request, _From, State) ->
     {'reply', {'error', 'not_implemented'}, State}.
 

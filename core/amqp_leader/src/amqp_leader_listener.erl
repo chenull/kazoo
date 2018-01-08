@@ -55,7 +55,7 @@ is_ready() ->
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(atom() | pid()) -> startlink_ret().
+-spec start_link(atom() | pid()) -> kz_types:startlink_ret().
 start_link(Name) ->
     gen_listener:start_link(?SERVER, [{'bindings', ?BINDINGS(Name)}
                                      ,{'responders', ?RESPONDERS}
@@ -82,7 +82,7 @@ start_link(Name) ->
 %%--------------------------------------------------------------------
 -spec init([atom()]) -> {'ok', state()}.
 init([Name]) ->
-    kz_util:put_callid(kapi_leader:queue(Name, node())),
+    kz_util:put_callid(kapi_leader:queue(Name, kz_types:node())),
     kz_nodes:notify_expire(),
     {'ok', #state{self = self(), name = Name}}.
 
@@ -149,7 +149,7 @@ handle_cast(_Msg, State) ->
 %%--------------------------------------------------------------------
 -spec handle_info(any(), state()) -> handle_info_ret_state(state()).
 handle_info(_Info, State) ->
-    lager:warning("~s unhandled info ~p", [node(), _Info]),
+    lager:warning("~s unhandled info ~p", [kz_types:node(), _Info]),
     {'noreply', State}.
 
 %%--------------------------------------------------------------------
@@ -162,8 +162,8 @@ handle_info(_Info, State) ->
 %%--------------------------------------------------------------------
 -spec handle_event(kz_json:object(), state()) -> {'reply', []}.
 handle_event(JObj, #state{name = Name}) ->
-    kz_util:put_callid(kapi_leader:queue(Name, node())),
-    NodeBin = kz_term:to_binary(node()),
+    kz_util:put_callid(kapi_leader:queue(Name, kz_types:node())),
+    NodeBin = kz_term:to_binary(kz_types:node()),
     case kz_json:get_value(<<"Node">>, JObj) of
         NodeBin -> 'ok';
         _ ->
@@ -214,7 +214,7 @@ recv_ready(Ref) ->
 
 -spec ready_when_node_is_up() -> 'true'.
 ready_when_node_is_up() ->
-    case kz_nodes:is_up(node()) of
+    case kz_nodes:is_up(kz_types:node()) of
         'false' ->
             lager:debug("node is not up yet"),
             timer:sleep(1 * ?MILLISECONDS_IN_SECOND),

@@ -34,7 +34,7 @@
 %% result of calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}}).
 %% Subtract this value from a Gregorian seconds version of a date
 %% to get the Unix timestamp
-%% datetime_to_gregorian_seconds({date(),time()}) - ?UNIX_EPOCH_IN_GREGORIAN.
+%% datetime_to_gregorian_seconds({kz_time:date(),kz_time:time()}) - ?UNIX_EPOCH_IN_GREGORIAN.
 -define(UNIX_EPOCH_IN_GREGORIAN, 62167219200).
 
 %% Helper macro for declaring children of supervisor

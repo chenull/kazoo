@@ -29,9 +29,9 @@
 -define(SERVER, ?MODULE).
 
 -record(state, {parent :: pid()
-               ,broker :: ne_binary()
-               ,self_binary = kz_term:to_binary(pid_to_list(self())) :: ne_binary()
-               ,zone :: ne_binary()
+               ,broker :: kz_term:ne_binary()
+               ,self_binary = kz_term:to_binary(pid_to_list(self())) :: kz_term:ne_binary()
+               ,zone :: kz_term:ne_binary()
                }).
 -type state() :: #state{}.
 
@@ -42,15 +42,15 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(pid(), ne_binary(), kz_proplist()) -> startlink_ret().
+-spec start_link(pid(), kz_term:ne_binary(), kz_term:proplist()) -> kz_types:startlink_ret().
 start_link(Parent, Broker, Params) ->
     gen_listener:start_link(?SERVER, Params, [Parent, Broker]).
 
--spec broker(server_ref()) -> ne_binary().
+-spec broker(kz_types:server_ref()) -> kz_term:ne_binary().
 broker(Pid) ->
     gen_listener:call(Pid, 'get_broker').
 
--spec stop(server_ref()) -> 'ok'.
+-spec stop(kz_types:server_ref()) -> 'ok'.
 stop(Pid) ->
     gen_listener:call(Pid, {'stop', self()}).
 
@@ -69,7 +69,7 @@ stop(Pid) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([pid() | ne_binary()]) -> {'ok', state()}.
+-spec init([pid() | kz_term:ne_binary()]) -> {'ok', state()}.
 init([Parent, Broker]=L) ->
     lager:debug("federating listener ~p on broker ~s", L),
     _ = kz_amqp_channel:consumer_broker(Broker),

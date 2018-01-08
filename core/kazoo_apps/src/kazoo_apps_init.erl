@@ -15,7 +15,7 @@
 
 -include("kazoo_apps.hrl").
 
--spec start_link() -> startlink_ret().
+-spec start_link() -> kz_types:startlink_ret().
 start_link() ->
     _ = sanity_checks(), %% one day make this true
     _ = kz_util:spawn(fun init/0),
@@ -31,7 +31,7 @@ init() ->
 set_cookie() ->
     Cookie = maybe_cookie_from_env(),
     lager:info("setting ~s cookie to ~p", [?APP, Cookie]),
-    erlang:set_cookie(node(), Cookie).
+    erlang:set_cookie(kz_types:node(), Cookie).
 
 -spec maybe_cookie_from_env() -> atom().
 maybe_cookie_from_env() ->
@@ -44,9 +44,9 @@ maybe_cookie_from_env() ->
 cookie_from_ini() ->
     case kz_config:get_atom(?APP, 'cookie') of
         [] ->
-            [Name, _Host] = binary:split(kz_term:to_binary(node()), <<"@">>),
+            [Name, _Host] = binary:split(kz_term:to_binary(kz_types:node()), <<"@">>),
             case kz_config:get_atom(kz_term:to_atom(Name, 'true'), 'cookie') of
-                [] -> lager:warning("failed to get cookie for node ~s, generating one", [node()]),
+                [] -> lager:warning("failed to get cookie for node ~s, generating one", [kz_types:node()]),
                       kz_term:to_atom(kz_binary:rand_hex(16), 'true');
                 [Cookie|_] -> Cookie
             end;

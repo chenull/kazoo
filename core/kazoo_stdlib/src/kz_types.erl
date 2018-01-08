@@ -9,14 +9,14 @@
 -include_lib("kazoo_stdlib/include/kz_records.hrl").
 
 %% when using gen_smtp to send emails, it takes a 5-tuple for a message-body part
--type mail_message_body() :: {ne_binary(), ne_binary(), kz_proplist(), kz_proplist(), ne_binary() | iolist()}.
+-type mail_message_body() :: {kz_term:ne_binary(), kz_term:ne_binary(), kz_term:proplist(), kz_term:proplist(), kz_term:ne_binary() | iolist()}.
 
 %% for setting types on dicts
 -type dict(K,V) :: [{K, V}].
 
 -type timeout() :: non_neg_integer() | 'infinity'.
 
--type ip_list() :: ne_binaries().
+-type ip_list() :: kz_term:ne_binaries().
 
 %% Recreate the non-exported types defined in the Erlang supervisor source
 -type sup_child_spec() :: supervisor:child_spec().
@@ -26,7 +26,7 @@
 -type sup_init_ret() :: {'ok', {supervisor:sup_flags(), [supervisor:child_spec()]}} |
                         'ignore'.
 
--type sup_child_id() :: api_pid().
+-type sup_child_id() :: kz_term:api_pid().
 -type sup_startchild_err() :: 'already_present' |
                               {'already_started', sup_child_id()} |
                               any().
@@ -45,7 +45,7 @@
                         {'ok', pid(), any()} |
                         {'error', startlink_err()}.
 
--type call_from() :: pid_ref().
+-type call_from() :: kz_term:pid_ref().
 -type gen_server_timeout() :: 'hibernate' | non_neg_integer().
 -type handle_call_ret() :: {'reply', any(), any()} |
                            {'reply', any(), any(), gen_server_timeout()} |
@@ -101,7 +101,7 @@
 
 %% XML types
 -type xml_attrib_name() :: atom().
--type xml_attrib_value() :: ne_binary() | nonempty_string() | iolist() | atom() | number().
+-type xml_attrib_value() :: kz_term:ne_binary() | nonempty_string() | iolist() | atom() | number().
 -type xml_attrib() :: #xmlAttribute{}.
 -type xml_attribs() :: [xml_attrib()].
 
@@ -121,7 +121,7 @@
 -type whapp_info() :: #whapp_info{}.
 -type kapps_info() :: [{binary(), whapp_info()}].
 
--type media_server() :: {ne_binary(), kz_json:object()}.
+-type media_server() :: {kz_term:ne_binary(), kz_json:object()}.
 -type media_servers() :: [media_server()].
 
 -type node() :: #kz_node{}.

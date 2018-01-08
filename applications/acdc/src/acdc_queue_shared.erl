@@ -65,7 +65,7 @@
 %%--------------------------------------------------------------------
 %% @doc Starts the server
 %%--------------------------------------------------------------------
--spec start_link(server_ref(), ne_binary(), ne_binary(), api_integer()) -> startlink_ret().
+-spec start_link(kz_types:server_ref(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:api_integer()) -> kz_types:startlink_ret().
 start_link(FSMPid, AcctId, QueueId, Priority) ->
     gen_listener:start_link(?SERVER
                            ,[{'bindings', ?SHARED_QUEUE_BINDINGS(AcctId, QueueId)}
@@ -76,17 +76,17 @@ start_link(FSMPid, AcctId, QueueId, Priority) ->
                            ,[FSMPid]
                            ).
 
--spec ack(server_ref(), gen_listener:basic_deliver()) -> 'ok'.
+-spec ack(kz_types:server_ref(), gen_listener:basic_deliver()) -> 'ok'.
 ack(Srv, Delivery) ->
     gen_listener:ack(Srv, Delivery),
     gen_listener:cast(Srv, {'ack', Delivery}).
 
--spec nack(server_ref(), gen_listener:basic_deliver()) -> 'ok'.
+-spec nack(kz_types:server_ref(), gen_listener:basic_deliver()) -> 'ok'.
 nack(Srv, Delivery) ->
     gen_listener:nack(Srv, Delivery),
     gen_listener:cast(Srv, {'noack', Delivery}).
 
--spec deliveries(server_ref()) -> deliveries().
+-spec deliveries(kz_types:server_ref()) -> deliveries().
 deliveries(Srv) ->
     gen_listener:call(Srv, 'deliveries').
 
@@ -126,7 +126,7 @@ init([FSMPid]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
--spec handle_call(any(), pid_ref(), state()) -> handle_call_ret_state(state()).
+-spec handle_call(any(), kz_term:pid_ref(), state()) -> handle_call_ret_state(state()).
 handle_call('deliveries', _From, #state{deliveries=Ds}=State) ->
     {'reply', Ds, State};
 handle_call(_Request, _From, State) ->
