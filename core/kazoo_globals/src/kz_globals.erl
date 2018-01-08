@@ -94,7 +94,7 @@
 -record(state, {zone = 'local' :: atom()
                ,zones = [] :: kz_term:proplist()
                ,queue :: kz_term:api_binary()
-               ,node = kz_types:node() :: atom()
+               ,node = kz_types:kz_node() :: atom()
                ,is_consuming = 'false' :: boolean()
                ,has_ets = 'false' :: boolean()
                }).
@@ -379,7 +379,7 @@ handle_info(_Info, State) ->
 %%--------------------------------------------------------------------
 -spec handle_event(kz_json:object(), kz_term:proplist()) -> gen_listener:handle_event_return().
 handle_event(JObj, State) ->
-    case kz_api:node(JObj) =:= kz_term:to_binary(kz_types:node()) of
+    case kz_api:node(JObj) =:= kz_term:to_binary(kz_types:kz_node()) of
         'true' -> 'ignore';
         'false' ->
             {'reply', [{'state', State}
@@ -834,7 +834,7 @@ delete_by_pid(Pid, Reason) ->
 
 -spec delete_by_node(atom()) -> 'ok'.
 delete_by_node(Node)
-  when Node =:= kz_types:node() ->
+  when Node =:= kz_types:kz_node() ->
     'ok';
 delete_by_node(Node) ->
     _Res = [begin
@@ -850,7 +850,7 @@ delete_by_node(Node) ->
 delete_global(Global, Reason) ->
     delete_global(Global, Reason, kz_global:node(Global)).
 
-delete_global(Global, Reason, Node) when Node =:= kz_types:node() ->
+delete_global(Global, Reason, Node) when Node =:= kz_types:kz_node() ->
     do_amqp_unregister(Global, Reason);
 delete_global(Global, _Reason, _Node) ->
     lager:debug("deleting ~p", [Global]),

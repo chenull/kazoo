@@ -128,7 +128,7 @@ process_req_as_email(DataJObj) ->
                   'undefined' -> teletype_util:render_subject(Subject0, Macros);
                   Text -> Text
               catch
-                  _:_ -> <<"system alert received into ", (kz_term:to_binary(kz_types:node()))/binary>>
+                  _:_ -> <<"system alert received into ", (kz_term:to_binary(kz_types:kz_node()))/binary>>
               end,
 
     {'ok', MasterAccountId} = kapps_util:get_master_account_id(),

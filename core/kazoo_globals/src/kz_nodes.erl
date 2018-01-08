@@ -90,12 +90,12 @@
                ,tab :: ets:tid()
                ,notify_new = sets:new() :: sets:set()
                ,notify_expire = sets:new() :: sets:set()
-               ,node = kz_types:node() :: atom()
+               ,node = kz_types:kz_node() :: atom()
                ,md5 :: kz_term:ne_binary()
                ,zone = 'local' :: atom()
                ,version :: kz_term:ne_binary()
                ,zones = [] :: kz_term:proplist()
-               ,me = 'undefined' :: kz_types:node() | 'undefined'
+               ,me = 'undefined' :: kz_types:kz_node() | 'undefined'
                }).
 -type nodes_state() :: #state{}.
 
@@ -119,7 +119,7 @@ start_link() ->
                            ,[]
                            ).
 
--spec is_up(kz_types:node()) -> boolean().
+-spec is_up(kz_types:kz_node()) -> boolean().
 is_up(Node) ->
     case ets:match(?MODULE, #kz_node{node = Node
                                     ,expires = '$2'
@@ -130,7 +130,7 @@ is_up(Node) ->
         [_] -> 'true'
     end.
 
--spec node_to_json(kz_term:text() | kz_types:node()) -> kz_json:object().
+-spec node_to_json(kz_term:text() | kz_types:kz_node()) -> kz_json:object().
 node_to_json(NodeName) when is_atom(NodeName) ->
     [#kz_node{}=Node] = ets:lookup(?MODULE, NodeName),
     node_to_json(Node);
@@ -163,7 +163,7 @@ globals_scope() ->
                           }
                  ,[{'andalso'
                    ,{'=/=', '$1', []}
-                   ,{'=/=', '$2', {'const', kz_types:node()}}
+                   ,{'=/=', '$2', {'const', kz_types:kz_node()}}
                    }]
                  ,['$1']
                  }],
@@ -272,16 +272,16 @@ status() ->
             'no_return'
     end.
 
--spec compare_nodes(kz_types:node(), kz_types:node()) -> boolean().
+-spec compare_nodes(kz_types:kz_node(), kz_types:kz_node()) -> boolean().
 compare_nodes(#kz_node{node = N1}, #kz_node{node = N2}) -> N1 > N2.
 
--spec print_status(kz_types:nodes(), atom()) -> 'no_return'.
+-spec print_status(kz_types:kz_nodes(), atom()) -> 'no_return'.
 print_status(Nodes, Zone) ->
     F = fun (Node) -> print_node_status(Node, Zone) end,
     lists:foreach(F, Nodes),
     'no_return'.
 
--spec print_node_status(kz_types:node(), atom()) -> 'ok'.
+-spec print_node_status(kz_types:kz_node(), atom()) -> 'ok'.
 print_node_status(#kz_node{zone=NodeZone
                           ,node=N
                           ,md5=MD5
@@ -404,7 +404,7 @@ format_presence_data(Data) ->
 format_presence_data(K, V, Acc) ->
     [<<K/binary, " (", (kz_term:to_binary(V))/binary, ") ">> | Acc].
 
--spec maybe_print_media_servers(kz_types:node()) -> 'ok'.
+-spec maybe_print_media_servers(kz_types:kz_node()) -> 'ok'.
 maybe_print_media_servers(#kz_node{media_servers=MediaServers
                                   ,registrations=Registrations
                                   ,channels=Channels
@@ -754,7 +754,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--spec create_node('undefined' | 5000..15000, nodes_state()) -> kz_types:node().
+-spec create_node('undefined' | 5000..15000, nodes_state()) -> kz_types:kz_node().
 create_node(Heartbeat, #state{zone=Zone
                              ,version=Version
                              ,md5=MD5
@@ -775,7 +775,7 @@ create_node(Heartbeat, #state{zone=Zone
 normalize_amqp_uri(URI) ->
     kz_term:to_binary(amqp_uri:remove_credentials(kz_term:to_list(URI))).
 
--spec add_kapps_data(kz_types:node()) -> kz_types:node().
+-spec add_kapps_data(kz_types:kz_node()) -> kz_types:kz_node().
 add_kapps_data(Node) ->
     lists:foldl(fun kapp_data/2, Node, kapps_controller:list_apps()).
 
@@ -784,7 +784,7 @@ request(Acc) ->
     App = props:get_value('app', Acc),
     [{'info', get_whapp_info(App)} | Acc].
 
--spec kapp_data(atom(), kz_types:node()) -> kz_types:node().
+-spec kapp_data(atom(), kz_types:kz_node()) -> kz_types:kz_node().
 kapp_data(App, Node) ->
     kapp_data(App, Node, kz_nodes_bindings:request(App)).
 
@@ -840,7 +840,7 @@ get_whapp_process_info(PInfo) ->
     Startup = props:get_value('$startup', props:get_value('dictionary', PInfo, [])),
     #whapp_info{startup=Startup}.
 
--spec advertise_payload(kz_types:node()) -> kz_term:proplist().
+-spec advertise_payload(kz_types:kz_node()) -> kz_term:proplist().
 advertise_payload(#kz_node{expires=Expires
                           ,kapps=Whapps
                           ,media_servers=MediaServers
@@ -884,7 +884,7 @@ media_servers_from_json(Servers) ->
      || Key <- kz_json:get_keys(Servers)
     ].
 
--spec from_json(kz_json:object(), nodes_state()) -> kz_types:node().
+-spec from_json(kz_json:object(), nodes_state()) -> kz_types:kz_node().
 from_json(JObj, State) ->
     Node = kz_json:get_value(<<"Node">>, JObj),
     #kz_node{node=kz_term:to_atom(Node, 'true')
@@ -982,7 +982,7 @@ get_amqp_broker(Broker) when is_binary(Broker) -> normalize_amqp_uri(Broker);
 get_amqp_broker(JObj) ->
     get_amqp_broker(kz_json:get_ne_value(<<"AMQP-Broker">>, JObj)).
 
--spec notify_expire(kz_types:nodes(), nodes_state() | kz_term:pids()) -> 'ok'.
+-spec notify_expire(kz_types:kz_nodes(), nodes_state() | kz_term:pids()) -> 'ok'.
 notify_expire([], _) -> 'ok';
 notify_expire(_, []) -> 'ok';
 notify_expire(Nodes, #state{notify_expire=Set}) ->
@@ -994,7 +994,7 @@ notify_expire([#kz_node{node=NodeName}=Node|Nodes], Pids) ->
         ],
     notify_expire(Nodes, Pids).
 
--spec notify_new(kz_types:node(), nodes_state() | kz_term:pids()) -> 'ok'.
+-spec notify_new(kz_types:kz_node(), nodes_state() | kz_term:pids()) -> 'ok'.
 notify_new(Node, #state{notify_new=Set}) ->
     notify_new(Node, sets:to_list(Set));
 notify_new(#kz_node{node=NodeName}=Node, Pids) ->
@@ -1037,7 +1037,7 @@ whapp_oldest_node(Whapp, Zone)
     determine_whapp_oldest_node(kz_term:to_binary(Whapp), MatchSpec).
 
 -spec determine_whapp_oldest_node(kz_term:ne_binary(), ets:match_spec()) ->
-                                         'undefined' | kz_types:node().
+                                         'undefined' | kz_types:kz_node().
 determine_whapp_oldest_node(Whapp, MatchSpec) ->
     case oldest_whapp_node(Whapp, MatchSpec) of
         {Node, _Start} -> Node;
@@ -1045,7 +1045,7 @@ determine_whapp_oldest_node(Whapp, MatchSpec) ->
     end.
 
 -type oldest_whapp_node() :: 'undefined' |
-                             {kz_types:node(), kz_time:gregorian_seconds()}.
+                             {kz_types:kz_node(), kz_time:gregorian_seconds()}.
 
 -spec oldest_whapp_node(kz_term:ne_binary(), ets:match_spec()) ->
                                oldest_whapp_node().
@@ -1057,7 +1057,7 @@ oldest_whapp_node(Whapp, MatchSpec) ->
                ,ets:select(?MODULE, MatchSpec)
                ).
 
--spec determine_whapp_oldest_node_fold({kz_types:kapps_info(), kz_types:node()}, oldest_whapp_node(), kz_term:ne_binary()) ->
+-spec determine_whapp_oldest_node_fold({kz_types:kapps_info(), kz_types:kz_node()}, oldest_whapp_node(), kz_term:ne_binary()) ->
                                               oldest_whapp_node().
 determine_whapp_oldest_node_fold({Whapps, Node}, 'undefined', Whapp) ->
     case props:get_value(Whapp, Whapps) of
@@ -1073,7 +1073,7 @@ determine_whapp_oldest_node_fold({Whapps, Node}, {_, Startup}=Acc, Whapp) ->
         _ -> Acc
     end.
 
--spec maybe_add_zone(kz_types:node(), nodes_state()) -> nodes_state().
+-spec maybe_add_zone(kz_types:kz_node(), nodes_state()) -> nodes_state().
 maybe_add_zone(#kz_node{zone='undefined'}, #state{}=State) -> State;
 maybe_add_zone(#kz_node{zone=Zone, broker=B}, #state{zones=Zones}=State) ->
     Broker = normalize_amqp_uri(B),
@@ -1107,7 +1107,7 @@ pool_state(Name, State, Workers, Overflow, Monitors) ->
 node_encoded() ->
     case application:get_env(?APP_NAME_ATOM, 'node_encoded') of
         'undefined' ->
-            Encoded = kz_base64url:encode(crypto:hash(md5, kz_term:to_binary(kz_types:node()))),
+            Encoded = kz_base64url:encode(crypto:hash(md5, kz_term:to_binary(kz_types:kz_node()))),
             application:set_env(?APP_NAME_ATOM, 'node_encoded', Encoded),
             Encoded;
         {'ok', Encoded} -> Encoded

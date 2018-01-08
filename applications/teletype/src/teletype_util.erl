@@ -342,7 +342,7 @@ default_content_transfer_encoding(_) -> <<"7BIT">>.
 system_params() ->
     [{<<"hostname">>, kz_term:to_binary(net_adm:localhost())}
     ,{<<"encoded_hostname">>, kz_base64url:encode(crypto:hash('md5', kz_term:to_binary(net_adm:localhost())))}
-    ,{<<"node">>, kz_types:node()}
+    ,{<<"node">>, kz_types:kz_node()}
     ,{<<"encoded_node">>, kz_nodes:node_encoded()}
     ].
 

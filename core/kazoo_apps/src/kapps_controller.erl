@@ -177,7 +177,7 @@ start_from_default_config() ->
 
 -spec kapp_from_node_name() -> atom().
 kapp_from_node_name() ->
-    kz_term:to_atom(hd(binary:split(kz_term:to_binary(kz_types:node()), <<$@>>)), 'true').
+    kz_term:to_atom(hd(binary:split(kz_term:to_binary(kz_types:kz_node()), <<$@>>)), 'true').
 
 -spec sysconf_first(atom(), atom()) -> boolean().
 sysconf_first('sysconf', _) -> 'true';

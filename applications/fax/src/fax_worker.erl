@@ -494,7 +494,7 @@ attempt_to_acquire_job(Id, Q) ->
 attempt_to_acquire_job(JObj, Q, <<"locked">>) ->
     kz_datamgr:save_doc(?KZ_FAXES_DB
                        ,kz_json:set_values([{<<"pvt_job_status">>, <<"processing">>}
-                                           ,{<<"pvt_job_node">>, kz_term:to_binary(kz_types:node())}
+                                           ,{<<"pvt_job_node">>, kz_term:to_binary(kz_types:kz_node())}
                                            ,{<<"pvt_modified">>, kz_time:now_s()}
                                            ,{<<"pvt_queue">>, Q}
                                            ]
@@ -858,7 +858,7 @@ fetch_document_from_url(JObj) ->
     Headers = props:filter_undefined(
                 [{"Host", kz_json:get_string_value(<<"host">>, FetchRequest)}
                 ,{"Referer", kz_json:get_string_value(<<"referer">>, FetchRequest)}
-                ,{"User-Agent", kz_json:get_string_value(<<"user_agent">>, FetchRequest, kz_term:to_list(kz_types:node()))}
+                ,{"User-Agent", kz_json:get_string_value(<<"user_agent">>, FetchRequest, kz_term:to_list(kz_types:kz_node()))}
                 ,{"Content-Type", kz_json:get_string_value(<<"content_type">>, FetchRequest, <<"text/plain">>)}
                 ]),
     Body = kz_json:get_string_value(<<"content">>, FetchRequest, ""),

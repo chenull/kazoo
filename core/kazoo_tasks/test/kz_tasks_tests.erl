@@ -63,7 +63,7 @@ noinput(Type) ->
 
 task(bad) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()
@@ -88,7 +88,7 @@ task(bad_noinput) -> noinput(bad);
 
 task(failure) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()
@@ -105,7 +105,7 @@ task(failure) ->
 
 task(partial) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()
@@ -122,7 +122,7 @@ task(partial) ->
 
 task(success) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()
@@ -156,7 +156,7 @@ task(pending) ->
 
 task(stopped) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()
@@ -174,7 +174,7 @@ task(stopped) ->
 
 task(executing) ->
     #{worker_pid => self()
-     ,worker_node => kz_term:to_binary(kz_types:node())
+     ,worker_node => kz_term:to_binary(kz_types:kz_node())
      ,account_id => ?ACCOUNT_ID
      ,auth_account_id => ?AUTH_ACCOUNT_ID
      ,id => kz_tasks:new_id()

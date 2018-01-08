@@ -49,9 +49,9 @@ init() ->
     set_node_defaults(),
 
     case ?COMPACT_AUTOMATICALLY of
-        'false' -> lager:info("node ~s not configured to compact automatically", [kz_types:node()]);
+        'false' -> lager:info("node ~s not configured to compact automatically", [kz_types:kz_node()]);
         'true' ->
-            lager:info("node ~s configured to compact automatically", [kz_types:node()]),
+            lager:info("node ~s configured to compact automatically", [kz_types:kz_node()]),
             _ = tasks_bindings:bind(?TRIGGER_ALL_DBS, ?MODULE, 'compact_db')
     end,
 

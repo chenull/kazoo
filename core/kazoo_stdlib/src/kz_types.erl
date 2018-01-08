@@ -122,8 +122,8 @@
 -type media_server() :: {kz_term:ne_binary(), kz_json:object()}.
 -type media_servers() :: [media_server()].
 
--type node() :: #kz_node{}.
--type nodes() :: [node()].
+-type kz_node() :: #kz_node{}.
+-type kz_nodes() :: [kz_node()].
 
 -export_type([mail_message_body/0
              ,dict/2
@@ -166,6 +166,6 @@
              ,kapps_info/0
              ,media_server/0
              ,media_servers/0
-             ,node/0
-             ,nodes/0
+             ,kz_node/0
+             ,kz_nodes/0
              ]).

@@ -388,10 +388,10 @@ not_found() ->
 
 -spec route_resp_log_winning_node() -> kz_types:xml_el().
 route_resp_log_winning_node() ->
-    action_el(<<"log">>, [<<"NOTICE log|${uuid}|", (kz_term:to_binary(kz_types:node()))/binary, " won call control">>]).
+    action_el(<<"log">>, [<<"NOTICE log|${uuid}|", (kz_term:to_binary(kz_types:kz_node()))/binary, " won call control">>]).
 
 route_resp_set_winning_node() ->
-    action_el(<<"export">>, [?SET_CCV(<<"Ecallmgr-Node">>, (kz_term:to_binary(kz_types:node())))]).
+    action_el(<<"export">>, [?SET_CCV(<<"Ecallmgr-Node">>, (kz_term:to_binary(kz_types:kz_node())))]).
 
 -spec route_resp_ringback(kz_json:object()) -> kz_types:xml_el().
 route_resp_ringback(JObj) ->

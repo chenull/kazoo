@@ -445,7 +445,7 @@ format_and_send_report(Context, Msg) ->
     {ReportId, URL} = save_report(Context),
     Subject = io_lib:format("presence reset for account ~s", [cb_context:account_id(Context)]),
     Props = [{<<"Report-ID">>, ReportId}
-            ,{<<"Node">>, kz_types:node()}
+            ,{<<"Node">>, kz_types:kz_node()}
             ],
     Headers = [{<<"Attachment-URL">>, URL}
               ,{<<"Account-ID">>, cb_context:account_id(Context)}

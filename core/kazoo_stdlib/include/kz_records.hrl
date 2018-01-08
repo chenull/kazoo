@@ -4,7 +4,7 @@
                     ,roles = [] :: kz_term:ne_binaries()
                     }).
 
--record(kz_node, {node = kz_types:node() :: atom() | '$1' | '$2' | '_'
+-record(kz_node, {node = kz_types:kz_node() :: atom() | '$1' | '$2' | '_'
                  ,md5 :: kz_term:api_binary() | '_'
                  ,expires = 0 :: non_neg_integer() | 'undefined' | '$2' | '_'
                  ,kapps = [] :: kz_types:kapps_info() | '$1' | '_'

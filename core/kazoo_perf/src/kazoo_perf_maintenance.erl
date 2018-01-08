@@ -59,7 +59,7 @@ collect() ->
     plists:map(fun (Metric) -> {Metric, measure(Metric)} end, Metrics, Malt).
 
 scheme(Account, Cluster, Zone) ->
-    [Service, Hostname0] = binary:split(kz_term:to_binary(kz_types:node()), <<$@>>),
+    [Service, Hostname0] = binary:split(kz_term:to_binary(kz_types:kz_node()), <<$@>>),
     Hostname = binary:replace(Hostname0, <<$.>>, <<"::">>, [global]),
     kz_util:iolist_join($., [Account, Cluster, Zone, Hostname, Service]).
 

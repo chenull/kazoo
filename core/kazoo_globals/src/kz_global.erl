@@ -42,7 +42,7 @@
 
 -include("kazoo_globals.hrl").
 
--record(kz_global, {node = kz_types:node() :: atom() | '_'
+-record(kz_global, {node = kz_types:kz_node() :: atom() | '_'
                    ,zone :: atom() | '_'
                    ,pid :: kz_term:api_pid() | '$2' | '_'
                    ,server :: any() | '_'
@@ -79,7 +79,7 @@ new_global(Name, Pid, Zone, Queue, State) ->
 
 -spec new_global(name(), pid(), atom(), kz_term:ne_binary(), atom(), integer()) -> global().
 new_global(Name, Pid, Zone, Queue, State, Timestamp) ->
-    #kz_global{node = kz_types:node()
+    #kz_global{node = kz_types:kz_node()
               ,zone = Zone
               ,server = Queue
               ,pid = Pid
@@ -165,7 +165,7 @@ new_timestamp() ->
 
 -spec is_local_node(global()) -> boolean().
 is_local_node(#kz_global{node=Node}) ->
-    Node =:= kz_types:node().
+    Node =:= kz_types:kz_node().
 
 -spec state(global()) -> kapi_globals:state().
 state(#kz_global{state=State}) -> State.

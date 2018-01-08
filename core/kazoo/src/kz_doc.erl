@@ -147,7 +147,7 @@ add_pvt_type(JObj, _, Options) ->
 -spec add_pvt_node(kz_json:object(), kz_term:api_binary(), kz_term:proplist()) -> kz_json:object().
 add_pvt_node(JObj, _, Options) ->
     case props:get_value('node', Options) of
-        'undefined' -> kz_json:set_value(?KEY_NODE, kz_term:to_binary(kz_types:node()), JObj);
+        'undefined' -> kz_json:set_value(?KEY_NODE, kz_term:to_binary(kz_types:kz_node()), JObj);
         Node -> kz_json:set_value(?KEY_NODE, kz_term:to_binary(Node), JObj)
     end.
 

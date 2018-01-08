@@ -483,7 +483,7 @@ conference_from_props(Props, Node, Conference) ->
                          ,switch_url = ecallmgr_fs_nodes:sip_url(Node)
                          ,switch_external_ip = ecallmgr_fs_nodes:sip_external_ip(Node)
                          ,account_id = props:get_value(?GET_CCV(<<"Account-ID">>), Props)
-                         ,handling_locally = (CtrlNode =:= kz_types:node())
+                         ,handling_locally = (CtrlNode =:= kz_types:kz_node())
                          ,origin_node = CtrlNode
                          ,control_node = CtrlNode
                          }.

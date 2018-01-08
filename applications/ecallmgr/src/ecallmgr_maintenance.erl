@@ -106,7 +106,7 @@
 
 -spec add_fs_node(kz_term:text()) -> 'ok'.
 add_fs_node(FSNode) ->
-    FSNodes = get_fs_nodes(kz_types:node()),
+    FSNodes = get_fs_nodes(kz_types:kz_node()),
     add_fs_node(FSNode, FSNodes, fun ecallmgr_config:set/2).
 
 -spec add_fs_node(kz_term:text(), kz_term:text() | boolean()) -> 'ok'.
@@ -116,12 +116,12 @@ add_fs_node(FSNode, 'true') ->
     FSNodes = get_fs_nodes(<<"default">>),
     add_fs_node(FSNode, FSNodes, fun ecallmgr_config:set_default/2);
 add_fs_node(FSNode, 'false') ->
-    FSNodes = get_fs_nodes(kz_types:node()),
+    FSNodes = get_fs_nodes(kz_types:kz_node()),
     add_fs_node(FSNode, FSNodes, fun ecallmgr_config:set_node/2).
 
 -spec remove_fs_node(kz_term:text() | atom()) -> 'ok'.
 remove_fs_node(FSNode) ->
-    FSNodes = get_fs_nodes(kz_types:node()),
+    FSNodes = get_fs_nodes(kz_types:kz_node()),
     remove_fs_node(FSNode, FSNodes, fun ecallmgr_config:set/2).
 
 -spec remove_fs_node(kz_term:text(), kz_term:text() | boolean()) -> 'ok'.
@@ -131,7 +131,7 @@ remove_fs_node(FSNode, 'true') ->
     FSNodes = get_fs_nodes(<<"default">>),
     remove_fs_node(FSNode, FSNodes, fun ecallmgr_config:set_default/2);
 remove_fs_node(FSNode, 'false') ->
-    FSNodes = get_fs_nodes(kz_types:node()),
+    FSNodes = get_fs_nodes(kz_types:kz_node()),
     remove_fs_node(FSNode, FSNodes, fun ecallmgr_config:set_node/2).
 
 -spec list_fs_nodes() -> 'no_return'.
@@ -141,7 +141,7 @@ list_fs_nodes() ->
 
 -spec get_fs_nodes() -> 'no_return'.
 get_fs_nodes() ->
-    _ = [io:format("~s~n", [Node]) || Node <- get_fs_nodes(kz_types:node())],
+    _ = [io:format("~s~n", [Node]) || Node <- get_fs_nodes(kz_types:kz_node())],
     'no_return'.
 
 -spec carrier_acls() -> 'no_return'.
@@ -689,7 +689,7 @@ maybe_print_acl(Network, FormatString, ACL) ->
     end.
 
 -spec get_acls() -> kz_json:object().
-get_acls() -> get_acls(kz_types:node()).
+get_acls() -> get_acls(kz_types:kz_node()).
 
 -spec get_acls(atom() | kz_term:ne_binary()) -> kz_json:object().
 get_acls(Node) ->

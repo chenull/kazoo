@@ -226,7 +226,7 @@ build_number_properties(JObj) ->
 update_status(Job, Status) ->
     {'ok', Job1} = kz_datamgr:save_doc(kz_doc:account_db(Job)
                                       ,kz_json:set_values([{<<"pvt_status">>, Status}
-                                                          ,{<<"pvt_node">>, kz_term:to_binary(kz_types:node())}
+                                                          ,{<<"pvt_node">>, kz_term:to_binary(kz_types:kz_node())}
                                                           ]
                                                          ,kz_doc:update_pvt_modified(Job)
                                                          )

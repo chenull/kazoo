@@ -205,7 +205,7 @@ exec_endpoints(ConferenceNode, ConferenceId, JObj, Endpoints) ->
 
 update_endpoint(Endpoint, EndpointCallId) ->
     Updates = [{fun kz_json:insert_value/3, <<"Outbound-Call-ID">>, EndpointCallId}
-              ,{fun kz_json:set_value/3, [<<"Custom-Channel-Vars">>, <<"Ecallmgr-Node">>], kz_types:node()}
+              ,{fun kz_json:set_value/3, [<<"Custom-Channel-Vars">>, <<"Ecallmgr-Node">>], kz_types:kz_node()}
               ],
     lists:foldl(fun({F, K, V}, JObj) -> F(K, V, JObj) end, Endpoint, Updates).
 

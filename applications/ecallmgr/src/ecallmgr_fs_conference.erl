@@ -72,7 +72,7 @@ start_link(Node, Options) ->
 %% Initializes the server
 %% @end
 %%--------------------------------------------------------------------
--spec init([kz_types:node() | kz_term:proplist()]) -> {'ok', state()}.
+-spec init([kz_types:kz_node() | kz_term:proplist()]) -> {'ok', state()}.
 init([Node, Options]) ->
     process_flag('trap_exit', 'true'),
     kz_util:put_callid(?DEFAULT_LOG_SYSTEM_ID),

@@ -107,7 +107,7 @@ handle_cast(_Msg, #state{timeout=Timeout}=State) ->
 %%--------------------------------------------------------------------
 -spec handle_info(any(), state()) -> handle_info_ret_state(state()).
 handle_info('initialize_pinger', #state{node=Node, options=Props}=State) ->
-    kz_notify:system_alert("node ~s disconnected from ~s", [Node, kz_types:node()]),
+    kz_notify:system_alert("node ~s disconnected from ~s", [Node, kz_types:kz_node()]),
     _ = case props:get_value('cookie', Props) of
             'undefined' -> 'ok';
             Cookie when is_atom(Cookie) ->
@@ -128,7 +128,7 @@ handle_info('check_node_status', #state{node=Node, timeout=Timeout}=State) ->
         'pong' ->
             %% give the node a moment to init
             timer:sleep(?MILLISECONDS_IN_SECOND),
-            kz_notify:system_alert("node ~s connected to ~s", [Node, kz_types:node()]),
+            kz_notify:system_alert("node ~s connected to ~s", [Node, kz_types:kz_node()]),
             'ok' = ecallmgr_fs_nodes:nodeup(Node),
             {'stop', 'normal', State};
         _Else ->

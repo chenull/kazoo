@@ -855,10 +855,10 @@ mem_usage() ->
 -spec node_name() -> binary().
 -spec node_hostname() -> binary().
 node_name() ->
-    [Name, _Host] = binary:split(kz_term:to_binary(kz_types:node()), <<"@">>),
+    [Name, _Host] = binary:split(kz_term:to_binary(kz_types:kz_node()), <<"@">>),
     Name.
 node_hostname() ->
-    [_Name, Host] = binary:split(kz_term:to_binary(kz_types:node()), <<"@">>),
+    [_Name, Host] = binary:split(kz_term:to_binary(kz_types:kz_node()), <<"@">>),
     Host.
 
 %% @public
