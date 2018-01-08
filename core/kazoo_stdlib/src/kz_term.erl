@@ -201,12 +201,12 @@ to_boolean(<<"false">>) -> 'false';
 to_boolean("false") -> 'false';
 to_boolean('false') -> 'false'.
 
--spec to_date(binary() | string() | integer()) -> kz_date().
+-spec to_date(binary() | string() | integer()) -> kz_time:date().
 to_date(X) ->
     {Date, _ } = to_datetime(X),
     Date.
 
--spec to_datetime(binary() | string() | integer()) -> kz_datetime().
+-spec to_datetime(binary() | string() | integer()) -> kz_time:datetime().
 to_datetime(X) when is_integer(X) -> calendar:gregorian_seconds_to_datetime(X);
 to_datetime(X) when is_binary(X) -> to_datetime(to_integer(X));
 to_datetime(X) when is_list(X) -> to_datetime(to_integer(X)).

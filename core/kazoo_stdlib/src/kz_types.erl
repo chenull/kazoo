@@ -69,23 +69,6 @@
 %% for setting types on dicts
 -type dict(K,V) :: [{K, V}].
 
--type kz_now() :: erlang:timestamp().
--type kz_year() :: non_neg_integer().
--type kz_month() :: 1..12.
--type kz_day() :: 1..31.
--type kz_hour() :: 0..23.
--type kz_minute() :: 0..59.
--type kz_second() :: 0..59.
--type kz_daynum() :: 1..7.
--type kz_weeknum() :: 1..53.
--type kz_date() :: calendar:date(). %%{kz_year(), kz_month(), kz_day()}.
--type kz_time() :: calendar:time(). %%{kz_hour(), kz_minute(), kz_second()}.
--type kz_datetime() :: calendar:datetime(). %%{kz_date(), kz_time()}.
--type kz_iso_week() :: calendar:yearweeknum(). %%{kz_year(), kz_weeknum()}.
--type gregorian_seconds() :: pos_integer().
--type unix_seconds() :: pos_integer().
--type api_seconds() :: 'undefined' | gregorian_seconds().
-
 -type kz_timeout() :: non_neg_integer() | 'infinity'.
 
 -type kz_ip_list() :: ne_binaries().
@@ -244,22 +227,6 @@
              ,functions/0
              ,mail_message_body/0
              ,dict/2
-             ,kz_now/0
-             ,kz_year/0
-             ,kz_month/0
-             ,kz_day/0
-             ,kz_hour/0
-             ,kz_minute/0
-             ,kz_second/0
-             ,kz_daynum/0
-             ,kz_weeknum/0
-             ,kz_date/0
-             ,kz_time/0
-             ,kz_datetime/0
-             ,kz_iso_week/0
-             ,gregorian_seconds/0
-             ,unix_seconds/0
-             ,api_seconds/0
              ,kz_timeout/0
              ,kz_ip_list/0
              ,sup_child_spec/0

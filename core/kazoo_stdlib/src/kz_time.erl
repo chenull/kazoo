@@ -38,6 +38,42 @@
 
 -include_lib("kazoo_stdlib/include/kz_types.hrl").
 
+-type now() :: erlang:timestamp().
+-type year() :: non_neg_integer().
+-type month() :: 1..12.
+-type day() :: 1..31.
+-type hour() :: 0..23.
+-type minute() :: 0..59.
+-type second() :: 0..59.
+-type daynum() :: 1..7.
+-type weeknum() :: 1..53.
+-type date() :: calendar:date(). %%{year(), month(), day()}.
+-type time() :: calendar:time(). %%{hour(), minute(), second()}.
+-type datetime() :: calendar:datetime(). %%{date(), time()}.
+-type iso_week() :: calendar:yearweeknum(). %%{year(), weeknum()}.
+-type gregorian_seconds() :: pos_integer().
+-type unix_seconds() :: pos_integer().
+-type api_seconds() :: 'undefined' | gregorian_seconds().
+
+-export_type([now/0
+             ,year/0
+             ,month/0
+             ,day/0
+             ,hour/0
+             ,minute/0
+             ,second/0
+             ,daynum/0
+             ,weeknum/0
+             ,date/0
+             ,time/0
+             ,datetime/0
+             ,iso_week/0
+             ,gregorian_seconds/0
+             ,unix_seconds/0
+             ,api_seconds/0
+             ]).
+
+
 %% returns current seconds
 -spec current_tstamp() -> gregorian_seconds().
 current_tstamp() ->
