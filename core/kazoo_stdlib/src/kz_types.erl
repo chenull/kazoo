@@ -14,8 +14,6 @@
 %% for setting types on dicts
 -type dict(K,V) :: [{K, V}].
 
--type timeout() :: non_neg_integer() | 'infinity'.
-
 -type ip_list() :: kz_term:ne_binaries().
 
 %% Recreate the non-exported types defined in the Erlang supervisor source
@@ -129,7 +127,6 @@
 
 -export_type([mail_message_body/0
              ,dict/2
-             ,timeout/0
              ,ip_list/0
              ,sup_child_spec/0
              ,sup_child_specs/0

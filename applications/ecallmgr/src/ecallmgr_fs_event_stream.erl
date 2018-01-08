@@ -29,7 +29,7 @@
                ,ip :: inet:ip_address() | 'undefined'
                ,port :: inet:port_number() | 'undefined'
                ,socket :: inet:socket() | 'undefined'
-               ,idle_alert = 'infinity' :: kz_types:timeout()
+               ,idle_alert = 'infinity' :: timeout()
                ,switch_url :: kz_term:api_ne_binary()
                ,switch_uri :: kz_term:api_ne_binary()
                ,switch_info = 'false' :: boolean()
@@ -336,7 +336,7 @@ maybe_bind(Node, Bindings, Attempts) ->
             maybe_bind(Node, Bindings, Attempts+1)
     end.
 
--spec idle_alert_timeout() -> kz_types:timeout().
+-spec idle_alert_timeout() -> timeout().
 idle_alert_timeout() ->
     case ecallmgr_config:get_integer(<<"event_stream_idle_alert">>, 0) of
         Timeout when Timeout =< 30 -> 'infinity';

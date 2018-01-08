@@ -113,7 +113,7 @@
                ,statem_call_id :: kz_term:api_binary() % used when no call-ids are available
                ,endpoints = [] :: kz_json:objects()
                ,outbound_call_ids = [] :: kz_term:ne_binaries()
-               ,max_connect_failures :: kz_types:timeout()
+               ,max_connect_failures :: timeout()
                ,connect_failures = 0 :: non_neg_integer()
                ,agent_state_updates = [] :: list()
                }).
@@ -255,7 +255,7 @@ sync_resp(ServerRef, JObj) ->
 %% @doc
 %% @end
 %%--------------------------------------------------------------------
--spec pause(kz_types:server_ref(), kz_types:timeout()) -> 'ok'.
+-spec pause(kz_types:server_ref(), timeout()) -> 'ok'.
 pause(ServerRef, Timeout) ->
     gen_statem:cast(ServerRef, {'pause', Timeout}).
 

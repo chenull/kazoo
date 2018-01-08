@@ -110,7 +110,7 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([]) -> {'ok', state(), kz_types:timeout()}.
+-spec init([]) -> {'ok', state(), timeout()}.
 init([]) ->
     State = #{node => kz_term:to_binary(kz_types:node())
              ,cache => ets:new(?ETS_DISCOVERY_CACHE, ?ETS_DISCOVERY_CACHE_OPTIONS)

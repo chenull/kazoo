@@ -29,7 +29,7 @@ build(Node) ->
 
 -spec collect(kz_json:object(), kz_term:pid_refs()) ->
                      kz_json:object().
--spec collect(kz_json:object(), kz_term:pid_refs(), kz_types:timeout()) ->
+-spec collect(kz_json:object(), kz_term:pid_refs(), timeout()) ->
                      kz_json:object().
 collect(ACLs, PidRefs) ->
     collect(ACLs, PidRefs, request_timeout()).

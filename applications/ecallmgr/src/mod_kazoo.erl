@@ -127,7 +127,7 @@ fetch_reply(Node, FetchID, Section, Reply, Timeout) ->
 
 -spec api(atom(), kz_term:text()) -> fs_api_return().
 -spec api(atom(), kz_term:text(), kz_term:text()) -> fs_api_return().
--spec api(atom(), kz_term:text(), kz_term:text(), kz_types:timeout()) -> fs_api_return().
+-spec api(atom(), kz_term:text(), kz_term:text(), timeout()) -> fs_api_return().
 api(Node, Cmd) ->
     api(Node, Cmd, "").
 api(Node, Cmd, Args) ->

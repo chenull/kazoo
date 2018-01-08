@@ -607,7 +607,7 @@ amqp_pool_send(Api, PubFun) when is_function(PubFun, 1) ->
 
 -spec amqp_pool_request(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun()) ->
                                kz_amqp_worker:request_return().
--spec amqp_pool_request(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun(), kz_types:timeout()) ->
+-spec amqp_pool_request(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun(), timeout()) ->
                                kz_amqp_worker:request_return().
 amqp_pool_request(Api, PubFun, ValidateFun)
   when is_function(PubFun, 1),
@@ -624,7 +624,7 @@ amqp_pool_request(Api, PubFun, ValidateFun, Timeout)
 
 -spec amqp_pool_request_custom(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun(), gen_listener:binding()) ->
                                       kz_amqp_worker:request_return().
--spec amqp_pool_request_custom(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun(), kz_types:timeout(), gen_listener:binding()) ->
+-spec amqp_pool_request_custom(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:validate_fun(), timeout(), gen_listener:binding()) ->
                                       kz_amqp_worker:request_return().
 amqp_pool_request_custom(Api, PubFun, ValidateFun, Bind)
   when is_function(PubFun, 1),
@@ -653,7 +653,7 @@ amqp_pool_collect(Api, PubFun) ->
 amqp_pool_collect(Api, PubFun, TimeoutOrUntil) ->
     kz_amqp_worker:call_collect(Api, PubFun, TimeoutOrUntil).
 
--spec amqp_pool_collect(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:collect_until(), kz_types:timeout()) ->
+-spec amqp_pool_collect(kz_term:api_terms(), kz_amqp_worker:publish_fun(), kz_amqp_worker:collect_until(), timeout()) ->
                                {'ok', kz_json:objects()} |
                                {'timeout', kz_json:objects()} |
                                {'error', any()}.

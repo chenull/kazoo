@@ -773,7 +773,7 @@ set_command(ChannelVars) ->
               ],
     kz_json:from_list(Command).
 
--spec wait_for_ringback(kz_types:timeout(), kapps_call:call()) -> ringback_parker_result().
+-spec wait_for_ringback(timeout(), kapps_call:call()) -> ringback_parker_result().
 wait_for_ringback(Timeout, Call) ->
     case wait_for_parker(Timeout, Call) of
         {'ok', JObj} ->
@@ -802,13 +802,13 @@ wait_for_ringback(Timeout, Call) ->
 -type wait_for_parker_result() :: {'ok' | 'fail' | 'error', kz_json:object()}.
 -type receive_event_result() :: {'ok', kz_json:object()} | {'error', 'timeout'}.
 
--spec wait_for_parker(kz_types:timeout(), kapps_call:call()) -> wait_for_parker_result().
+-spec wait_for_parker(timeout(), kapps_call:call()) -> wait_for_parker_result().
 wait_for_parker(Timeout, Call) ->
     Start = os:timestamp(),
     lager:debug("waiting for parker for ~p ms", [Timeout]),
     wait_for_parker(Timeout, Call, Start, kapps_call_command:receive_event(Timeout)).
 
--spec wait_for_parker(kz_types:timeout(), kapps_call:call(), kz_time:now(), receive_event_result()) -> wait_for_parker_result().
+-spec wait_for_parker(timeout(), kapps_call:call(), kz_time:now(), receive_event_result()) -> wait_for_parker_result().
 wait_for_parker(_Timeout, _Call, _Start, {'error', 'timeout'}=E) -> E;
 wait_for_parker(Timeout, Call, Start, {'ok', JObj}) ->
     Disposition = kz_json:get_value(<<"Disposition">>, JObj),

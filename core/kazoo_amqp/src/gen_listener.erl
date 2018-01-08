@@ -144,30 +144,30 @@
 %%% API
 %%%===================================================================
 -callback init(any()) -> {'ok', module_state()} |
-                         {'ok', module_state(), kz_types:timeout() | 'hibernate'} |
+                         {'ok', module_state(), timeout() | 'hibernate'} |
                          {'stop', any()} |
                          'ignore'.
 
 -type handle_call_return() :: {'reply', any(), module_state()} |
-                              {'reply', any(), module_state(), kz_types:timeout() | 'hibernate'} |
+                              {'reply', any(), module_state(), timeout() | 'hibernate'} |
                               {'noreply', module_state()} |
-                              {'noreply', module_state(), kz_types:timeout() | 'hibernate'} |
+                              {'noreply', module_state(), timeout() | 'hibernate'} |
                               {'stop', any(), any(), module_state()} |
                               {'stop', any(), module_state()}.
 
 -callback handle_call(any(), {pid(), any()}, module_state()) -> handle_call_return().
 
 -type handle_cast_return() :: {'noreply', module_state()} |
-                              {'noreply', module_state(), kz_types:timeout() | 'hibernate'} |
+                              {'noreply', module_state(), timeout() | 'hibernate'} |
                               {'stop', any(), module_state()}.
 
 -callback handle_cast(any(), module_state()) -> handle_cast_return().
 
 -type handle_info_return() :: {'noreply', module_state()} |
-                              {'noreply', module_state(), kz_types:timeout() | 'hibernate'} |
+                              {'noreply', module_state(), timeout() | 'hibernate'} |
                               {'stop', any(), module_state()}.
 
--callback handle_info(kz_types:timeout() | any(), module_state()) -> handle_info_return().
+-callback handle_info(timeout() | any(), module_state()) -> handle_info_return().
 
 
 -type handle_event_return() :: 'ignore' |
@@ -240,7 +240,7 @@ nack(Srv, Delivery) -> gen_server:cast(Srv, {'nack', Delivery}).
 -spec call(kz_types:server_ref(), any()) -> any().
 call(Name, Request) -> gen_server:call(Name, {'$client_call', Request}).
 
--spec call(kz_types:server_ref(), any(), kz_types:timeout()) -> any().
+-spec call(kz_types:server_ref(), any(), timeout()) -> any().
 call(Name, Request, Timeout) -> gen_server:call(Name, {'$client_call', Request}, Timeout).
 
 -spec cast(kz_types:server_ref(), any()) -> 'ok'.
@@ -262,8 +262,8 @@ reply(From, Msg) -> gen_server:reply(From, Msg).
 -type server_name() :: {'global' | 'local', atom()} | pid().
 
 -spec enter_loop(atom(), list(), any()) -> no_return().
--spec enter_loop(atom(), list(), any(), kz_types:timeout() | server_name()) -> no_return().
--spec enter_loop(atom(), list(), any(), server_name(), kz_types:timeout()) -> no_return().
+-spec enter_loop(atom(), list(), any(), timeout() | server_name()) -> no_return().
+-spec enter_loop(atom(), list(), any(), server_name(), timeout()) -> no_return().
 enter_loop(Module, Options, ModuleState) ->
     enter_loop(Module, Options, ModuleState, self(), 'infinity').
 enter_loop(Module, Options, ModuleState, {Scope, _Name}=ServerName)
@@ -982,7 +982,7 @@ create_binding(Binding, Props, Q) ->
 stop_timer('undefined') -> 'false';
 stop_timer(Ref) when is_reference(Ref) -> erlang:cancel_timer(Ref).
 
--spec start_timer(kz_types:timeout()) -> kz_term:api_reference().
+-spec start_timer(timeout()) -> kz_term:api_reference().
 start_timer(0) ->
     self() ! ?CALLBACK_TIMEOUT_MSG,
     'undefined';

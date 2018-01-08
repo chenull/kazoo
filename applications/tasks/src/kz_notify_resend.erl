@@ -118,7 +118,7 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([]) -> {'ok', state(), kz_types:timeout()}.
+-spec init([]) -> {'ok', state(), timeout()}.
 init([]) ->
     kz_util:put_callid(?NAME),
     lager:debug("~s has been started", [?NAME]),

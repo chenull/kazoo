@@ -43,7 +43,7 @@ store_file_args(Filename, UrlFun) ->
     ,{<<"Http-Method">>, <<"put">>}
     ].
 
--spec store_file(kz_term:ne_binary(), kz_term:ne_binary() | function(), pos_integer(), kz_types:timeout(), map()) ->
+-spec store_file(kz_term:ne_binary(), kz_term:ne_binary() | function(), pos_integer(), timeout(), map()) ->
                         'ok' | {'error', any()}.
 store_file(Filename, Url, Tries, Timeout, #{media_server := Node}=Map) ->
     Msg = case kz_maps:get('alert_msg', Map) of
@@ -60,7 +60,7 @@ store_file(Filename, Url, Tries, Timeout, #{media_server := Node}=Map) ->
           end,
     do_store_file(Tries, Timeout, API, Msg, Map).
 
--spec do_store_file(pos_integer(), kz_types:timeout(), function(), kz_term:ne_binary(), map()) ->
+-spec do_store_file(pos_integer(), timeout(), function(), kz_term:ne_binary(), map()) ->
                            'ok' | {'error', any()}.
 do_store_file(Tries, Timeout, API, Msg, #{media_server := Node}=Map) ->
     Payload = API(),
@@ -86,7 +86,7 @@ do_store_file(Tries, Timeout, API, Msg, #{media_server := Node}=Map) ->
             retry_store_file(Tries - 1, Timeout, API, Msg, kz_term:to_binary(Error), Map)
     end.
 
--spec retry_store_file(integer(), kz_types:timeout(), kz_term:proplist() | function()
+-spec retry_store_file(integer(), timeout(), kz_term:proplist() | function()
                       ,kz_term:ne_binary(), kz_term:ne_binary(), map()) ->
                               'ok' | {'error', any()}.
 retry_store_file(0, _Timeout, _API, Msg, Error, Map) ->

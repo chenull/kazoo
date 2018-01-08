@@ -352,9 +352,9 @@ clean_services(AccountId, Worker) ->
     kz_util:put_callid(OldCallId),
     Resp.
 
--spec wait_for_response(kz_term:ne_binary(), kz_types:timeout()) ->
+-spec wait_for_response(kz_term:ne_binary(), timeout()) ->
                                kz_amqp_worker:request_return().
--spec wait_for_response(kz_term:ne_binary(), kz_types:timeout(), kz_json:objects()) ->
+-spec wait_for_response(kz_term:ne_binary(), timeout(), kz_json:objects()) ->
                                kz_amqp_worker:request_return().
 wait_for_response(MsgId, Timeout) ->
     wait_for_response(MsgId, Timeout, []).

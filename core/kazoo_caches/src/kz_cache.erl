@@ -66,7 +66,7 @@
 -define(DATABASE_BINDING, [{'type', <<"database">>}]).
 
 -type store_options() :: [{'origin', origin_tuple() | origin_tuples()} |
-                          {'expires', kz_types:timeout()} |
+                          {'expires', timeout()} |
                           {'callback', 'undefined' | callback_fun()}
                          ].
 -export_type([store_options/0]).
@@ -79,7 +79,7 @@
                ,channel_reconnect_flush = 'false' :: boolean()
                ,new_node_flush = 'false' :: boolean()
                ,expire_node_flush = 'false' :: boolean()
-               ,expire_period = ?EXPIRE_PERIOD :: kz_types:timeout()
+               ,expire_period = ?EXPIRE_PERIOD :: timeout()
                ,expire_period_ref :: reference()
                ,props = [] :: kz_term:proplist()
                ,has_monitors = 'false' :: boolean()
@@ -102,7 +102,7 @@ start_link(Name) when is_atom(Name) ->
 start_link(Name, Props) when is_list(Props) ->
     start_link(Name, ?EXPIRE_PERIOD, Props).
 
--spec start_link(atom(), kz_types:timeout(), kz_term:proplist()) -> kz_types:startlink_ret().
+-spec start_link(atom(), timeout(), kz_term:proplist()) -> kz_types:startlink_ret().
 start_link(Name, ExpirePeriod, Props) ->
     case props:get_value('origin_bindings', Props) of
         'undefined' ->
@@ -169,7 +169,7 @@ dump(ShowValue) -> dump_local(?SERVER, ShowValue).
 
 -spec wait_for_key(any()) -> {'ok', any()} |
                              {'error', 'timeout'}.
--spec wait_for_key(any(), kz_types:timeout()) -> {'ok', any()} |
+-spec wait_for_key(any(), timeout()) -> {'ok', any()} |
                                            {'error', 'timeout'}.
 
 wait_for_key(Key) -> wait_for_key(Key, ?DEFAULT_WAIT_TIMEOUT).
@@ -330,7 +330,7 @@ wait_for_key_local(Srv, Key, Timeout) when is_integer(Timeout) ->
     {'ok', Ref} = gen_server:call(Srv, {'wait_for_key', Key, Timeout}, WaitFor),
     wait_for_response(Ref, WaitFor).
 
--spec wait_for_response(reference(), kz_types:timeout()) -> {'ok', any()} |
+-spec wait_for_response(reference(), timeout()) -> {'ok', any()} |
                                                       {'error', 'timeout'}.
 wait_for_response(Ref, WaitFor) ->
     receive
@@ -355,19 +355,19 @@ wait_for_response(Ref, WaitFor) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([atom() | kz_types:timeout() | kz_term:proplist()]) -> {'ok', state()}.
+-spec init([atom() | timeout() | kz_term:proplist()]) -> {'ok', state()}.
 init([Name, ExpirePeriod, Props]) ->
     kz_util:put_callid(Name),
     init(Name, ExpirePeriod, Props, props:get_value('origin_bindings', Props)).
 
--spec init(atom(), kz_types:timeout(), kz_term:proplist(), kz_term:api_list()) -> {'ok', state()}.
+-spec init(atom(), timeout(), kz_term:proplist(), kz_term:api_list()) -> {'ok', state()}.
 init(Name, ExpirePeriod, Props, 'undefined') ->
     init(Name, ExpirePeriod, Props);
 init(Name, ExpirePeriod, Props, _Bindings) ->
     kapi_conf:declare_exchanges(),
     init(Name, ExpirePeriod, Props).
 
--spec init(atom(), kz_types:timeout(), kz_term:proplist()) -> {'ok', state()}.
+-spec init(atom(), timeout(), kz_term:proplist()) -> {'ok', state()}.
 init(Name, ExpirePeriod, Props) ->
     Tab = ets:new(Name
                  ,['set', 'public', 'named_table', {'keypos', #cache_obj.key}]
@@ -654,7 +654,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--spec get_props_expires(kz_term:proplist()) -> kz_types:timeout().
+-spec get_props_expires(kz_term:proplist()) -> timeout().
 get_props_expires(Props) ->
     case props:get_value('expires', Props) of
         'undefined' -> ?EXPIRES;

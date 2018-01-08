@@ -78,14 +78,14 @@ constrain_binding_digit(BindingDigit) ->
         'false' -> ?DEFAULT_BINDING_DIGIT
     end.
 
--spec kz_types:timeout() -> non_neg_integer().
+-spec timeout() -> non_neg_integer().
 -spec timeout(kz_term:ne_binary()) -> non_neg_integer().
 timeout() ->
     kapps_config:get_integer(<<"metaflows">>, <<"digit_timeout_ms">>, ?DEFAULT_DIGIT_TIMEOUT).
 
 timeout(Account) ->
     case konami_doc(Account) of
-        'undefined' -> kz_types:timeout();
+        'undefined' -> timeout();
         KonamiDoc ->
             get_attribute(KonamiDoc, <<"digit_timeout_ms">>, fun timeout/0, fun kz_term:to_integer/1)
     end.

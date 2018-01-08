@@ -177,7 +177,7 @@ set_accepting_charges(#cb_context{req_json = ReqJObj} = Context) ->
 -spec device_id(context()) -> kz_term:api_ne_binary().
 -spec reseller_id(context()) -> kz_term:api_ne_binary().
 -spec account_modb(context()) -> kz_term:api_ne_binary().
--spec account_modb(context(), kz_time:now() | kz_types:timeout()) -> kz_term:api_ne_binary().
+-spec account_modb(context(), kz_time:now() | timeout()) -> kz_term:api_ne_binary().
 -spec account_modb(context(), kz_time:year(), kz_time:month()) -> kz_term:api_ne_binary().
 -spec account_realm(context()) -> kz_term:api_ne_binary().
 -spec account_doc(context()) -> kz_term:api_object().

@@ -101,7 +101,7 @@ start_link(AccountId) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([kz_term:ne_binary()]) -> {'ok', state(), kz_types:timeout()}.
+-spec init([kz_term:ne_binary()]) -> {'ok', state(), timeout()}.
 init([AccountId]) ->
     _ = kz_util:spawn(fun cleanup_jobs/1, [AccountId]),
     State = #state{account_id=AccountId

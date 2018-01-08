@@ -82,7 +82,7 @@
                          {whapp(), validate_fun(), boolean()} |  %% {Whapp, VFun, IncludeFederated}
                          {whapp(), boolean(), boolean()} |       %% {Whapp, IncludeFederated, IsShared}
                          {whapp(), validate_fun(), boolean(), boolean()}. %% {Whapp, VFun, IncludeFederated, IsShared}
--type timeout_or_until() :: kz_types:timeout() | collect_until().
+-type timeout_or_until() :: timeout() | collect_until().
 
 %% case {IsFederated, IsShared} of
 %%  {'true', 'true'} -> Get from {0,1} whapp instance per zone
@@ -183,9 +183,9 @@ default_timeout() -> 2 * ?MILLISECONDS_IN_SECOND.
                           {'error', any()}.
 -spec call(kz_term:api_terms(), publish_fun(), validate_fun()) ->
                   request_return().
--spec call(kz_term:api_terms(), publish_fun(), validate_fun(), kz_types:timeout()) ->
+-spec call(kz_term:api_terms(), publish_fun(), validate_fun(), timeout()) ->
                   request_return().
--spec call(kz_term:api_terms(), publish_fun(), validate_fun(), kz_types:timeout(), pid()  | atom()) ->
+-spec call(kz_term:api_terms(), publish_fun(), validate_fun(), timeout(), pid()  | atom()) ->
                   request_return().
 call(Req, PubFun, VFun) ->
     call(Req, PubFun, VFun, default_timeout()).
@@ -260,9 +260,9 @@ checkin_worker(Worker, Pool) ->
 
 -spec call_custom(kz_term:api_terms(), publish_fun(), validate_fun(), gen_listener:binding()) ->
                          request_return().
--spec call_custom(kz_term:api_terms(), publish_fun(), validate_fun(), kz_types:timeout(), gen_listener:binding()) ->
+-spec call_custom(kz_term:api_terms(), publish_fun(), validate_fun(), timeout(), gen_listener:binding()) ->
                          request_return().
--spec call_custom(kz_term:api_terms(), publish_fun(), validate_fun(), kz_types:timeout(), gen_listener:binding(), pid()) ->
+-spec call_custom(kz_term:api_terms(), publish_fun(), validate_fun(), timeout(), gen_listener:binding(), pid()) ->
                          request_return().
 call_custom(Req, PubFun, VFun, Bind) ->
     call_custom(Req, PubFun, VFun, default_timeout(), Bind).
@@ -292,9 +292,9 @@ call_custom(Req, PubFun, VFun, Timeout, Bind, Worker) ->
                           request_return().
 -spec call_collect(kz_term:api_terms(), publish_fun(), timeout_or_until()) ->
                           request_return().
--spec call_collect(kz_term:api_terms(), publish_fun(), collect_until(), kz_types:timeout()) ->
+-spec call_collect(kz_term:api_terms(), publish_fun(), collect_until(), timeout()) ->
                           request_return().
--spec call_collect(kz_term:api_terms(), publish_fun(), collect_until(), kz_types:timeout(), pid()) ->
+-spec call_collect(kz_term:api_terms(), publish_fun(), collect_until(), timeout(), pid()) ->
                           request_return().
 call_collect(Req, PubFun) ->
     call_collect(Req, PubFun, default_timeout()).
@@ -1005,11 +1005,11 @@ reset(#state{req_timeout_ref = ReqRef
                ,responses = 'undefined'
                }.
 
--spec fudge_timeout(kz_types:timeout()) -> kz_types:timeout().
+-spec fudge_timeout(timeout()) -> timeout().
 fudge_timeout('infinity'=T) -> T;
 fudge_timeout(T) -> T + ?FUDGE.
 
--spec start_req_timeout(kz_types:timeout()) -> reference().
+-spec start_req_timeout(timeout()) -> reference().
 start_req_timeout('infinity') -> make_ref();
 start_req_timeout(Timeout) ->
     erlang:start_timer(Timeout, self(), 'req_timeout').

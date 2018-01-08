@@ -743,7 +743,7 @@ update_properties(QueueJObj, State) ->
       %%,strategy = get_strategy(kz_json:get_value(<<"strategy">>, QueueJObj))
      }.
 
--spec current_call('undefined' | kapps_call:call(), kz_term:api_reference() | kz_types:timeout(), kz_types:timeout()) -> kz_term:api_object().
+-spec current_call('undefined' | kapps_call:call(), kz_term:api_reference() | timeout(), timeout()) -> kz_term:api_object().
 current_call('undefined', _, _) -> 'undefined';
 current_call(Call, QueueTimeLeft, Start) ->
     kz_json:from_list([{<<"call_id">>, kapps_call:call_id(Call)}
@@ -755,7 +755,7 @@ current_call(Call, QueueTimeLeft, Start) ->
                       ,{<<"wait_time">>, elapsed(Start)}
                       ]).
 
--spec elapsed(kz_term:api_reference() | kz_types:timeout() | integer()) -> kz_term:api_integer().
+-spec elapsed(kz_term:api_reference() | timeout() | integer()) -> kz_term:api_integer().
 elapsed('undefined') -> 'undefined';
 elapsed(Ref) when is_reference(Ref) ->
     case erlang:read_timer(Ref) of

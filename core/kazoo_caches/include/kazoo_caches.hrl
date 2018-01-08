@@ -18,7 +18,7 @@
 
 -record(cache_obj, {key :: any()| '_' | '$1'
                    ,value :: any() | '_' | '$1' | '$2'
-                   ,expires :: kz_types:timeout() | '_' | '$3'
+                   ,expires :: timeout() | '_' | '$3'
                    ,timestamp = kz_time:now_s() :: kz_time:gregorian_seconds() | '_' | '$4'
                    ,callback :: callback_fun() | '_' | '$2' | '$3' | '$5' | 'undefined'
                    ,origin :: origin_tuple() | origin_tuples() | '$1' | '_' | 'undefined'

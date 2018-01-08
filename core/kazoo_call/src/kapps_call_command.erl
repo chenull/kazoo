@@ -426,10 +426,10 @@ relay_event(Pid, JObj) ->
 relay_event(Pid, JObj, RelayFun) ->
     RelayFun(Pid, {'amqp_msg', JObj}).
 
--spec receive_event(kz_types:timeout()) ->
+-spec receive_event(timeout()) ->
                            {'ok', kz_json:object()} |
                            {'error', 'timeout'}.
--spec receive_event(kz_types:timeout(), boolean()) ->
+-spec receive_event(timeout(), boolean()) ->
                            {'ok', kz_json:object()} |
                            {'other', kz_json:object() | any()} |
                            {'error', 'timeout'}.
@@ -1253,9 +1253,9 @@ build_moh_keys(AMOH, BMOH) ->
 
 -spec b_hold(kapps_call:call()) ->
                     kapps_api_std_return().
--spec b_hold(kz_types:timeout() | kz_term:api_binary(), kapps_call:call()) ->
+-spec b_hold(timeout() | kz_term:api_binary(), kapps_call:call()) ->
                     kapps_api_std_return().
--spec b_hold(kz_types:timeout(), kz_term:api_binary(), kapps_call:call()) ->
+-spec b_hold(timeout(), kz_term:api_binary(), kapps_call:call()) ->
                     kapps_api_std_return().
 
 hold(Call) -> hold('undefined', Call).
@@ -2246,7 +2246,7 @@ b_privacy(Mode, Call) ->
                             collect_digits_return().
 
 -record(wcc_collect_digits, {max_digits :: pos_integer()
-                            ,timeout = ?DEFAULT_DIGIT_TIMEOUT :: kz_types:timeout()
+                            ,timeout = ?DEFAULT_DIGIT_TIMEOUT :: timeout()
                             ,interdigit = ?DEFAULT_INTERDIGIT_TIMEOUT :: pos_integer()
                             ,noop_id :: kz_term:api_binary()
                             ,terminators = [<<"#">>] :: kz_term:ne_binaries()
@@ -2406,7 +2406,7 @@ handle_collect_digit_event(_JObj, _NoopId, _EventType) ->
                               kapps_api_std_return().
 -spec wait_for_message(kapps_call:call(), binary(), kz_term:ne_binary(), kz_term:ne_binary()) ->
                               kapps_api_std_return().
--spec wait_for_message(kapps_call:call(), binary(), kz_term:ne_binary(), kz_term:ne_binary(), kz_types:timeout()) ->
+-spec wait_for_message(kapps_call:call(), binary(), kz_term:ne_binary(), kz_term:ne_binary(), timeout()) ->
                               kapps_api_std_return().
 
 wait_for_message(Call, Application) ->
@@ -2450,7 +2450,7 @@ wait_for_message(Call, Application, Event, Type, Timeout) ->
                                   wait_for_application_return().
 -spec wait_for_application(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) ->
                                   wait_for_application_return().
--spec wait_for_application(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), kz_types:timeout()) ->
+-spec wait_for_application(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), timeout()) ->
                                   wait_for_application_return().
 
 wait_for_application(Call, Application) ->
@@ -2500,14 +2500,14 @@ wait_for_application(Call, Application, Event, Type, Timeout) ->
 -spec wait_for_headless_application(kz_term:ne_binary()
                                    ,headless_event()
                                    ,kz_term:ne_binary()
-                                   ,kz_types:timeout()
+                                   ,timeout()
                                    ) ->
                                            wait_for_headless_application_return().
 -spec wait_for_headless_application(kz_term:ne_binary()
                                    ,headless_event()
                                    ,kz_term:ne_binary()
                                    ,fun((kz_json:object()) -> boolean())
-                                   ,kz_types:timeout()
+                                   ,timeout()
                                    ) ->
                                            wait_for_headless_application_return().
 
@@ -2576,7 +2576,7 @@ wait_for_headless_application(Application, Event, Type, Fun, Timeout) ->
 %% Wait for a DTMF event and extract the digits when it comes
 %% @end
 %%--------------------------------------------------------------------
--spec wait_for_dtmf(kz_types:timeout()) ->
+-spec wait_for_dtmf(timeout()) ->
                            {'error', 'channel_hungup' | 'timeout' | kz_json:object()} |
                            {'ok', binary()}.
 wait_for_dtmf(Timeout) ->
@@ -2606,9 +2606,9 @@ wait_for_dtmf(Timeout) ->
 %% Waits for and determines the status of the bridge command
 %% @end
 %%--------------------------------------------------------------------
--spec wait_for_bridge(kz_types:timeout(), kapps_call:call()) ->
+-spec wait_for_bridge(timeout(), kapps_call:call()) ->
                              kapps_api_bridge_return().
--spec wait_for_bridge(kz_types:timeout(), 'undefined' | fun((kz_json:object()) -> any()), kapps_call:call()) ->
+-spec wait_for_bridge(timeout(), 'undefined' | fun((kz_json:object()) -> any()), kapps_call:call()) ->
                              kapps_api_bridge_return().
 wait_for_bridge(0, Call) ->
     wait_for_bridge(?BRIDGE_DEFAULT_TIMEOUT, 'undefined', Call);
@@ -2724,7 +2724,7 @@ wait_for_channel_bridge() ->
 %%--------------------------------------------------------------------
 -spec wait_for_hangup() -> {'ok', 'channel_hungup'} |
                            {'error', 'timeout'}.
--spec wait_for_hangup(kz_types:timeout()) ->
+-spec wait_for_hangup(timeout()) ->
                              {'ok', 'channel_hungup'} |
                              {'error', 'timeout'}.
 wait_for_hangup() ->
@@ -2755,7 +2755,7 @@ wait_for_hangup(Timeout) ->
 %%--------------------------------------------------------------------
 -spec wait_for_unbridge() ->   {'ok', 'leg_hungup'} |
                                {'error', 'timeout'}.
--spec wait_for_unbridge(kz_types:timeout()) ->
+-spec wait_for_unbridge(timeout()) ->
                                {'ok', 'leg_hungup'} |
                                {'error', 'timeout'}.
 wait_for_unbridge() ->
@@ -2778,7 +2778,7 @@ wait_for_unbridge(Timeout) ->
 %% Waits for and determines the status of the bridge command
 %% @end
 %%--------------------------------------------------------------------
--spec wait_for_application_or_dtmf(kz_term:ne_binary(), kz_types:timeout()) ->
+-spec wait_for_application_or_dtmf(kz_term:ne_binary(), timeout()) ->
                                           kapps_api_std_return() |
                                           {'dtmf', binary()}.
 wait_for_application_or_dtmf(Application, Timeout) ->
@@ -2806,7 +2806,7 @@ wait_for_application_or_dtmf(Application, Timeout) ->
 -define(WAIT_FOR_FAX_TIMEOUT, kapps_config:get_integer(<<"fax">>, <<"wait_for_fax_timeout_ms">>, ?MILLISECONDS_IN_HOUR)).
 
 -spec wait_for_fax() -> wait_for_fax_ret().
--spec wait_for_fax(kz_types:timeout()) -> wait_for_fax_ret().
+-spec wait_for_fax(timeout()) -> wait_for_fax_ret().
 wait_for_fax() -> wait_for_fax(?WAIT_FOR_FAX_TIMEOUT).
 wait_for_fax(Timeout) ->
     Start = os:timestamp(),
@@ -3073,7 +3073,7 @@ wait_for_fax_detection(Timeout, Call) ->
 %%--------------------------------------------------------------------
 -spec wait_for_unparked_call(kapps_call:call()) ->
                                     kapps_api_std_return().
--spec wait_for_unparked_call(kapps_call:call(), kz_types:timeout()) ->
+-spec wait_for_unparked_call(kapps_call:call(), timeout()) ->
                                     kapps_api_std_return().
 
 wait_for_unparked_call(Call) ->
@@ -3126,7 +3126,7 @@ store_file(Filename, URLFun, Tries, Call) ->
     App = kz_util:calling_app(),
     store_file(Filename, URLFun, Tries, storage_timeout(App), Call).
 
--spec store_file(kz_term:ne_binary(), store_fun(), pos_integer(), kz_types:timeout(), kapps_call:call()) ->
+-spec store_file(kz_term:ne_binary(), store_fun(), pos_integer(), timeout(), kapps_call:call()) ->
                         'ok' | {'error', any()}.
 store_file(Filename, URLFun, Tries, Timeout, Call) ->
     Msg = case kapps_call:kvs_fetch('alert_msg', Call) of
@@ -3145,7 +3145,7 @@ store_file(Filename, URLFun, Tries, Timeout, Call) ->
           end,
     do_store_file(Tries, Timeout, API, Msg, Call).
 
--spec do_store_file(pos_integer(), kz_types:timeout(), function()
+-spec do_store_file(pos_integer(), timeout(), function()
                    ,kz_term:ne_binary(), kapps_call:call()) ->
                            'ok' | {'error', any()}.
 do_store_file(Tries, Timeout, API, Msg, Call) ->
@@ -3179,7 +3179,7 @@ do_store_file(Tries, Timeout, API, Msg, Call) ->
             retry_store_file(Tries - 1, Timeout, API, Msg, kz_term:to_binary(Error), Call)
     end.
 
--spec retry_store_file(integer(), kz_types:timeout(), kz_term:proplist() | function()
+-spec retry_store_file(integer(), timeout(), kz_term:proplist() | function()
                       ,kz_term:ne_binary(), kz_term:ne_binary(), kapps_call:call()) ->
                               'ok' | {'error', any()}.
 retry_store_file(0, _Timeout, _API, Msg, Error, Call) ->

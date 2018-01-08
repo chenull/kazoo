@@ -56,7 +56,7 @@ add(#data_connection{}=Connection) ->
 
 -spec wait_for_connection() -> 'ok' | 'no_connection'.
 -spec wait_for_connection(any()) -> 'ok' | 'no_connection'.
--spec wait_for_connection(any(), kz_types:timeout()) -> 'ok' | 'no_connection'.
+-spec wait_for_connection(any(), timeout()) -> 'ok' | 'no_connection'.
 
 wait_for_connection() ->
     wait_for_connection('local').

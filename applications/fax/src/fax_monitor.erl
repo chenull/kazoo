@@ -61,7 +61,7 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
--spec init([]) -> {'ok', state(), kz_types:timeout()}.
+-spec init([]) -> {'ok', state(), timeout()}.
 init([]) ->
     {'ok', #state{}, ?POLLING_INTERVAL}.
 

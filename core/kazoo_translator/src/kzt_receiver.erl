@@ -26,8 +26,8 @@
                   ,hangup_dtmf :: kz_term:api_binary()
                   ,collect_dtmf = 'false' :: boolean()
                   ,record_call :: boolean()
-                  ,call_timeout :: kz_types:timeout() | 'undefined'
-                  ,call_time_limit :: kz_types:timeout()
+                  ,call_timeout :: timeout() | 'undefined'
+                  ,call_time_limit :: timeout()
                   ,start :: kz_time:now()
                   ,call_b_leg :: kz_term:api_binary()
                   }).
@@ -44,13 +44,13 @@
 -spec default_on_first_fun(any()) -> 'ok'.
 default_on_first_fun(_) -> 'ok'.
 
--spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), pos_integer()) ->
+-spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), timeout(), pos_integer()) ->
                            collect_dtmfs_return().
--spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), pos_integer(), function()) ->
+-spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), timeout(), pos_integer(), function()) ->
                            collect_dtmfs_return().
--spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), pos_integer(), function(), binary()) ->
+-spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), timeout(), pos_integer(), function(), binary()) ->
                            collect_dtmfs_return().
--spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), pos_integer(), function(), binary(), kz_json:object()) ->
+-spec collect_dtmfs(kapps_call:call(), kz_term:api_binary(), timeout(), pos_integer(), function(), binary(), kz_json:object()) ->
                            collect_dtmfs_return().
 
 collect_dtmfs(Call, FinishKey, Timeout, N) ->
@@ -132,7 +132,7 @@ collect_dtmfs(Call, FinishKey, Timeout, N, OnFirstFun, Collected, JObj) ->
             collect_dtmfs(Call, FinishKey, Timeout, N, OnFirstFun, Collected)
     end.
 
--spec handle_dtmf(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), pos_integer(), function(), binary(), kz_term:api_binary()) ->
+-spec handle_dtmf(kapps_call:call(), kz_term:api_binary(), timeout(), pos_integer(), function(), binary(), kz_term:api_binary()) ->
                          collect_dtmfs_return().
 handle_dtmf(Call, FinishKey, _Timeout, _N, _OnFirstFun, _Collected, FinishKey) ->
     lager:info("finish key '~s' pressed", [FinishKey]),
@@ -164,8 +164,8 @@ handle_dtmf(Call, FinishKey, Timeout, N, OnFirstFun, Collected, DTMF) ->
                  ,<<DTMF/binary, Collected/binary>>
                  ).
 
--spec collect_decr_timeout(kapps_call:call(), kz_types:timeout(), kz_time:now()) ->
-                                  kz_types:timeout().
+-spec collect_decr_timeout(kapps_call:call(), timeout(), kz_time:now()) ->
+                                  timeout().
 collect_decr_timeout(Call, Timeout, Start) ->
     case kzt_util:get_gather_pidref(Call) of
         {_Pid, _Ref} when is_pid(_Pid)
@@ -174,7 +174,7 @@ collect_decr_timeout(Call, Timeout, Start) ->
         _ -> kz_time:decr_timeout(Timeout, Start)
     end.
 
--spec collect_timeout(kapps_call:call(), kz_types:timeout()) -> kz_types:timeout().
+-spec collect_timeout(kapps_call:call(), timeout()) -> timeout().
 collect_timeout(Call, Timeout) ->
     case kzt_util:get_gather_pidref(Call) of
         {_Pid, _Ref} when is_pid(_Pid)
@@ -183,10 +183,10 @@ collect_timeout(Call, Timeout) ->
         _ -> Timeout
     end.
 
--spec say_loop(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), kz_types:timeout()) ->
+-spec say_loop(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), timeout()) ->
                       {'ok', kapps_call:call()} |
                       {'error', _, kapps_call:call()}.
--spec say_loop(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), list() | 'undefined', kz_term:ne_binary(), kz_types:timeout()) ->
+-spec say_loop(kapps_call:call(), kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary(), list() | 'undefined', kz_term:ne_binary(), timeout()) ->
                       {'ok', kapps_call:call()} |
                       {'error', _, kapps_call:call()}.
 say_loop(Call, SayMe, Voice, Lang, Engine, N) ->
@@ -209,10 +209,10 @@ say_loop(Call, SayMe, Voice, Lang, Terminators, Engine, N) ->
         {'error', _, _}=ERR -> ERR
     end.
 
--spec play_loop(kapps_call:call(), binary(), kz_types:timeout()) ->
+-spec play_loop(kapps_call:call(), binary(), timeout()) ->
                        {'ok', kapps_call:call()} |
                        {'error', _, kapps_call:call()}.
--spec play_loop(kapps_call:call(), binary(), list() | 'undefined', kz_types:timeout()) ->
+-spec play_loop(kapps_call:call(), binary(), list() | 'undefined', timeout()) ->
                        {'ok', kapps_call:call()} |
                        {'error', _, kapps_call:call()}.
 play_loop(Call, PlayMe, N) ->
@@ -293,7 +293,7 @@ process_call_event(Call, EvtName, JObj) ->
             wait_for_call_event(Call, EvtName)
     end.
 
--spec decr_loop_counter(kz_types:timeout()) -> kz_types:timeout().
+-spec decr_loop_counter(timeout()) -> timeout().
 decr_loop_counter('infinity') -> 'infinity';
 decr_loop_counter(N) when is_integer(N), N > 0 -> N-1;
 decr_loop_counter(_) -> 0.

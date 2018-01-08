@@ -417,7 +417,7 @@ notify_watcher(Watcher) ->
     Watcher ! {?MODULE, 'connection_available'},
     ok.
 
--spec wait_for_notification(kz_types:timeout()) ->
+-spec wait_for_notification(timeout()) ->
                                    'ok' |
                                    {'error', 'timeout'}.
 wait_for_notification(Timeout) ->

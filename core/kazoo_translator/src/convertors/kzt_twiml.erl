@@ -303,7 +303,7 @@ gather(Call, Attrs) ->
 
     gather(Call, FinishKey, Timeout, Props, kzt_twiml_util:num_digits(Props)).
 
--spec gather(kapps_call:call(), kz_term:api_binary(), kz_types:timeout(), kz_term:proplist(), pos_integer()) ->
+-spec gather(kapps_call:call(), kz_term:api_binary(), timeout(), kz_term:proplist(), pos_integer()) ->
                     {'ok', kapps_call:call()} |
                     {'request', kapps_call:call()} |
                     {'error', _, kapps_call:call()} |

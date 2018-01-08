@@ -191,7 +191,7 @@ cache_if_not_media(CacheProps, DbName, DocId, CacheValue) ->
                                        )
     end.
 
--spec expires_policy_value(kz_term:ne_binary(), kz_json:object() | data_error()) -> kz_types:timeout().
+-spec expires_policy_value(kz_term:ne_binary(), kz_json:object() | data_error()) -> timeout().
 expires_policy_value(_DbName, {'error', _}) ->
     ?DEFAULT_CACHE_PERIOD;
 expires_policy_value(DbName, CacheValue) ->
@@ -199,7 +199,7 @@ expires_policy_value(DbName, CacheValue) ->
     Type = kz_doc:type(CacheValue, <<"no_type">>),
     expires_policy_value(DbName, Classification, Type).
 
--spec expires_policy_value(kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) -> kz_types:timeout().
+-spec expires_policy_value(kz_term:ne_binary(), kz_term:ne_binary(), kz_term:ne_binary()) -> timeout().
 expires_policy_value(<<"system_config">>, _, _) -> 'infinity';
 expires_policy_value(<<"system_data">>, _, _) -> 'infinity';
 expires_policy_value(DbName, Classification, Type) ->

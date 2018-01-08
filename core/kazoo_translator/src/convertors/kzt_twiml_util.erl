@@ -111,7 +111,7 @@ timeout_s(Props, Default) ->
         N when is_integer(N), N > 0 -> N
     end.
 
--spec num_digits(kz_term:proplist()) -> kz_types:timeout().
+-spec num_digits(kz_term:proplist()) -> timeout().
 num_digits(Props) ->
     case props:get_integer_value('numDigits', Props) of
         'undefined' -> 'infinity';
